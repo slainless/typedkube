@@ -5,7 +5,7 @@
 
 Augment [KubeJS](https://kubejs.com/) workspace with opinionated, ready to use typescript setup, fast bundler and correct type definitions setup.
 
-This setup enables code sharing, ESM support, modern ECMAScript languange features[^1], and limited Node modules support[^2]. 
+This setup enables code sharing, ESM support, modern ECMAScript languange features[^1], and limited Node modules support[^2].
 
 [^1]: All features that are pure language features and transpilable such as `class`, block scoping, arrow functions, template literals, etc. `Promise` is currently not supported.
 [^2]: [Node modules support](#node-modules-support)
@@ -31,18 +31,18 @@ Install Node dependencies with any package manager, then run the build script wi
 
 All executed scripts should be in these directories:
 ```
-- typedkube/scripts/client  -> kubejs/client_scripts
-- typedkube/scripts/server  -> kubejs/server_scripts
-- typedkube/scripts/startup -> kubejs/startup_scripts
+typedkube/scripts/client    -> kubejs/client_scripts
+typedkube/scripts/server    -> kubejs/server_scripts
+typedkube/scripts/startup   -> kubejs/startup_scripts
 ```
 
 For example, script at `typedkube/scripts/server/custom_recipes/create.ts` will output to `kubejs/server_scripts/custom_recipes/create.js`
 
 `typedkube/root` directory will be mapped directly to KubeJS root. All directories placed in this directory will be copied to KubeJS root as-is. For example:
 ```
-- typedkube/root/assets`  -> kubejs/assets
-- typedkube/root/config`  -> kubejs/config
-- typedkube/root/data`    -> kubejs/data
+typedkube/root/assets       -> kubejs/assets
+typedkube/root/config       -> kubejs/config
+typedkube/root/data         -> kubejs/data
 ```
 
 It is possible to insert raw js script in `typedkube/root/xxx_scripts`, essentially bypassing bundler processing.
@@ -67,3 +67,7 @@ Specifically, modules that calls for unsupported ECMAScript features such as Int
 The current bundler is intentionally configured the way it is, skipping minimization and chunking, since the way Rhino and KubeJS works prevent both bundler features to work as expected.
 
 Also, since chunking is not enabled, so is module-level memory. Sharing memory between module must be done via global variables, either using KubeJS `globalThis.global` or directly with `globalThis` (refer to `./libs/global.ts` for example how to get global object reference).
+
+## TODO
+
+- [ ] Implements parser and typegen for [KubeJS Offline](https://github.com/Hunter19823/kubejsoffline-core) output.
