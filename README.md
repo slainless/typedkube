@@ -5,9 +5,10 @@
 
 Augment [KubeJS](https://kubejs.com/) workspace with opinionated, ready to use typescript setup, fast bundler and correct type definitions setup.
 
-This setup enables code sharing, ESM support, and limited[^1] Node modules support.
+This setup enables code sharing, ESM support, modern ECMAScript languange features[^1], and limited Node modules support[^2]. 
 
-[^1]: [Node modules support](#node-modules-support)
+[^1]: All features that are pure language features and transpilable such as `class`, block scoping, arrow functions, template literals, etc. `Promise` is currently not supported.
+[^2]: [Node modules support](#node-modules-support)
 
 ## Get started
 
