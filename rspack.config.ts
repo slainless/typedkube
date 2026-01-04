@@ -24,11 +24,14 @@ export default defineConfig({
 	]),
 	resolve: {
 		preferRelative: true,
+		extensions: [".ts", ".js"],
 	},
 	optimization: {
 		splitChunks: false,
 		runtimeChunk: false,
+		minimize: false,
 	},
+	devtool: false,
 	output: {
 		chunkFormat: "module",
 		filename: "[name].js",
@@ -40,6 +43,9 @@ export default defineConfig({
 	plugins: [
 		new rspack.CopyRspackPlugin({
 			patterns: [{ from: "./root" }],
+		}),
+		new rspack.ProvidePlugin({
+			$: path.resolve(process.cwd(), "./libs/polyfill.ts"),
 		}),
 	],
 	module: {

@@ -3,5 +3,12 @@
     "formatter": {
       "semicolons": "asNeeded"
     }
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noShadowRestrictedNames": "off"
+      }
+    }
   }
 }
