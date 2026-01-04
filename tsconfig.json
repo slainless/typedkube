@@ -3,7 +3,7 @@
   "compilerOptions": {
     // Environment setup & latest features
     "lib": ["ES2015.Collection", "ES2015.Symbol", "Decorators", "Decorators.Legacy", "ES2015.Iterable"],
-    "typeRoots": ["./typing"],
+    "typeRoots": ["typings"],
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
