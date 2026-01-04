@@ -13,7 +13,10 @@ This setup enables code sharing, ESM support, modern ECMAScript languange featur
 ## Get started
 
 > [!WARNING]
-> Make backup of the existing KubeJS directory. KubeJS directory will be cleared for every build cycle except `exported` and `documentation` directory.
+> During each build cycle, the `kubejs` directory is automatically cleared by the build process.
+> Any files that are not located in the `exported/` or `documentation/` directories <ins>will be deleted</ins>.
+> 
+> Users are responsible for backing up their data before running the build.
 
 Clone this repository inside MC's root instance, by default should be cloned as `typedkube`:
 ```
