@@ -12,8 +12,8 @@ export function FunctionMixin<
 	class IsFunction extends klass {
 		protected _cachedParameters?: Parameter[]
 
-		protected _declaringFunctionIndex: ElementIndex
-		protected _declaringFunctionType: "method" | "constructor"
+		protected _declaringFunctionIndex?: ElementIndex
+		protected _declaringFunctionType?: "method" | "constructor"
 
 		parameters() {
 			if (this._cachedParameters) return this._cachedParameters
@@ -32,11 +32,11 @@ export function FunctionMixin<
 		}
 
 		declaringFunctionIndex() {
-			return this._declaringFunctionIndex
+			return this.useBeforeInit("declaringFunctionIndex")
 		}
 
 		declaringFunctionType() {
-			return this._declaringFunctionType
+			return this.useBeforeInit("declaringFunctionType")
 		}
 
 		setDeclaringFunctionIndex(id: ElementIndex) {

@@ -5,7 +5,6 @@ import { IndexHolderMixin } from "../mixin/data"
 import { FunctionMixin, WrappedFunctionMixin } from "../mixin/function"
 import { ModifierMixin } from "../mixin/modifier"
 import { BasicNameMixin } from "../mixin/name"
-import { MappedTypeMixin } from "../mixin/type"
 import {
 	MappedTypeVariableMixin,
 	TypeVariableMixin,
@@ -13,7 +12,7 @@ import {
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
 
-export class Method extends FunctionMixin(
+export class Constructor extends FunctionMixin(
 	DeclaringClassMixin(
 		AnnotationMixin(
 			ModifierMixin(
@@ -22,13 +21,13 @@ export class Method extends FunctionMixin(
 		),
 	),
 ) {
-	protected _methodIndexInClass: number
+	protected _constructorIndexInClass: number
 
 	constructor(
 		registry: Registry,
 		protected id: ElementIndex,
 		declaringClass: ElementIndex,
-		methodIndexInClass: number,
+		constructorIndexInClass: number,
 	) {
 		super(registry)
 		const index = this.registry.dataIndexOf(id)
@@ -36,36 +35,32 @@ export class Method extends FunctionMixin(
 		this.setData(this.decode(index))
 		this.setDeclaringClassIndex(declaringClass)
 		this.setDeclaringFunctionIndex(id)
-		this.setDeclaringFunctionType("method")
-		this._methodIndexInClass = methodIndexInClass
+		this.setDeclaringFunctionType("constructor")
+		this._constructorIndexInClass = constructorIndexInClass
 	}
 
-	protected rawDataParsingKeys(): readonly string[] {
+	protected override rawDataParsingKeys(): readonly string[] {
 		return [
-			Property.METHOD_NAME,
 			Property.MODIFIERS,
-			Property.METHOD_RETURN_TYPE,
 			Property.ANNOTATIONS,
-			Property.PARAMETERS,
-			Property.TYPE_VARIABLES,
 			Property.EXCEPTIONS,
+			Property.TYPE_VARIABLES,
+			Property.PARAMETERS,
 		]
 	}
 
-	protected getStorageRawData(id: DataIndex): string {
-		return this.registry.storage.getMethod(id)
+	protected override getStorageRawData(id: DataIndex) {
+		return this.registry.storage.getConstructor(id)
 	}
 
 	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedMethod(this.registry, this, typeVariableMap)
+		return new WrappedConstructor(this.registry, this, typeVariableMap)
 	}
 }
 
-export class WrappedMethod extends WrappedFunctionMixin(
+export class WrappedConstructor extends WrappedFunctionMixin(
 	WrappedDeclaringClassMixin(
-		WrappedAnnotationMixin(
-			MappedTypeVariableMixin(MappedTypeMixin(Wrapped<Method>)),
-		),
+		WrappedAnnotationMixin(MappedTypeVariableMixin(Wrapped<Constructor>)),
 	),
 ) {
 	asString() {
@@ -80,15 +75,7 @@ export class WrappedMethod extends WrappedFunctionMixin(
 		throw new Error("TODO")
 	}
 
-	equals(other: WrappedMethod) {
-		throw new Error("TODO")
-	}
-
-	moreSpecificThan(other: WrappedMethod) {
-		throw new Error("TODO")
-	}
-
-	wrappedDeclaringMethod() {
+	wrappedDeclaringConstructor() {
 		throw new Error("TODO")
 	}
 }
@@ -99,8 +86,6 @@ export namespace Method {
 			AnnotationMixin.Data,
 			FunctionMixin.Data,
 			TypeVariableMixin.Data {
-		[Property.METHOD_NAME]?: DataIndex
-		[Property.METHOD_RETURN_TYPE]?: DataIndex
 		[Property.EXCEPTIONS]?: DataIndex[]
 	}
 }

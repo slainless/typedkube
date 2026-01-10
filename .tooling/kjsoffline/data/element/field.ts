@@ -29,7 +29,7 @@ export class Field extends DeclaringClassMixin(
 		this._fieldIndexInClass = fieldIndexInClass
 	}
 
-	protected rawDataParsingKeys() {
+	protected override rawDataParsingKeys() {
 		return [
 			Property.FIELD_NAME,
 			Property.FIELD_TYPE,
@@ -38,7 +38,7 @@ export class Field extends DeclaringClassMixin(
 		] as const
 	}
 
-	protected getStorageRawData(id: DataIndex): string {
+	protected override getStorageRawData(id: DataIndex) {
 		return this.registry.storage.getField(id)
 	}
 

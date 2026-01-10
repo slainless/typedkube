@@ -3,6 +3,7 @@ import { IndexHolderMixin } from "../mixin/data"
 import { MappedTypeMixin } from "../mixin/type"
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
+import { exist } from "../utils"
 
 export class Annotation extends IndexHolderMixin(Base<Annotation.Data>) {
 	constructor(
@@ -15,16 +16,17 @@ export class Annotation extends IndexHolderMixin(Base<Annotation.Data>) {
 		this.setData(this.decode(index))
 	}
 
-	protected rawDataParsingKeys() {
+	protected override rawDataParsingKeys() {
 		return [Property.ANNOTATION_TYPE, Property.ANNOTATION_STRING] as const
 	}
 
-	protected getStorageRawData(id: DataIndex): string {
+	protected override getStorageRawData(id: DataIndex) {
 		return this.registry.storage.getAnnotation(id)
 	}
 
 	name() {
-		return this.registry.storage.getName(this.data[Property.ANNOTATION_STRING])
+		const index = exist(this.data()[Property.ANNOTATION_STRING])
+		return this.registry.storage.getName(index)
 	}
 
 	asString() {
@@ -35,7 +37,7 @@ export class Annotation extends IndexHolderMixin(Base<Annotation.Data>) {
 		return new WrappedAnnotation(this.registry, this, typeVariableMap)
 	}
 
-	toString() {
+	override toString() {
 		return `@${this.name()}`
 	}
 }

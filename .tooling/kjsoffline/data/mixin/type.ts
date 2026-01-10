@@ -8,15 +8,16 @@ import {
 } from "../common"
 import { Class, type WrappedClass } from "../element/class"
 import type { DataIndex } from "../storage"
+import { exist } from "../utils"
 
 export function TypeVariableMapMixin<T extends Constructor<Data<any>>>(
 	klass: T,
 ) {
 	class TypeVariableHolder extends klass {
-		private _typeVariableMap: TypeVariableMap
+		protected _typeVariableMap?: TypeVariableMap
 
 		typeVariableMap() {
-			return this._typeVariableMap
+			return this.useBeforeInit("typeVariableMap")
 		}
 
 		setTypeVariableMap(typeVariableMap: TypeVariableMap) {
@@ -54,10 +55,8 @@ export function MappedTypeMixin<
 		}
 
 		mappedType() {
-			const type = this.registry.get(
-				Class,
-				this.registry.elementIndexOf(this.mappedTypeIndex()),
-			)
+			const index = exist(this.mappedTypeIndex())
+			const type = this.registry.get(Class, this.registry.elementIndexOf(index))
 			const wrappedType = type.asWrapped(this.typeVariableMap())
 			this._cachedMappedType = wrappedType
 			return wrappedType

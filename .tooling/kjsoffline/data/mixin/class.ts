@@ -4,19 +4,19 @@ import type { ElementIndex } from "../registry"
 
 export function DeclaringClassMixin<T extends Constructor<Base>>(klass: T) {
 	class HasDeclaringClass extends klass {
-		protected _declaringClass: ElementIndex
+		protected _declaringClassIndex?: ElementIndex
 
 		declaringClassIndex() {
-			return this._declaringClass
+			return this.useBeforeInit("declaringClassIndex")
 		}
 
 		setDeclaringClassIndex(id: ElementIndex) {
-			this._declaringClass = id
+			this._declaringClassIndex = id
 			return this
 		}
 
 		declaringClass() {
-			return this.registry.get(Class, this._declaringClass)
+			return this.registry.get(Class, this.declaringClassIndex())
 		}
 	}
 

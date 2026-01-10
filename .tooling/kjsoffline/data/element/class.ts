@@ -8,7 +8,7 @@ import {
 } from "../mixin/type-parameter"
 import type { ElementIndex, Registry } from "../registry"
 import type { RawClassTypeData } from "../storage"
-import { asArray } from "../utils"
+import { asArray, exist } from "../utils"
 import { Constructor } from "./constructor"
 import { Field } from "./field"
 import { Method } from "./method"
@@ -51,11 +51,15 @@ export class Class extends TypeVariableMixin(
 	}
 
 	superClassIndex() {
-		return this.registry.elementIndexOf(this.data()[Property.SUPER_CLASS])
+		return this.data()[Property.SUPER_CLASS] as number as
+			| ElementIndex
+			| undefined
 	}
 
 	enclosingClassIndex() {
-		return this.registry.elementIndexOf(this.data()[Property.ENCLOSING_CLASS])
+		return this.data()[Property.ENCLOSING_CLASS] as number as
+			| ElementIndex
+			| undefined
 	}
 
 	isInnerClass() {
@@ -63,7 +67,9 @@ export class Class extends TypeVariableMixin(
 	}
 
 	declaringClassIndex() {
-		return this.registry.elementIndexOf(this.data()[Property.DECLARING_CLASS])
+		return this.data()[Property.DECLARING_CLASS] as number as
+			| ElementIndex
+			| undefined
 	}
 
 	innerClassesIndex() {
@@ -113,7 +119,7 @@ export class Class extends TypeVariableMixin(
 	}
 
 	fields = this.createAccessor((klass) => {
-		const fields = klass.data()[Property.FIELDS]
+		const fields = asArray(klass.data()[Property.FIELDS])
 		return fields.map((field, index) =>
 			this.registry.get(
 				Field,
@@ -125,7 +131,7 @@ export class Class extends TypeVariableMixin(
 	})
 
 	methods = this.createAccessor((klass) => {
-		const methods = klass.data()[Property.METHODS]
+		const methods = asArray(klass.data()[Property.METHODS])
 		return methods.map((method, index) =>
 			this.registry.get(
 				Method,
@@ -137,7 +143,7 @@ export class Class extends TypeVariableMixin(
 	})
 
 	constructors = this.createAccessor((klass) => {
-		const constructors = klass.data()[Property.CONSTRUCTORS]
+		const constructors = asArray(klass.data()[Property.CONSTRUCTORS])
 		return constructors.map((constructor, index) =>
 			this.registry.get(
 				Constructor,
@@ -149,9 +155,11 @@ export class Class extends TypeVariableMixin(
 	})
 
 	rawTypeIndex() {
-		return this.registry.elementIndexOf(
-			this.data()[Property.RAW_PARAMETERIZED_TYPE],
-		)
+		// TODO: implements variants of class...
+		throw new Error("TODO")
+		// return this.data()[Property.RAW_PARAMETERIZED_TYPE] as number as
+		// 	| ElementIndex
+		// 	| undefined
 	}
 
 	isParameterized() {
@@ -159,7 +167,11 @@ export class Class extends TypeVariableMixin(
 	}
 
 	ownerTypeIndex() {
-		return this.registry.elementIndexOf(this.data()[Property.OWNER_TYPE])
+		// TODO: implements variants of class...
+		throw new Error("TODO")
+		// return this.data()[Property.OWNER_TYPE] as number as
+		// 	| ElementIndex
+		// 	| undefined
 	}
 
 	protected walkInheritanceChain(
@@ -184,7 +196,7 @@ export class Class extends TypeVariableMixin(
 				break
 			}
 
-			queue.push(klass.superClassIndex())
+			queue.push(...asArray(klass.superClassIndex()))
 			queue.push(...klass.interfaces())
 			// TODO: handles walking with parameterized class...
 			throw new Error("TODO")
@@ -192,31 +204,41 @@ export class Class extends TypeVariableMixin(
 	}
 
 	lowerBoundsIndex() {
-		return asArray(
-			this.data()[Property.WILDCARD_LOWER_BOUNDS],
-		) as number[] as ElementIndex[]
+		// TODO: implements variants of class...
+		throw new Error("TODO")
+		// return asArray(
+		// 	this.data()[Property.WILDCARD_LOWER_BOUNDS],
+		// ) as number[] as ElementIndex[]
 	}
 
 	upperBoundsIndex() {
-		return asArray(
-			this.data()[Property.WILDCARD_UPPER_BOUNDS],
-		) as number[] as ElementIndex[]
+		// TODO: implements variants of class...
+		throw new Error("TODO")
+		// return asArray(
+		// 	this.data()[Property.WILDCARD_UPPER_BOUNDS],
+		// ) as number[] as ElementIndex[]
 	}
 
 	isWildcard() {
-		return (
-			this.lowerBoundsIndex().length > 0 || this.upperBoundsIndex().length > 0
-		)
+		// TODO: implements variants of class...
+		throw new Error("TODO")
+		// return (
+		// 	this.lowerBoundsIndex().length > 0 || this.upperBoundsIndex().length > 0
+		// )
 	}
 
 	isTypeVariable() {
-		return this.data()[Property.TYPE_VARIABLE_NAME] != null
+		// TODO: implements variants of class...
+		throw new Error("TODO")
+		// return this.data()[Property.TYPE_VARIABLE_NAME] != null
 	}
 
 	typeVariableBoundsIndex() {
-		return asArray(
-			this.data()[Property.TYPE_VARIABLE_BOUNDS],
-		) as number[] as ElementIndex[]
+		// TODO: implements variants of class...
+		throw new Error("TODO")
+		// return asArray(
+		// 	this.data()[Property.TYPE_VARIABLE_BOUNDS],
+		// ) as number[] as ElementIndex[]
 	}
 
 	name() {
@@ -252,7 +274,8 @@ export class Class extends TypeVariableMixin(
 	}
 
 	packageName() {
-		return this.registry.storage.getPackageName(this.packageId())
+		const packageId = exist(this.packageId())
+		return this.registry.storage.getPackageName(packageId)
 	}
 
 	parameterizedArgs() {
@@ -307,7 +330,7 @@ export class Class extends TypeVariableMixin(
 }
 
 export class WrappedClass extends MappedTypeVariableMixin(Wrapped<Class>) {
-	typeVariableMap(): TypeVariableMap {
+	override typeVariableMap(): TypeVariableMap {
 		// TODO: implement computeExhaustiveMapping when accessed without any type variable...
 		throw new Error("TODO")
 	}

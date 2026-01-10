@@ -1,7 +1,9 @@
+type Part = boolean | null | number
 export function decodePart(
-	part: string,
+	part: string | undefined,
 	objectDecoder?: (part: string) => any,
-) {
+): Part | Part[] {
+	if (!part) return null
 	if (!part.trim()) return null
 
 	// Format
@@ -17,7 +19,7 @@ export function decodePart(
 		return part
 			.slice(1)
 			.split("|")
-			.map((p) => decodePart(p.trim()))
+			.map((p) => decodePart(p.trim())) as Part[]
 
 	if (part.startsWith("{")) {
 		if (objectDecoder) return objectDecoder(atob(part.slice(1)))
@@ -30,12 +32,21 @@ export function decodePart(
 	return num
 }
 
-export function asArray<T>(value: T): T extends Array<any> ? T : Array<T> {
+export function asArray<T>(
+	value: T,
+): NonNullable<T> extends Array<any> ? NonNullable<T> : Array<NonNullable<T>> {
 	// @ts-expect-error
-	return Array.isArray(value) ? value : [value]
+	return (Array.isArray(value) ? (value == null ? [] : value) : [value]).filter(
+		(v) => v != null,
+	)
 }
 
-export function exist<T>(
+export function exist<T>(val: T, contextMessage?: string): NonNullable<T> {
+	assertExist(val, contextMessage)
+	return val
+}
+
+export function assertExist<T>(
 	val: T,
 	contextMessage?: string,
 ): asserts val is NonNullable<T> {
@@ -44,4 +55,7 @@ export function exist<T>(
 			`Expected 'val' to be defined, but received ${val}: ${contextMessage}`,
 		)
 	}
+
+	// @ts-expect-error
+	return val
 }

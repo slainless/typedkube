@@ -7,7 +7,7 @@ export function AnnotationMixin<
 	T extends Constructor<Base<{ [Property.ANNOTATIONS]?: ElementIndex[] }>>,
 >(klass: T) {
 	class Annotated extends klass {
-		private _cachedAnnotations: Annotation[]
+		private _cachedAnnotations!: Annotation[]
 
 		annotations() {
 			if (this._cachedAnnotations) return this._cachedAnnotations

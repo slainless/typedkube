@@ -17,7 +17,12 @@ export class Registry {
 			this.registry.set(klass, new Map())
 		}
 
-		const registry = this.registry.get(klass)
+		let registry = this.registry.get(klass)
+		if (!registry) {
+			registry = new Map()
+			this.registry.set(klass, registry)
+		}
+
 		if (registry.has(id)) {
 			return registry.get(id) as InstanceType<T>
 		}

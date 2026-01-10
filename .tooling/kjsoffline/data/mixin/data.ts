@@ -3,10 +3,10 @@ import type { DataIndex } from "../storage"
 
 export function IndexHolderMixin<T extends Constructor<Base<any>>>(klass: T) {
 	class IndexHolder extends klass {
-		private _index: DataIndex
+		protected _index?: DataIndex
 
 		index() {
-			return this._index
+			return this.useBeforeInit("index")
 		}
 
 		setIndex(id: DataIndex) {

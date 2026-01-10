@@ -2,7 +2,7 @@ import type { Tagged } from "type-fest"
 import { Property } from "./common"
 import type { Modifier } from "./element/modifier"
 import type { ElementIndex } from "./registry"
-import { exist } from "./utils"
+import { assertExist } from "./utils"
 
 export type DataIndex = Tagged<number, "data">
 
@@ -93,61 +93,63 @@ export type TypeData =
 	| TypeVariableData
 
 export class DataStorage {
-	annotations: string[]
-	constructors: string[]
-	fields: string[]
-	methods: string[]
-	packages: Array<[string] | [string, number]>
-	parameters: string[]
-	names: string[]
-	types: TypeData[]
+	annotations: string[] = []
+	constructors: string[] = []
+	fields: string[] = []
+	methods: string[] = []
+	packages: Array<[string] | [string, number]> = []
+	parameters: string[] = []
+	names: string[] = []
+	types: TypeData[] = []
 
 	getAnnotation(id: DataIndex) {
-		exist(id)
+		assertExist(id)
 		return this.annotations[id]
 	}
 
 	getConstructor(id: DataIndex) {
-		exist(id)
+		assertExist(id)
 		return this.constructors[id]
 	}
 
 	getField(id: DataIndex) {
-		exist(id)
+		assertExist(id)
 		return this.fields[id]
 	}
 
 	getMethod(id: DataIndex) {
-		exist(id)
+		assertExist(id)
 		return this.methods[id]
 	}
 
 	getPackage(id: DataIndex) {
-		exist(id)
+		assertExist(id)
 		return this.packages[id]
 	}
 
-	getPackageName(id: DataIndex) {
-		exist(id)
+	getPackageName(id: DataIndex | undefined) {
+		assertExist(id)
 		const data = this.packages[id]
-		if (data.length === 1) return data[0]
+		if (!data) return
+		if (data?.length === 1) return data[0]
 		return `${data[1]}.${data[0]}`
 	}
 
 	getParameter(id: DataIndex) {
-		exist(id)
+		assertExist(id)
 		return this.parameters[id]
 	}
 
 	getName(id: DataIndex) {
-		exist(id)
+		assertExist(id)
 		return this.names[id]
 	}
 
 	getType(id: DataIndex): TypeData | undefined {
-		exist(id)
+		assertExist(id)
 		if (!(id in this.types)) return
 		const type = this.types[id]
+		if (!type) return
 		// TODO: move _id assignment to normalization step
 		if (type._id == null) type._id = id
 		return type

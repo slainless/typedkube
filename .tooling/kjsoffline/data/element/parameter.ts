@@ -35,7 +35,7 @@ export class Parameter extends DeclaringClassMixin(
 		this._parameterIndexInFunction = parameterIndexInFunction
 	}
 
-	protected rawDataParsingKeys() {
+	protected override rawDataParsingKeys() {
 		return [
 			Property.PARAMETER_NAME,
 			Property.PARAMETER_TYPE,
@@ -44,11 +44,12 @@ export class Parameter extends DeclaringClassMixin(
 		] as const
 	}
 
-	protected getStorageRawData(id: DataIndex): string {
+	protected override getStorageRawData(id: DataIndex) {
 		return this.registry.storage.getParameter(id)
 	}
 
 	declaringFunction() {
+		// TODO: implement this
 		// if (this._functionType === 'method') {
 		//     return this.registry.get(Method, this._declaringFunction)
 		// } else {

@@ -31,7 +31,7 @@ export namespace Modifier {
 	export const ABSTRACT = new Modifier(1024, "abstract")
 	export const STRICT = new Modifier(2048, "strict")
 	export const SYNTHETIC = new Modifier(4096, "synthetic")
-	export const MANDATED = new Modifier("耀".codePointAt(0), "mandated")
+	export const MANDATED = new Modifier("耀".codePointAt(0)!, "mandated")
 
 	export const BRIDGE = new Modifier(64, "bridge")
 	export const VARARGS = new Modifier(128, "varargs")

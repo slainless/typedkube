@@ -1,7 +1,7 @@
 import { TypeVariableMapMixin } from "./mixin/type"
 import type { Registry } from "./registry"
 import type { DataIndex } from "./storage"
-import { decodePart } from "./utils"
+import { decodePart, exist } from "./utils"
 
 export type Constructor<T, Arguments extends unknown[] = any[]> = new (
 	...arguments_: Arguments
@@ -20,10 +20,22 @@ export class Data<T = {}> {
 		if (!this._data) throw new TypeError("Data must be initialized before use!")
 		return this._data
 	}
+
+	useBeforeInit<T extends this, K extends keyof T>(
+		this: T,
+		key: K,
+		// @ts-expect-error
+	): NonNullable<T[`_${K}`]> {
+		// @ts-expect-error
+		const value = this[`_${key}`]
+		if (value == null)
+			throw new TypeError(`${String(key)} must be initialized before use!`)
+		return value
+	}
 }
 
 export class Base<T = {}> extends Data<T> {
-	protected getStorageRawData(id: DataIndex): string {
+	protected getStorageRawData(id: DataIndex): string | undefined {
 		throw new Error("Not Implemented")
 	}
 
@@ -36,7 +48,7 @@ export class Base<T = {}> extends Data<T> {
 		const data = this.getStorageRawData(id)
 		if (!data)
 			throw new ReferenceError(
-				`Cannot find ${this.constructor.name} with index: ${id}`,
+				`Cannot find raw data of ${this.constructor.name} with index: ${id}`,
 			)
 
 		const values = data.split(",")
@@ -47,10 +59,11 @@ export class Base<T = {}> extends Data<T> {
 
 		const result: any = {}
 		for (const index in keys) {
-			const decoded = decodePart(values[index].trim())
+			const key = exist(keys[index])
+			const decoded = decodePart(values[index]?.trim())
 			if (decoded == null) continue
 
-			result[keys[index]] = decoded
+			result[key] = decoded
 		}
 
 		return result
@@ -71,12 +84,12 @@ export class Wrapped<T extends Base = Base<{}>> extends TypeVariableMapMixin(
 		this.setTypeVariableMap(typeVariableMap)
 	}
 
-	data(): T extends Base<infer D> ? D : never {
+	override data(): T extends Base<infer D> ? D : never {
 		// @ts-expect-error
 		return super.data()
 	}
 
-	setData(data: T extends Base<infer D> ? D : never) {
+	override setData(data: T extends Base<infer D> ? D : never) {
 		super.setData(data)
 		return this
 	}

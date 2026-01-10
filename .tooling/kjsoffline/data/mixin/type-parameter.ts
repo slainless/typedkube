@@ -22,7 +22,7 @@ export function MappedTypeVariableMixin<
 			const typeVariableMap = this.typeVariableMap()
 			return this.wrapped()
 				.typeVariablesIndex()
-				.map((id) => typeVariableMap[id] ?? id)
+				.map((id) => typeVariableMap[this.registry.dataIndexOf(id)] ?? id)
 		}
 	}
 
