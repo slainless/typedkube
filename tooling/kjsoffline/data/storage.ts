@@ -1,0 +1,155 @@
+import type { Tagged } from "type-fest"
+import { Property } from "./common"
+import type { Modifier } from "./element/modifier"
+import type { ElementIndex } from "./registry"
+import { exist } from "./utils"
+
+export type DataIndex = Tagged<number, "data">
+
+/**
+ * Raw class type data structure.
+ * Represents a Java class, interface, enum, or annotation type.
+ */
+export interface RawClassTypeData {
+	/** Class name (NameID) */
+	[Property.CLASS_NAME]?: DataIndex
+	/** Annotations (List<AnnotationID>) */
+	[Property.ANNOTATIONS]?: ElementIndex[]
+	/** Modifiers (int) */
+	[Property.MODIFIERS]?: Modifier.Value
+	/** Type variables/parameters (List<TypeVariableID>) */
+	[Property.TYPE_VARIABLES]?: DataIndex[]
+	/** Package name (PackageID) */
+	[Property.PACKAGE_NAME]?: DataIndex
+	/** Super class (TypeID) */
+	[Property.SUPER_CLASS]?: DataIndex
+	/** Interfaces (List<TypeID>) */
+	[Property.INTERFACES]?: DataIndex[]
+	/** Inner classes (List<TypeID>) */
+	[Property.INNER_CLASSES]?: DataIndex[]
+	/** Enclosing class (TypeID) */
+	[Property.ENCLOSING_CLASS]?: DataIndex
+	/** Declaring class (TypeID) */
+	[Property.DECLARING_CLASS]?: DataIndex
+	/** Fields (List<FieldID>) */
+	[Property.FIELDS]?: DataIndex[]
+	/** Constructors (List<ConstructorID>) */
+	[Property.CONSTRUCTORS]?: DataIndex[]
+	/** Methods (List<MethodID>) */
+	[Property.METHODS]?: DataIndex[]
+	/** Internal ID assigned during normalization */
+	_id?: DataIndex
+}
+
+/**
+ * Parameterized type data structure.
+ * Represents a generic type with type arguments (e.g., List<String>).
+ */
+export interface ParameterizedTypeData {
+	/** Raw type (TypeID) */
+	[Property.RAW_PARAMETERIZED_TYPE]?: DataIndex
+	/** Owner type (TypeID) */
+	[Property.OWNER_TYPE]?: DataIndex
+	/** Type variables/actual type arguments (List<TypeOrTypeVariableID>) */
+	[Property.TYPE_VARIABLES]: DataIndex[]
+	/** Internal ID assigned during normalization */
+	_id?: DataIndex
+}
+
+/**
+ * Wildcard type data structure.
+ * Represents a wildcard type (e.g., ? extends Number, ? super Integer).
+ */
+export interface WildcardTypeData {
+	/** Lower bounds (List<TypeOrTypeVariableID>) */
+	[Property.WILDCARD_LOWER_BOUNDS]?: DataIndex[]
+	/** Upper bounds (List<TypeOrTypeVariableID>) */
+	[Property.WILDCARD_UPPER_BOUNDS]?: DataIndex[]
+	/** Internal ID assigned during normalization */
+	_id?: DataIndex
+}
+
+/**
+ * Type variable data structure.
+ * Represents a generic type variable (e.g., T, E, K, V).
+ */
+export interface TypeVariableData {
+	/** Type variable name (NameID) */
+	[Property.TYPE_VARIABLE_NAME]: DataIndex
+	/** Type variable bounds (List<TypeOrTypeVariableID>) */
+	[Property.TYPE_VARIABLE_BOUNDS]?: DataIndex[]
+	/** Internal ID assigned during normalization */
+	_id?: DataIndex
+}
+
+/**
+ * Union type representing all possible type data structures.
+ * Types are stored as JSON objects (not compressed strings like fields/methods).
+ */
+export type TypeData =
+	| RawClassTypeData
+	| ParameterizedTypeData
+	| WildcardTypeData
+	| TypeVariableData
+
+export class DataStorage {
+	annotations: string[]
+	constructors: string[]
+	fields: string[]
+	methods: string[]
+	packages: Array<[string] | [string, number]>
+	parameters: string[]
+	names: string[]
+	types: TypeData[]
+
+	getAnnotation(id: DataIndex) {
+		exist(id)
+		return this.annotations[id]
+	}
+
+	getConstructor(id: DataIndex) {
+		exist(id)
+		return this.constructors[id]
+	}
+
+	getField(id: DataIndex) {
+		exist(id)
+		return this.fields[id]
+	}
+
+	getMethod(id: DataIndex) {
+		exist(id)
+		return this.methods[id]
+	}
+
+	getPackage(id: DataIndex) {
+		exist(id)
+		return this.packages[id]
+	}
+
+	getPackageName(id: DataIndex) {
+		exist(id)
+		const data = this.packages[id]
+		if (data.length === 1) return data[0]
+		return `${data[1]}.${data[0]}`
+	}
+
+	getParameter(id: DataIndex) {
+		exist(id)
+		return this.parameters[id]
+	}
+
+	getName(id: DataIndex) {
+		exist(id)
+		return this.names[id]
+	}
+
+	getType(id: DataIndex): TypeData | undefined {
+		exist(id)
+		if (!(id in this.types)) return
+		const type = this.types[id]
+		// TODO: move _id assignment to normalization step
+		if (type._id == null) type._id = id
+		return type
+	}
+}

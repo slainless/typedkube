@@ -1,4 +1,5 @@
 {
+  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
   "javascript": {
     "formatter": {
       "semicolons": "asNeeded"
@@ -8,6 +9,9 @@
     "rules": {
       "suspicious": {
         "noShadowRestrictedNames": "off"
+      },
+      "complexity": {
+        "noThisInStatic": "off"
       }
     }
   }

@@ -12,5 +12,8 @@
   "scripts": {
     "dev": "rspack build --watch",
     "build": "rspack build"
+  },
+  "dependencies": {
+    "type-fest": "^5.3.1"
   }
 }
