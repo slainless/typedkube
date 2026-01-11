@@ -1,4 +1,4 @@
-import type { Base, Constructor, Wrapped } from "../common"
+import type { Base, Constructor } from "../common"
 import { Class } from "../element/class"
 import type { ElementIndex } from "../registry"
 

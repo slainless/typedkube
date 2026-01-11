@@ -8,10 +8,12 @@
   "linter": {
     "rules": {
       "suspicious": {
-        "noShadowRestrictedNames": "off"
+        "noShadowRestrictedNames": "off",
+        "noExplicitAny": "off"
       },
       "complexity": {
-        "noThisInStatic": "off"
+        "noThisInStatic": "off",
+        "noBannedTypes": "off"
       }
     }
   }
