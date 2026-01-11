@@ -43,7 +43,7 @@ export class Class<T extends TypeData> extends IndexHolderMixin(
 	}
 
 	override data(): T {
-		return this.data()
+		return super.data() as T
 	}
 
 	override setData(data: T) {
