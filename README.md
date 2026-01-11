@@ -55,14 +55,15 @@ All unsupported features are omitted from the type definitions.
 
 Partial ES6 is also provided, following the current implementation of KubeJS's Rhino.
 
-KubeJS type definitions will be added gradually, following my own needs.
+Ideally, KubeJS type definitions will be provided from KubeJS offline reflection output.
+But the effort is still ongoing, so for now, the typings will be stubbed with `any`.
 
 ## Node modules support
 
 While ESM support is possible, it is still very limited to what kind of module you can load from node modules.
 Specifically, modules that calls for unsupported ECMAScript features such as Intl, Reflect, IntArray, etc. will almost guaranteed not to work. Refer to [ES5 table](https://compat-table.github.io/compat-table/es5/) and [ES6 table](https://mozilla.github.io/rhino/compat/engines.html).
 
-## Bundler and Rhino quirkiness
+## Bundler and Rhino
 
 The current bundler is intentionally configured the way it is, skipping minimization and chunking, since the way Rhino and KubeJS works prevent both bundler features to work as expected.
 
