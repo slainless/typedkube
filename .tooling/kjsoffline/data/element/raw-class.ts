@@ -1,4 +1,6 @@
 import { Property, type TypeVariableMap, Wrapped } from "../common"
+import { AnnotationMixin } from "../mixin/annotation"
+import { ModifierMixin } from "../mixin/modifier"
 import { TypeVariableMixin } from "../mixin/type-variable"
 import type { ElementIndex } from "../registry"
 import type { RawClassTypeData } from "../storage"
@@ -11,7 +13,9 @@ import { Method } from "./method"
 import { ParameterizedType } from "./parameterized-type"
 import type { Relation } from "./relation"
 
-export class RawClass extends TypeVariableMixin(Class<RawClassTypeData>) {
+export class RawClass extends AnnotationMixin(
+	ModifierMixin(TypeVariableMixin(Class<RawClassTypeData>)),
+) {
 	override dataDiscriminator() {
 		return Property.CLASS_NAME
 	}

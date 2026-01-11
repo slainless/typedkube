@@ -1,5 +1,6 @@
 import { type Base, type Constructor, Property } from "../common"
 import type { Modifier } from "../element/modifier"
+import { ParameterizedType } from "../element/parameterized-type"
 
 export function ModifierMixin<
 	T extends Constructor<Base<{ [Property.MODIFIERS]?: Modifier.Value }>>,
@@ -7,10 +8,11 @@ export function ModifierMixin<
 	abstract class Modified extends klass {
 		protected _cachedModifiers?: Modifier.Value
 
-		modifiers() {
+		modifiers(): Modifier.Value | undefined {
 			const mod = this.data()[Property.MODIFIERS]
 			if (mod != null) return mod
-			throw new Error("TODO")
+			if (this instanceof ParameterizedType) return this.rawType().modifiers()
+			return
 		}
 	}
 

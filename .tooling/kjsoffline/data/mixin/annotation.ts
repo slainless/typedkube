@@ -1,10 +1,10 @@
 import { type Base, type Constructor, Property } from "../common"
 import { Annotation } from "../element/annotation"
-import type { ElementIndex } from "../registry"
+import type { DataIndex } from "../storage"
 import { asArray } from "../utils"
 
 export function AnnotationMixin<
-	T extends Constructor<Base<{ [Property.ANNOTATIONS]?: ElementIndex[] }>>,
+	T extends Constructor<Base<{ [Property.ANNOTATIONS]?: DataIndex[] }>>,
 >(klass: T) {
 	class Annotated extends klass {
 		private _cachedAnnotations!: Annotation[]
@@ -12,7 +12,7 @@ export function AnnotationMixin<
 		annotations() {
 			if (this._cachedAnnotations) return this._cachedAnnotations
 			this._cachedAnnotations = asArray(this.data()[Property.ANNOTATIONS]).map(
-				(id) => this.registry.get(Annotation, id),
+				(id) => this.registry.get(Annotation, this.registry.elementIndexOf(id)),
 			)
 			return this._cachedAnnotations
 		}
@@ -23,6 +23,6 @@ export function AnnotationMixin<
 
 export namespace AnnotationMixin {
 	export interface Data {
-		[Property.ANNOTATIONS]?: ElementIndex[]
+		[Property.ANNOTATIONS]?: DataIndex[]
 	}
 }
