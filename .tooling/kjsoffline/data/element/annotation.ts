@@ -1,9 +1,9 @@
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common"
-import { IndexHolderMixin } from "../mixin/data"
-import { MappedTypeMixin } from "../mixin/type"
+import { IndexHolderMixin } from "../mixin/index-holder"
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
 import { exist } from "../utils"
+import { MappedTypeMixin } from "../wrapped-mixin/mapped-type"
 
 export class Annotation extends IndexHolderMixin(Base<Annotation.Data>) {
 	constructor(

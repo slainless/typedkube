@@ -1,13 +1,15 @@
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common"
-import { AnnotationMixin, WrappedAnnotationMixin } from "../mixin/annotation"
-import { DeclaringClassMixin, WrappedDeclaringClassMixin } from "../mixin/class"
-import { IndexHolderMixin } from "../mixin/data"
+import { AnnotationMixin } from "../mixin/annotation"
+import { BasicNameMixin } from "../mixin/basic-name"
+import { DeclaringClassMixin } from "../mixin/declaring-class"
+import { IndexHolderMixin } from "../mixin/index-holder"
 import { ModifierMixin } from "../mixin/modifier"
-import { BasicNameMixin } from "../mixin/name"
-import { MappedTypeMixin } from "../mixin/type"
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
 import { assertExist } from "../utils"
+import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation"
+import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class"
+import { MappedTypeMixin } from "../wrapped-mixin/mapped-type"
 
 export class Field extends DeclaringClassMixin(
 	AnnotationMixin(

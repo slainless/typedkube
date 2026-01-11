@@ -1,7 +1,7 @@
 import { type Base, Property, Wrapped } from "../common"
-import { MappedTypeMixin } from "../mixin/type"
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
+import { MappedTypeMixin } from "../wrapped-mixin/mapped-type"
 import { Class } from "./class"
 
 export class Binding extends MappedTypeMixin(Wrapped<Base<Binding.Data>>) {

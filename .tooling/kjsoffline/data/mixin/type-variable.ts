@@ -1,4 +1,4 @@
-import { type Base, type Constructor, Property, type Wrapped } from "../common"
+import { type Base, type Constructor, Property } from "../common"
 import type { ElementIndex } from "../registry"
 import { asArray } from "../utils"
 
@@ -12,21 +12,6 @@ export function TypeVariableMixin<
 	}
 
 	return TypeVariableHolder as T & typeof TypeVariableHolder
-}
-
-export function MappedTypeVariableMixin<
-	T extends InstanceType<ReturnType<typeof TypeVariableMixin>>,
->(klass: Constructor<Wrapped<T>>) {
-	class HasMappedTypeVariable extends klass {
-		mappedTypeVariables() {
-			const typeVariableMap = this.typeVariableMap()
-			return this.wrapped()
-				.typeVariablesIndex()
-				.map((id) => typeVariableMap[this.registry.dataIndexOf(id)] ?? id)
-		}
-	}
-
-	return HasMappedTypeVariable
 }
 
 export namespace TypeVariableMixin {

@@ -26,15 +26,3 @@ export function DeclaringClassMixin<T extends Constructor<Base>>(klass: T) {
 export type DeclaringClassMixin<T extends Constructor<Base>> = ReturnType<
 	typeof DeclaringClassMixin<T>
 >
-
-export function WrappedDeclaringClassMixin<
-	T extends InstanceType<ReturnType<typeof DeclaringClassMixin>>,
->(klass: Constructor<Wrapped<T>>) {
-	class HasWrappedDeclaringClass extends klass {
-		wrappedDeclaringClass() {
-			return this.wrapped().declaringClass().asWrapped(this.typeVariableMap())
-		}
-	}
-
-	return HasWrappedDeclaringClass
-}

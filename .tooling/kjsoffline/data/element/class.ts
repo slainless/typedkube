@@ -1,14 +1,12 @@
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common"
 import { AnnotationMixin } from "../mixin/annotation"
-import { IndexHolderMixin } from "../mixin/data"
+import { IndexHolderMixin } from "../mixin/index-holder"
 import { ModifierMixin } from "../mixin/modifier"
-import {
-	MappedTypeVariableMixin,
-	TypeVariableMixin,
-} from "../mixin/type-parameter"
+import { TypeVariableMixin } from "../mixin/type-variable"
 import type { ElementIndex, Registry } from "../registry"
 import type { RawClassTypeData } from "../storage"
 import { asArray, exist } from "../utils"
+import { MappedTypeVariableMixin } from "../wrapped-mixin/type-variable"
 import { Constructor } from "./constructor"
 import { Field } from "./field"
 import { Method } from "./method"
@@ -28,7 +26,9 @@ export class Class extends TypeVariableMixin(
 		super(registry)
 		const index = this.registry.dataIndexOf(id)
 		this.setIndex(index)
-		this.setData(this.registry.storage.getType(index))
+
+		const data = exist(this.registry.storage.getType(index))
+		this.setData(data)
 		this._arrayDepth = arrayDepth
 	}
 

@@ -2,7 +2,7 @@ import { type Base, type Constructor, Property, type Wrapped } from "../common"
 import { Parameter } from "../element/parameter"
 import type { ElementIndex } from "../registry"
 import { asArray } from "../utils"
-import type { DeclaringClassMixin } from "./class"
+import type { DeclaringClassMixin } from "./declaring-class"
 
 export function FunctionMixin<
 	T extends DeclaringClassMixin<
@@ -54,8 +54,10 @@ export function FunctionMixin<
 }
 
 export function WrappedFunctionMixin<
-	T extends InstanceType<ReturnType<typeof FunctionMixin>>,
->(klass: Constructor<Wrapped<T>>) {
+	T extends Constructor<
+		Wrapped<InstanceType<ReturnType<typeof FunctionMixin>>>
+	>,
+>(klass: T) {
 	class HasWrappedParameter extends klass {
 		wrappedParameters() {
 			// TODO: whether to use cache or not
@@ -65,7 +67,7 @@ export function WrappedFunctionMixin<
 		}
 	}
 
-	return HasWrappedParameter
+	return HasWrappedParameter as T & typeof HasWrappedParameter
 }
 
 export namespace FunctionMixin {

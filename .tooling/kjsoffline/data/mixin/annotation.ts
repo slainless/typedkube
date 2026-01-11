@@ -1,4 +1,4 @@
-import { type Base, type Constructor, Property, type Wrapped } from "../common"
+import { type Base, type Constructor, Property } from "../common"
 import { Annotation } from "../element/annotation"
 import type { ElementIndex } from "../registry"
 import { asArray } from "../utils"
@@ -19,21 +19,6 @@ export function AnnotationMixin<
 	}
 
 	return Annotated as T & typeof Annotated
-}
-
-export function WrappedAnnotationMixin<
-	T extends InstanceType<ReturnType<typeof AnnotationMixin>>,
->(klass: Constructor<Wrapped<T>>) {
-	class HasWrappedAnnotation extends klass {
-		wrappedDeclaringClass() {
-			// TODO: whether to use cache or not
-			return this.wrapped()
-				.annotations()
-				.map((annotation) => annotation.asWrapped(this.typeVariableMap()))
-		}
-	}
-
-	return HasWrappedAnnotation
 }
 
 export namespace AnnotationMixin {

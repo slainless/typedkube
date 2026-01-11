@@ -1,4 +1,3 @@
-import { TypeVariableMapMixin } from "./mixin/type"
 import type { Registry } from "./registry"
 import type { DataIndex } from "./storage"
 import { decodePart, exist } from "./utils"
@@ -70,28 +69,19 @@ export class Base<T = {}> extends Data<T> {
 	}
 }
 
-export class Wrapped<T extends Base = Base<{}>> extends TypeVariableMapMixin(
-	Data,
-) {
+export class Wrapped<T extends Base> {
+	protected _typeVariableMap: TypeVariableMap
+
 	constructor(
-		registry: Registry,
+		protected registry: Registry,
 		protected classInstance: T,
 		typeVariableMap: TypeVariableMap,
 	) {
-		super(registry)
-		// @ts-expect-error
-		this.setData(classInstance.data())
-		this.setTypeVariableMap(typeVariableMap)
+		this._typeVariableMap = typeVariableMap
 	}
 
-	override data(): T extends Base<infer D> ? D : never {
-		// @ts-expect-error
-		return super.data()
-	}
-
-	override setData(data: T extends Base<infer D> ? D : never) {
-		super.setData(data)
-		return this
+	typeVariableMap() {
+		return this._typeVariableMap
 	}
 
 	wrapped(): T {

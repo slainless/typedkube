@@ -1,5 +1,4 @@
 import { type Base, type Constructor, Property } from "../common"
-import { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
 import { exist } from "../utils"
 
