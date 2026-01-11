@@ -1,5 +1,5 @@
 {
   "imports": {
-    "@tooling/": "./.tooling/"
+    "@tooling/": "./@tooling/"
   }
 }
