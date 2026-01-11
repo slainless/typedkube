@@ -1,5 +1,6 @@
 import type { Base, Constructor } from "../common"
 import { Class } from "../element/class"
+import { RawClass } from "../element/raw-class"
 import type { ElementIndex } from "../registry"
 
 export function DeclaringClassMixin<T extends Constructor<Base>>(klass: T) {
@@ -16,7 +17,9 @@ export function DeclaringClassMixin<T extends Constructor<Base>>(klass: T) {
 		}
 
 		declaringClass() {
-			return this.registry.get(Class, this.declaringClassIndex())
+			const klass = this.registry.get(Class, this.declaringClassIndex())
+			if (klass instanceof RawClass) return klass
+			throw new Error("Declaring class must be a RawClass")
 		}
 	}
 

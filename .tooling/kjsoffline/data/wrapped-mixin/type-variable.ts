@@ -7,11 +7,11 @@ export function MappedTypeVariableMixin<
 	>,
 >(klass: T) {
 	class HasMappedTypeVariable extends klass {
-		mappedTypeVariables() {
+		mappedTypeVariablesIndex() {
 			const typeVariableMap = this.typeVariableMap()
 			return this.wrapped()
 				.typeVariablesIndex()
-				.map((id) => typeVariableMap[this.registry.dataIndexOf(id)] ?? id)
+				.map((id) => typeVariableMap[id] ?? id)
 		}
 	}
 

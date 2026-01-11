@@ -1,5 +1,5 @@
 import { type Base, type Constructor, Property, type Wrapped } from "../common"
-import { Class, type WrappedClass } from "../element/class"
+import { Class } from "../element/class"
 import type { DataIndex } from "../storage"
 import { exist } from "../utils"
 
@@ -8,7 +8,7 @@ export function MappedTypeMixin<
 >(klass: T) {
 	class TypeHolder extends klass {
 		protected _cachedMappedIndex?: DataIndex
-		protected _cachedMappedType?: WrappedClass
+		protected _cachedMappedType?: Class<any>
 
 		mappedTypeIndex() {
 			if (this._cachedMappedIndex) return this._cachedMappedIndex
@@ -31,9 +31,8 @@ export function MappedTypeMixin<
 		mappedType() {
 			const index = exist(this.mappedTypeIndex())
 			const type = this.registry.get(Class, this.registry.elementIndexOf(index))
-			const wrappedType = type.asWrapped(this.typeVariableMap())
-			this._cachedMappedType = wrappedType
-			return wrappedType
+			this._cachedMappedType = type
+			return type
 		}
 	}
 

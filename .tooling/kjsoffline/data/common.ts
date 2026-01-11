@@ -7,7 +7,7 @@ export type Constructor<T, Arguments extends unknown[] = any[]> = new (
 ) => T
 
 export class Data<T = {}> {
-	private _data?: T
+	protected _data?: T
 	constructor(protected registry: Registry) {}
 
 	setData(data: T) {

@@ -1,9 +1,9 @@
 import { type Base, type Constructor, Property } from "../common"
-import type { ElementIndex } from "../registry"
+import type { DataIndex } from "../storage"
 import { asArray } from "../utils"
 
 export function TypeVariableMixin<
-	T extends Constructor<Base<{ [Property.TYPE_VARIABLES]?: ElementIndex[] }>>,
+	T extends Constructor<Base<{ [Property.TYPE_VARIABLES]?: DataIndex[] }>>,
 >(klass: T) {
 	class TypeVariableHolder extends klass {
 		typeVariablesIndex() {
@@ -16,6 +16,6 @@ export function TypeVariableMixin<
 
 export namespace TypeVariableMixin {
 	export interface Data {
-		[Property.TYPE_VARIABLES]?: ElementIndex[]
+		[Property.TYPE_VARIABLES]?: DataIndex[]
 	}
 }

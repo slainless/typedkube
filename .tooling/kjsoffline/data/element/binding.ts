@@ -2,7 +2,7 @@ import { type Base, Property, Wrapped } from "../common"
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type"
-import { Class } from "./class"
+import { CompleteClass } from "./complete-class"
 
 export class Binding extends MappedTypeMixin(Wrapped<Base<Binding.Data>>) {
 	private _id: string
@@ -19,7 +19,7 @@ export class Binding extends MappedTypeMixin(Wrapped<Base<Binding.Data>>) {
 		this.setData(data)
 		this._type = type
 		this._name = name
-		this._id = `${name}-${this.registry.get(Class, type).id()}`
+		this._id = `${name}-${this.registry.get(CompleteClass, type).id()}`
 		this.setTypeVariableMap({})
 	}
 

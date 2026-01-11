@@ -14,7 +14,7 @@ export interface RawClassTypeData {
 	/** Class name (NameID) */
 	[Property.CLASS_NAME]?: DataIndex
 	/** Annotations (List<AnnotationID>) */
-	[Property.ANNOTATIONS]?: ElementIndex[]
+	[Property.ANNOTATIONS]?: DataIndex[]
 	/** Modifiers (int) */
 	[Property.MODIFIERS]?: Modifier.Value
 	/** Type variables/parameters (List<TypeVariableID>) */
