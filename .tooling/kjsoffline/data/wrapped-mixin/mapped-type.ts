@@ -1,8 +1,12 @@
-import { type Base, type Constructor, Property, type Wrapped } from "../common"
-import { Class } from "../element/class"
-import { RawClass } from "../element/raw-class"
-import type { DataIndex } from "../storage"
-import { exist } from "../utils"
+import {
+	type Base,
+	type Constructor,
+	Property,
+	type Wrapped,
+} from "../common.ts"
+import { Class } from "../element/class.ts"
+import type { DataIndex } from "../storage.ts"
+import { exist } from "../utils.ts"
 
 export function MappedTypeMixin<
 	T extends Constructor<Wrapped<Base<{ [Property.TYPE]?: DataIndex }>>>,

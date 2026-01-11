@@ -1,8 +1,7 @@
 import type { Tagged } from "type-fest"
-import { Property } from "./common"
-import type { Modifier } from "./element/modifier"
-import type { ElementIndex } from "./registry"
-import { assertExist } from "./utils"
+import { Property } from "./common.ts"
+import type { Modifier } from "./element/modifier.ts"
+import { assertExist } from "./utils.ts"
 
 export type DataIndex = Tagged<number, "data">
 

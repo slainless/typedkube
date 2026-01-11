@@ -1,5 +1,5 @@
-import type { Constructor, Wrapped } from "../common"
-import type { AnnotationMixin } from "../mixin/annotation"
+import type { Constructor, Wrapped } from "../common.ts"
+import type { AnnotationMixin } from "../mixin/annotation.ts"
 
 export function WrappedAnnotationMixin<
 	T extends Constructor<

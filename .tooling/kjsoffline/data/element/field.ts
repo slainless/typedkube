@@ -1,15 +1,15 @@
-import { Base, Property, type TypeVariableMap, Wrapped } from "../common"
-import { AnnotationMixin } from "../mixin/annotation"
-import { BasicNameMixin } from "../mixin/basic-name"
-import { DeclaringClassMixin } from "../mixin/declaring-class"
-import { IndexHolderMixin } from "../mixin/index-holder"
-import { ModifierMixin } from "../mixin/modifier"
-import type { ElementIndex, Registry } from "../registry"
-import type { DataIndex } from "../storage"
-import { assertExist } from "../utils"
-import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation"
-import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class"
-import { MappedTypeMixin } from "../wrapped-mixin/mapped-type"
+import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
+import { AnnotationMixin } from "../mixin/annotation.ts"
+import { BasicNameMixin } from "../mixin/basic-name.ts"
+import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
+import { IndexHolderMixin } from "../mixin/index-holder.ts"
+import { ModifierMixin } from "../mixin/modifier.ts"
+import type { ElementIndex, Registry } from "../registry.ts"
+import type { DataIndex } from "../storage.ts"
+import { assertExist } from "../utils.ts"
+import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
+import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
+import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 
 export class Field extends DeclaringClassMixin(
 	AnnotationMixin(
@@ -54,10 +54,6 @@ export class Field extends DeclaringClassMixin(
 
 	asWrapped(typeVariableMap: TypeVariableMap) {
 		return new WrappedField(this.registry, this, typeVariableMap)
-	}
-
-	asString() {
-		throw new Error("TODO")
 	}
 }
 

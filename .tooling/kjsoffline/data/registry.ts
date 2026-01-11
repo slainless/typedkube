@@ -1,12 +1,12 @@
 import type { Tagged } from "type-fest"
-import type { Base, Constructor } from "./common"
-import { Class } from "./element/class"
-import { ParameterizedType } from "./element/parameterized-type"
-import { RawClass } from "./element/raw-class"
-import { TypeVariable } from "./element/type-variable"
-import { WildcardType } from "./element/wildcard-type"
-import type { DataIndex, DataStorage } from "./storage"
-import { exist } from "./utils"
+import type { Base, Constructor } from "./common.ts"
+import { Class } from "./element/class.ts"
+import { ParameterizedType } from "./element/parameterized-type.ts"
+import { RawClass } from "./element/raw-class.ts"
+import { TypeVariable } from "./element/type-variable.ts"
+import { WildcardType } from "./element/wildcard-type.ts"
+import type { DataIndex, DataStorage } from "./storage.ts"
+import { exist } from "./utils.ts"
 
 export type ElementIndex = Tagged<number, "element">
 

@@ -1,5 +1,5 @@
-import type { Base, Constructor } from "../common"
-import type { DataIndex } from "../storage"
+import type { Base, Constructor } from "../common.ts"
+import type { DataIndex } from "../storage.ts"
 
 export function IndexHolderMixin<T extends Constructor<Base>>(klass: T) {
 	class IndexHolder extends klass {

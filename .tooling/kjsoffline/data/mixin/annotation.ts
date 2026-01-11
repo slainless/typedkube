@@ -1,7 +1,7 @@
-import { type Base, type Constructor, Property } from "../common"
-import { Annotation } from "../element/annotation"
-import type { DataIndex } from "../storage"
-import { asArray } from "../utils"
+import { type Base, type Constructor, Property } from "../common.ts"
+import { Annotation } from "../element/annotation.ts"
+import type { DataIndex } from "../storage.ts"
+import { asArray } from "../utils.ts"
 
 export function AnnotationMixin<
 	T extends Constructor<Base<{ [Property.ANNOTATIONS]?: DataIndex[] }>>,

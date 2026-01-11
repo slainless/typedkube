@@ -1,6 +1,6 @@
-import { type Base, type Constructor, Property } from "../common"
-import type { DataIndex } from "../storage"
-import { exist } from "../utils"
+import { type Base, type Constructor, Property } from "../common.ts"
+import type { DataIndex } from "../storage.ts"
+import { exist } from "../utils.ts"
 
 export function BasicNameMixin<
 	T extends Constructor<Base<{ [Property.NAME]?: DataIndex }>>,

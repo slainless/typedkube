@@ -12,10 +12,11 @@
   "scripts": {
     "dev": "rspack build --watch",
     "build": "rspack build",
-    "debug:extract": "bun run .tooling/kjsoffline/html/debug.ts"
+    "debug:extract": "deno run .tooling/kjsoffline/html/debug.ts"
   },
   "dependencies": {
     "domhandler": "^5.0.3",
     "type-fest": "^5.3.1"
-  }
+  },
+  "type": "module"
 }

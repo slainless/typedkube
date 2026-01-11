@@ -1,5 +1,5 @@
-import type { Constructor, Wrapped } from "../common"
-import type { TypeVariableMixin } from "../mixin/type-variable"
+import type { Constructor, Wrapped } from "../common.ts"
+import type { TypeVariableMixin } from "../mixin/type-variable.ts"
 
 export function MappedTypeVariableMixin<
 	T extends Constructor<

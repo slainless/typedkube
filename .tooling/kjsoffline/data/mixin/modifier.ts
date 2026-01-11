@@ -1,6 +1,6 @@
-import { type Base, type Constructor, Property } from "../common"
-import type { Modifier } from "../element/modifier"
-import { ParameterizedType } from "../element/parameterized-type"
+import { type Base, type Constructor, Property } from "../common.ts"
+import type { Modifier } from "../element/modifier.ts"
+import { ParameterizedType } from "../element/parameterized-type.ts"
 
 export function ModifierMixin<
 	T extends Constructor<Base<{ [Property.MODIFIERS]?: Modifier.Value }>>,

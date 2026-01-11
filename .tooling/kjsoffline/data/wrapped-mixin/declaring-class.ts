@@ -1,5 +1,5 @@
-import type { Constructor, Wrapped } from "../common"
-import type { DeclaringClassMixin } from "../mixin/declaring-class"
+import type { Constructor, Wrapped } from "../common.ts"
+import type { DeclaringClassMixin } from "../mixin/declaring-class.ts"
 
 export function WrappedDeclaringClassMixin<
 	T extends Constructor<

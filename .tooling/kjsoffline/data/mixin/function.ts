@@ -1,8 +1,13 @@
-import { type Base, type Constructor, Property, type Wrapped } from "../common"
-import { Parameter } from "../element/parameter"
-import type { ElementIndex } from "../registry"
-import { asArray } from "../utils"
-import type { DeclaringClassMixin } from "./declaring-class"
+import {
+	type Base,
+	type Constructor,
+	Property,
+	type Wrapped,
+} from "../common.ts"
+import { Parameter } from "../element/parameter.ts"
+import type { ElementIndex } from "../registry.ts"
+import { asArray } from "../utils.ts"
+import type { DeclaringClassMixin } from "./declaring-class.ts"
 
 export function FunctionMixin<
 	T extends DeclaringClassMixin<
@@ -60,7 +65,7 @@ export function WrappedFunctionMixin<
 >(klass: T) {
 	class HasWrappedParameter extends klass {
 		wrappedParameters() {
-			// TODO: whether to use cache or not
+			// REVIEW: whether to use cache or not
 			return this.wrapped()
 				.parameters()
 				.map((parameter) => parameter.asWrapped(this.typeVariableMap()))

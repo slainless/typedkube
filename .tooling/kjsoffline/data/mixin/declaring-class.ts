@@ -1,7 +1,7 @@
-import type { Base, Constructor } from "../common"
-import { Class } from "../element/class"
-import { RawClass } from "../element/raw-class"
-import type { ElementIndex } from "../registry"
+import type { Base, Constructor } from "../common.ts"
+import { Class } from "../element/class.ts"
+import { RawClass } from "../element/raw-class.ts"
+import type { ElementIndex } from "../registry.ts"
 
 export function DeclaringClassMixin<T extends Constructor<Base>>(klass: T) {
 	class HasDeclaringClass extends klass {

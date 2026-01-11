@@ -10,5 +10,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "lib": ["ESNext"]
   }
 }

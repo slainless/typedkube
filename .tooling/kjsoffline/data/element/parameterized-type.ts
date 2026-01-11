@@ -1,9 +1,9 @@
-import { Property, type TypeVariableMap, Wrapped } from "../common"
-import type { ElementIndex } from "../registry"
-import type { ParameterizedTypeData } from "../storage"
-import { exist } from "../utils"
-import { Class } from "./class"
-import { RawClass } from "./raw-class"
+import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
+import type { ElementIndex } from "../registry.ts"
+import type { ParameterizedTypeData } from "../storage.ts"
+import { exist } from "../utils.ts"
+import { Class } from "./class.ts"
+import { RawClass } from "./raw-class.ts"
 
 export class ParameterizedType extends Class<ParameterizedTypeData> {
 	static override dataDiscriminator(): string {

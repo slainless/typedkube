@@ -1,13 +1,13 @@
-import { Base } from "../common"
-import { IndexHolderMixin } from "../mixin/index-holder"
-import type { ElementIndex, Registry } from "../registry"
-import type { DataIndex, TypeData } from "../storage"
-import { exist } from "../utils"
+import { Base } from "../common.ts"
+import { IndexHolderMixin } from "../mixin/index-holder.ts"
+import type { ElementIndex, Registry } from "../registry.ts"
+import type { DataIndex, TypeData } from "../storage.ts"
+import { exist } from "../utils.ts"
 
 export class Class<T extends TypeData> extends IndexHolderMixin(
 	Base<TypeData>,
 ) {
-	protected override _data!: T
+	protected declare _data: T
 	protected _arrayDepth?: number
 
 	constructor(
@@ -21,7 +21,7 @@ export class Class<T extends TypeData> extends IndexHolderMixin(
 		const type = exist(this.registry.storage.getType(index))
 		this.validateData(type)
 
-		// @ts-expect-error
+		// @ts-expect-error ...
 		this.setData(type)
 		this.setIndex(index)
 		this._arrayDepth = arrayDepth

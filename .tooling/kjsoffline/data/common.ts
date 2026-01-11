@@ -1,6 +1,6 @@
-import type { Registry } from "./registry"
-import type { DataIndex } from "./storage"
-import { decodePart, exist } from "./utils"
+import type { Registry } from "./registry.ts"
+import type { DataIndex } from "./storage.ts"
+import { decodePart, exist } from "./utils.ts"
 
 export type Constructor<T, Arguments extends unknown[] = any[]> = new (
 	...arguments_: Arguments

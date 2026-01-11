@@ -1,8 +1,8 @@
-import { Property, type TypeVariableMap, Wrapped } from "../common"
-import type { ElementIndex } from "../registry"
-import type { TypeVariableData } from "../storage"
-import { asArray } from "../utils"
-import { Class } from "./class"
+import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
+import type { ElementIndex } from "../registry.ts"
+import type { TypeVariableData } from "../storage.ts"
+import { asArray } from "../utils.ts"
+import { Class } from "./class.ts"
 
 export class TypeVariable extends Class<TypeVariableData> {
 	static override dataDiscriminator(): string {
