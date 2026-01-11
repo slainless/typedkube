@@ -2,7 +2,7 @@
   "exclude": ["./rspack.config.ts"],
   "compilerOptions": {
     // Environment setup & latest features
-    "lib": ["ES2015.Collection", "ES2015.Symbol", "Decorators", "Decorators.Legacy", "ES2015.Iterable"],
+    "lib": [],
     "typeRoots": ["typings"],
     "target": "ESNext",
     "module": "Preserve",
