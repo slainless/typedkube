@@ -55,6 +55,10 @@ export class Field extends DeclaringClassMixin(
 	asWrapped(typeVariableMap: TypeVariableMap) {
 		return new WrappedField(this.registry, this, typeVariableMap)
 	}
+
+	asString() {
+		throw new Error("TODO")
+	}
 }
 
 export class WrappedField extends WrappedDeclaringClassMixin(

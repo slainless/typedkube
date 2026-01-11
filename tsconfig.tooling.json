@@ -12,6 +12,13 @@
     "noImplicitOverride": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "lib": ["ESNext"]
-  }
+    "lib": [
+      "ESNext"
+    ],
+    "paths": {
+      "@tooling/*": [
+        "./@tooling/*"
+      ]
+    }
+  },
 }
