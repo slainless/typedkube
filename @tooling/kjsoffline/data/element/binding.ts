@@ -2,7 +2,6 @@ import { type Base, Property, Wrapped } from "../common.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex } from "../storage.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
-import { CompleteClass } from "./complete-class.ts"
 
 export class Binding extends MappedTypeMixin(Wrapped<Base<Binding.Data>>) {
 	private _id: string
