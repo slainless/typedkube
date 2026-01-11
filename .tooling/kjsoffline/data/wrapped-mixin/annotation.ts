@@ -7,7 +7,7 @@ export function WrappedAnnotationMixin<
 	>,
 >(klass: T) {
 	class HasWrappedAnnotation extends klass {
-		wrappedDeclaringClass() {
+		wrappedAnnotations() {
 			// TODO: whether to use cache or not
 			return this.wrapped()
 				.annotations()
