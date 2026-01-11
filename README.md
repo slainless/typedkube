@@ -18,6 +18,8 @@ This setup enables code sharing, ESM support, modern ECMAScript languange featur
 > 
 > Users are responsible for backing up their data before running the build.
 
+This workspace should be compatible with any typescript runtime such as Deno, Bun, or Node.js (v22+).
+
 Clone this repository inside MC's root instance, by default should be cloned as `typedkube`:
 ```
 minecraft/
