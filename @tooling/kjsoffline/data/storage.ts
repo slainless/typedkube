@@ -101,6 +101,17 @@ export class DataStorage {
 	names: string[] = []
 	types: TypeData[] = []
 
+	constructor(data: Record<string, unknown>) {
+		this.annotations = data.annotations as string[]
+		this.constructors = data.constructors as string[]
+		this.fields = data.fields as string[]
+		this.methods = data.methods as string[]
+		this.packages = data.packages as Array<[string] | [string, number]>
+		this.parameters = data.parameters as string[]
+		this.names = data.names as string[]
+		this.types = data.types as TypeData[]
+	}
+
 	getAnnotation(id: DataIndex) {
 		assertExist(id)
 		return this.annotations[id]
