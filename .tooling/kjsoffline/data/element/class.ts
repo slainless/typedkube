@@ -37,7 +37,9 @@ export class Class<T extends TypeData> extends IndexHolderMixin(
 	}
 
 	static dataDiscriminator(): string {
-		throw new Error("TODO")
+		throw new Error(
+			"Data discriminator must be implemented to determine the type of the data",
+		)
 	}
 
 	override data(): T {
