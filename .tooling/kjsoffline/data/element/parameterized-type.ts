@@ -1,4 +1,4 @@
-import { Property } from "../common"
+import { Property, type TypeVariableMap, Wrapped } from "../common"
 import type { ElementIndex } from "../registry"
 import type { ParameterizedTypeData } from "../storage"
 import { exist } from "../utils"
@@ -39,4 +39,10 @@ export class ParameterizedType extends Class<ParameterizedTypeData> {
 			throw new Error("Owner type is not a RawClass or ParameterizedType")
 		return ownerType
 	}
+
+	asWrapped(typeVariableMap: TypeVariableMap) {
+		return new WrappedParameterizedType(this.registry, this, typeVariableMap)
+	}
 }
+
+export class WrappedParameterizedType extends Wrapped<ParameterizedType> {}

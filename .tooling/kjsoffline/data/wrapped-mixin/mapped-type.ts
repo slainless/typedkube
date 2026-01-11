@@ -1,5 +1,6 @@
 import { type Base, type Constructor, Property, type Wrapped } from "../common"
 import { Class } from "../element/class"
+import { RawClass } from "../element/raw-class"
 import type { DataIndex } from "../storage"
 import { exist } from "../utils"
 
@@ -33,6 +34,10 @@ export function MappedTypeMixin<
 			const type = this.registry.get(Class, this.registry.elementIndexOf(index))
 			this._cachedMappedType = type
 			return type
+		}
+
+		wrappedMappedType() {
+			return this.mappedType().asWrapped(this.typeVariableMap())
 		}
 	}
 

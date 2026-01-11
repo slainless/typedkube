@@ -1,4 +1,4 @@
-import { Property } from "../common"
+import { Property, type TypeVariableMap, Wrapped } from "../common"
 import type { ElementIndex } from "../registry"
 import type { TypeVariableData } from "../storage"
 import { asArray } from "../utils"
@@ -14,4 +14,10 @@ export class TypeVariable extends Class<TypeVariableData> {
 			this.data()[Property.TYPE_VARIABLE_BOUNDS],
 		) as number[] as ElementIndex[]
 	}
+
+	asWrapped(typeVariableMap: TypeVariableMap) {
+		return new WrappedTypeVariable(this.registry, this, typeVariableMap)
+	}
 }
+
+export class WrappedTypeVariable extends Wrapped<TypeVariable> {}

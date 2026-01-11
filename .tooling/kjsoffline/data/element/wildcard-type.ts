@@ -1,4 +1,4 @@
-import { Property } from "../common"
+import { Property, type TypeVariableMap, Wrapped } from "../common"
 import type { ElementIndex } from "../registry"
 import type { WildcardTypeData } from "../storage"
 import { asArray } from "../utils"
@@ -20,4 +20,10 @@ export class WildcardType extends Class<WildcardTypeData> {
 			this.data()[Property.WILDCARD_UPPER_BOUNDS],
 		) as number[] as ElementIndex[]
 	}
+
+	asWrapped(typeVariableMap: TypeVariableMap) {
+		return new WrappedWildcardType(this.registry, this, typeVariableMap)
+	}
 }
+
+export class WrappedWildcardType extends Wrapped<WildcardType> {}
