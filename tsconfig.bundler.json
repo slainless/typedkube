@@ -3,6 +3,9 @@
     "./rspack.config.ts"
   ],
   "compilerOptions": {
+    "module": "Preserve",
+    "moduleDetection": "force",
+    "target": "esnext",
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
