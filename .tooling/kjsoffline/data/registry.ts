@@ -38,11 +38,10 @@ export class Registry {
 		let finalClass: Constructor<Base> = klass
 		if (klass === Class) {
 			const data = exist(this.storage.getType(this.dataIndexOf(id)))
-			if (RawClass.prototype.isValid(data)) finalClass = RawClass
-			else if (ParameterizedType.prototype.isValid(data))
-				finalClass = ParameterizedType
-			else if (WildcardType.prototype.isValid(data)) finalClass = WildcardType
-			else if (TypeVariable.prototype.isValid(data)) finalClass = TypeVariable
+			if (RawClass.isValid(data)) finalClass = RawClass
+			else if (ParameterizedType.isValid(data)) finalClass = ParameterizedType
+			else if (WildcardType.isValid(data)) finalClass = WildcardType
+			else if (TypeVariable.isValid(data)) finalClass = TypeVariable
 			else throw new Error(`Invalid data being assigned to ${Class.name}`)
 		}
 

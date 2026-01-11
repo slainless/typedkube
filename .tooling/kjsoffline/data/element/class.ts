@@ -28,15 +28,15 @@ export class Class<T extends TypeData> extends IndexHolderMixin(
 	}
 
 	validateData(data: TypeData) {
-		if (this.isValid(data)) return
+		if ((this.constructor as typeof Class).isValid(data)) return
 		throw new Error(`Invalid data being assigned to ${this.constructor.name}`)
 	}
 
-	isValid(data: TypeData) {
+	static isValid(data: TypeData) {
 		return this.dataDiscriminator() in data
 	}
 
-	dataDiscriminator(): string {
+	static dataDiscriminator(): string {
 		throw new Error("TODO")
 	}
 

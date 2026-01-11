@@ -5,7 +5,7 @@ import { asArray } from "../utils"
 import { Class } from "./class"
 
 export class TypeVariable extends Class<TypeVariableData> {
-	override dataDiscriminator(): string {
+	static override dataDiscriminator(): string {
 		return Property.TYPE_VARIABLE_NAME
 	}
 

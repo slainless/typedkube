@@ -16,7 +16,7 @@ import type { Relation } from "./relation"
 export class RawClass extends AnnotationMixin(
 	ModifierMixin(TypeVariableMixin(Class<RawClassTypeData>)),
 ) {
-	override dataDiscriminator() {
+	static override dataDiscriminator() {
 		return Property.CLASS_NAME
 	}
 
@@ -133,12 +133,6 @@ export class RawClass extends AnnotationMixin(
 				queue.push(index)
 			}
 		}
-	}
-
-	isTypeVariable() {
-		// TODO: implements variants of class...
-		throw new Error("TODO")
-		// return this.data()[Property.TYPE_VARIABLE_NAME] != null
 	}
 
 	name() {

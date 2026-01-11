@@ -6,7 +6,7 @@ import { Class } from "./class"
 import { RawClass } from "./raw-class"
 
 export class ParameterizedType extends Class<ParameterizedTypeData> {
-	override dataDiscriminator(): string {
+	static override dataDiscriminator(): string {
 		return Property.RAW_PARAMETERIZED_TYPE
 	}
 
