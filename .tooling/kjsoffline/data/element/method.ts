@@ -12,6 +12,7 @@ import {
 } from "../mixin/type-parameter"
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
+import { assertExist } from "../utils"
 
 export class Method extends FunctionMixin(
 	DeclaringClassMixin(
@@ -31,6 +32,9 @@ export class Method extends FunctionMixin(
 		methodIndexInClass: number,
 	) {
 		super(registry)
+		assertExist(declaringClass)
+		assertExist(methodIndexInClass)
+
 		const index = this.registry.dataIndexOf(id)
 		this.setIndex(index)
 		this.setData(this.decode(index))

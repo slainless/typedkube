@@ -7,6 +7,7 @@ import { BasicNameMixin } from "../mixin/name"
 import { MappedTypeMixin } from "../mixin/type"
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
+import { assertExist } from "../utils"
 
 export class Field extends DeclaringClassMixin(
 	AnnotationMixin(
@@ -22,6 +23,9 @@ export class Field extends DeclaringClassMixin(
 		fieldIndexInClass: number,
 	) {
 		super(registry)
+		assertExist(declaringClass)
+		assertExist(fieldIndexInClass)
+
 		const index = this.registry.dataIndexOf(id)
 		this.setIndex(index)
 		this.setData(this.decode(index))

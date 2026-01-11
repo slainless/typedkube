@@ -7,14 +7,17 @@ import { BasicNameMixin } from "../mixin/name"
 import { MappedTypeMixin } from "../mixin/type"
 import type { ElementIndex, Registry } from "../registry"
 import type { DataIndex } from "../storage"
+import { assertExist } from "../utils"
+import { Constructor } from "./constructor"
+import { Method } from "./method"
 
 export class Parameter extends DeclaringClassMixin(
 	BasicNameMixin(
 		AnnotationMixin(ModifierMixin(IndexHolderMixin(Base<Parameter.Data>))),
 	),
 ) {
-	protected _functionType: "method" | "constructor"
-	protected _declaringFunction: ElementIndex
+	protected _declaringFunctionType: "method" | "constructor"
+	protected _declaringFunctionIndex: ElementIndex
 	protected _parameterIndexInFunction: number
 
 	constructor(
@@ -22,16 +25,20 @@ export class Parameter extends DeclaringClassMixin(
 		protected id: ElementIndex,
 		declaringClass: ElementIndex,
 		declaringFunction: ElementIndex,
-		declaringFunctionType: Parameter["_functionType"],
+		declaringFunctionType: Parameter["_declaringFunctionType"],
 		parameterIndexInFunction: number,
 	) {
 		super(registry)
+		assertExist(declaringClass)
+		assertExist(declaringFunction)
+		assertExist(parameterIndexInFunction)
+
 		const index = this.registry.dataIndexOf(id)
 		this.setIndex(index)
 		this.setData(this.decode(index))
 		this.setDeclaringClassIndex(declaringClass)
-		this._functionType = declaringFunctionType
-		this._declaringFunction = declaringFunction
+		this._declaringFunctionType = declaringFunctionType
+		this._declaringFunctionIndex = declaringFunction
 		this._parameterIndexInFunction = parameterIndexInFunction
 	}
 
@@ -49,20 +56,23 @@ export class Parameter extends DeclaringClassMixin(
 	}
 
 	declaringFunction() {
-		// TODO: implement this
-		// if (this._functionType === 'method') {
-		//     return this.registry.get(Method, this._declaringFunction)
-		// } else {
-		//     return this.registry.get(Constructor, this._declaringFunction)
-		// }
+		/**
+		 * declaring class should be optional here since declaring function should constructed first
+		 * before parameters...
+		 */
+		if (this._declaringFunctionType === "method") {
+			return this.registry.get(Method, this._declaringFunctionIndex)
+		} else {
+			return this.registry.get(Constructor, this._declaringFunctionIndex)
+		}
 	}
 
 	declaringFunctionType() {
-		return this._functionType
+		return this._declaringFunctionType
 	}
 
 	declaringFunctionIndex() {
-		return this._declaringFunction
+		return this._declaringFunctionIndex
 	}
 
 	parameterIndexInFunction() {
