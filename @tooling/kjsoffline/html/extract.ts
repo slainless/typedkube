@@ -22,8 +22,11 @@ export class JsonExtractor {
 				this.tagOpened(name, attribs, isImplied)
 			},
 			onclosetag: (name) => {
-				this.tagClosed(name)
-				this.lastFlush(output)
+				if (this.isWriting) {
+					this.tagClosed(name)
+					this.lastFlush(output)
+					parser.end()
+				}
 			},
 		})
 
