@@ -2,6 +2,7 @@ import { Property, Wrapped } from "../common.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { WildcardTypeData } from "../storage.ts"
 import { asArray } from "../utils.ts"
+import { ClassTypeMixin } from "../wrapped-mixin/class-type.ts"
 import { Class } from "./class.ts"
 
 export class WildcardType extends Class<WildcardTypeData> {
@@ -30,4 +31,6 @@ export class WildcardType extends Class<WildcardTypeData> {
 	}
 }
 
-export class WrappedWildcardType extends Wrapped<WildcardType> {}
+export class WrappedWildcardType extends ClassTypeMixin(
+	Wrapped<WildcardType>,
+) {}

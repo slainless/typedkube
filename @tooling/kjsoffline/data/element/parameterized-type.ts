@@ -3,7 +3,7 @@ import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { ParameterizedTypeData } from "../storage.ts"
 import { exist } from "../utils.ts"
-import { ClassTypeVariableMappingMixin } from "../wrapped-mixin/exhaustive-type-variable.ts"
+import { ClassTypeMixin } from "../wrapped-mixin/class-type.ts"
 import { Class } from "./class.ts"
 import { RawClass } from "./raw-class.ts"
 
@@ -56,6 +56,6 @@ export class ParameterizedType extends TypeVariableMixin(
 	}
 }
 
-export class WrappedParameterizedType extends ClassTypeVariableMappingMixin(
+export class WrappedParameterizedType extends ClassTypeMixin(
 	Wrapped<ParameterizedType>,
 ) {}

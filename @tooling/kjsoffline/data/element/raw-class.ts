@@ -5,7 +5,7 @@ import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { RawClassTypeData } from "../storage.ts"
 import { asArray, exist } from "../utils.ts"
-import { ClassTypeVariableMappingMixin } from "../wrapped-mixin/exhaustive-type-variable.ts"
+import { ClassTypeMixin } from "../wrapped-mixin/class-type.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/type-variable.ts"
 import { Class } from "./class.ts"
 import { Constructor } from "./constructor.ts"
@@ -234,7 +234,7 @@ export class RawClass extends AnnotationMixin(
 	}
 }
 
-export class WrappedRawClass extends ClassTypeVariableMappingMixin(
+export class WrappedRawClass extends ClassTypeMixin(
 	MappedTypeVariableMixin(Wrapped<RawClass>),
 ) {
 	protected _cachedTypeVariableMap?: TypeVariableMap

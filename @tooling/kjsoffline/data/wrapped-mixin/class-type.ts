@@ -5,12 +5,11 @@ import { RawClass } from "../element/raw-class"
 import { TypeVariable } from "../element/type-variable"
 import { WildcardType } from "../element/wildcard-type"
 import type { DataIndex } from "../storage"
-import { silenceError } from "../utils"
 
-export function ClassTypeVariableMappingMixin<
-	T extends Constructor<Wrapped<Class<any>>>,
->(klass: T) {
-	class HasExhaustiveTypeVariable extends klass {
+export function ClassTypeMixin<T extends Constructor<Wrapped<Class<any>>>>(
+	klass: T,
+) {
+	class ClassType extends klass {
 		// TODO: create lru cache for these...
 		protected _cachedRecursiveTypeVariableMap?: RecursiveTypeVariableMap
 		protected _cachedFlatTypeVariableMap?: TypeVariableMap
@@ -112,7 +111,7 @@ export function ClassTypeVariableMappingMixin<
 		}
 	}
 
-	return HasExhaustiveTypeVariable as T & typeof HasExhaustiveTypeVariable
+	return ClassType as T & typeof ClassType
 }
 
 export type RecursiveTypeVariableMap = {

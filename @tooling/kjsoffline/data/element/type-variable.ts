@@ -2,6 +2,7 @@ import { Property, Wrapped } from "../common.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { TypeVariableData } from "../storage.ts"
 import { asArray } from "../utils.ts"
+import { ClassTypeMixin } from "../wrapped-mixin/class-type.ts"
 import { Class } from "./class.ts"
 
 export class TypeVariable extends Class<TypeVariableData> {
@@ -24,4 +25,6 @@ export class TypeVariable extends Class<TypeVariableData> {
 	}
 }
 
-export class WrappedTypeVariable extends Wrapped<TypeVariable> {}
+export class WrappedTypeVariable extends ClassTypeMixin(
+	Wrapped<TypeVariable>,
+) {}
