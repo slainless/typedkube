@@ -1,11 +1,12 @@
 import { Property, Wrapped } from "../common.ts"
+import { ClassTypeMixin } from "../mixin/class-type.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { TypeVariableData } from "../storage.ts"
 import { asArray } from "../utils.ts"
-import { ClassTypeMixin } from "../wrapped-mixin/class-type.ts"
+import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
 import { Class } from "./class.ts"
 
-export class TypeVariable extends Class<TypeVariableData> {
+export class TypeVariable extends ClassTypeMixin(Class<TypeVariableData>) {
 	static override dataDiscriminator(): string {
 		return Property.TYPE_VARIABLE_NAME
 	}
@@ -16,15 +17,13 @@ export class TypeVariable extends Class<TypeVariableData> {
 		) as number[] as ElementIndex[]
 	}
 
-	asWrapped() {
-		return this.registry.get(
-			WrappedTypeVariable,
-			this.id,
-			() => new WrappedTypeVariable(this.registry, this, {}),
+	asWrapped(arrayDepth = 0) {
+		return new WrappedTypeVariable(this.registry, this, {}).setArrayDepth(
+			arrayDepth,
 		)
 	}
 }
 
-export class WrappedTypeVariable extends ClassTypeMixin(
+export class WrappedTypeVariable extends WrappedClassMixin(
 	Wrapped<TypeVariable>,
 ) {}

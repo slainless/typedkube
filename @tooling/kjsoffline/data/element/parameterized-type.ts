@@ -1,14 +1,15 @@
 import { Property, Wrapped } from "../common.ts"
+import { ClassTypeMixin } from "../mixin/class-type.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { ParameterizedTypeData } from "../storage.ts"
 import { exist } from "../utils.ts"
-import { ClassTypeMixin } from "../wrapped-mixin/class-type.ts"
+import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
 import { Class } from "./class.ts"
 import { RawClass } from "./raw-class.ts"
 
-export class ParameterizedType extends TypeVariableMixin(
-	Class<ParameterizedTypeData>,
+export class ParameterizedType extends ClassTypeMixin(
+	TypeVariableMixin(Class<ParameterizedTypeData>),
 ) {
 	static override dataDiscriminator(): string {
 		return Property.RAW_PARAMETERIZED_TYPE
@@ -47,15 +48,13 @@ export class ParameterizedType extends TypeVariableMixin(
 		return ownerType
 	}
 
-	asWrapped() {
-		return this.registry.get(
-			WrappedParameterizedType,
-			this.id,
-			() => new WrappedParameterizedType(this.registry, this, {}),
+	asWrapped(arrayDepth = 0) {
+		return new WrappedParameterizedType(this.registry, this, {}).setArrayDepth(
+			arrayDepth,
 		)
 	}
 }
 
-export class WrappedParameterizedType extends ClassTypeMixin(
+export class WrappedParameterizedType extends WrappedClassMixin(
 	Wrapped<ParameterizedType>,
 ) {}

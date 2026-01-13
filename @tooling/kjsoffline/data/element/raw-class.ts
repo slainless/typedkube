@@ -1,11 +1,12 @@
 import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
+import { ClassTypeMixin } from "../mixin/class-type.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { RawClassTypeData } from "../storage.ts"
 import { asArray, exist } from "../utils.ts"
-import { ClassTypeMixin } from "../wrapped-mixin/class-type.ts"
+import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/type-variable.ts"
 import { Class } from "./class.ts"
 import { Constructor } from "./constructor.ts"
@@ -14,8 +15,8 @@ import { Method } from "./method.ts"
 import { ParameterizedType } from "./parameterized-type.ts"
 import type { Relation } from "./relation.ts"
 
-export class RawClass extends AnnotationMixin(
-	ModifierMixin(TypeVariableMixin(Class<RawClassTypeData>)),
+export class RawClass extends ClassTypeMixin(
+	AnnotationMixin(ModifierMixin(TypeVariableMixin(Class<RawClassTypeData>))),
 ) {
 	static override dataDiscriminator() {
 		return Property.CLASS_NAME
@@ -95,6 +96,20 @@ export class RawClass extends AnnotationMixin(
 		}
 	}
 
+	fieldsIndex() {
+		return asArray(this.data()[Property.FIELDS]) as number[] as ElementIndex[]
+	}
+
+	methodsIndex() {
+		return asArray(this.data()[Property.METHODS]) as number[] as ElementIndex[]
+	}
+
+	constructorsIndex() {
+		return asArray(
+			this.data()[Property.CONSTRUCTORS],
+		) as number[] as ElementIndex[]
+	}
+
 	fields = this.createAccessor((klass) => {
 		const fields = asArray(klass.data()[Property.FIELDS])
 		return fields.map((field, index) =>
@@ -162,21 +177,21 @@ export class RawClass extends AnnotationMixin(
 		}
 	}
 
-	name() {
-		throw new Error("TODO")
-	}
+	// name() {
+	// 	throw new Error("TODO")
+	// }
 
-	simpleName() {
-		throw new Error("TODO")
-	}
+	// simpleName() {
+	// 	throw new Error("TODO")
+	// }
 
-	referenceName() {
-		throw new Error("TODO")
-	}
+	// referenceName() {
+	// 	throw new Error("TODO")
+	// }
 
-	fullyQualifiedName() {
-		throw new Error("TODO")
-	}
+	// fullyQualifiedName() {
+	// 	throw new Error("TODO")
+	// }
 
 	override packageIndex() {
 		return this.data()[Property.PACKAGE_NAME]
@@ -217,61 +232,21 @@ export class RawClass extends AnnotationMixin(
 		// }
 	}
 
-	asString() {
-		throw new Error("TODO")
-	}
+	// asString() {
+	// 	throw new Error("TODO")
+	// }
 
 	hasDependency() {
 		throw new Error("TODO")
 	}
 
-	asWrapped() {
-		return this.registry.get(
-			WrappedRawClass,
-			this.id,
-			() => new WrappedRawClass(this.registry, this, {}),
+	asWrapped(arrayDepth = 0) {
+		return new WrappedRawClass(this.registry, this, {}).setArrayDepth(
+			arrayDepth,
 		)
 	}
 }
 
-export class WrappedRawClass extends ClassTypeMixin(
+export class WrappedRawClass extends WrappedClassMixin(
 	MappedTypeVariableMixin(Wrapped<RawClass>),
-) {
-	protected _cachedTypeVariableMap?: TypeVariableMap
-
-	name() {
-		throw new Error("TODO")
-	}
-
-	simpleName() {
-		throw new Error("TODO")
-	}
-
-	referenceName() {
-		throw new Error("TODO")
-	}
-
-	fullyQualifiedName() {
-		throw new Error("TODO")
-	}
-
-	asKubeLoad_1_18() {
-		throw new Error("TODO")
-	}
-
-	asKubeLoad_1_19() {
-		throw new Error("TODO")
-	}
-
-	asKubeLoad_1_20() {
-		throw new Error("TODO")
-	}
-
-	asKubeLoad() {
-		throw new Error("TODO")
-	}
-
-	asString() {
-		throw new Error("TODO")
-	}
-}
+) {}

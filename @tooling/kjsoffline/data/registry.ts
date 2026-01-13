@@ -22,7 +22,6 @@ export class Registry {
 	get(
 		klass: typeof Class,
 		id: ElementIndex,
-		arrayDepth?: number,
 	): RawClass | ParameterizedType | WildcardType | TypeVariable
 	get<T extends Constructor<Base>>(
 		klass: T,
@@ -51,18 +50,11 @@ export class Registry {
 		}
 
 		let instance: any
-		if (klass === Class) {
-			const arrayDepth = Number.parseInt(args.pop(), 10)
-			instance = new finalClass(
-				this,
-				id,
-				Number.isNaN(arrayDepth) ? undefined : arrayDepth,
-			)
-		} else if (typeof args[0] === "function" && args.length === 1) {
+		if (klass === Class) instance = new finalClass(this, id)
+		else if (typeof args[0] === "function" && args.length === 1)
 			instance = args[0]()
-		} else {
-			instance = new finalClass(this, id, ...args)
-		}
+		else instance = new finalClass(this, id, ...args)
+
 		registry.set(id, instance)
 		return instance
 	}
