@@ -5,7 +5,7 @@ import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
-import type { DataIndex } from "../storage.ts"
+import type { DataIndex, DataIndexWithDepth } from "../storage.ts"
 import { assertExist } from "../utils.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
@@ -109,6 +109,6 @@ export class WrappedParameter extends WrappedDeclaringClassMixin(
 export namespace Parameter {
 	export interface Data extends ModifierMixin.Data, AnnotationMixin.Data {
 		[Property.PARAMETER_NAME]?: DataIndex
-		[Property.PARAMETER_TYPE]?: DataIndex
+		[Property.PARAMETER_TYPE]?: DataIndexWithDepth
 	}
 }

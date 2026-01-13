@@ -4,6 +4,7 @@ import type { Modifier } from "./element/modifier.ts"
 import { assertExist } from "./utils.ts"
 
 export type DataIndex = Tagged<number, "data">
+export type DataIndexWithDepth = DataIndex | [DataIndex, number]
 
 /**
  * Raw class type data structure.

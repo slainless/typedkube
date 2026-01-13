@@ -5,43 +5,47 @@ import {
 	type Wrapped,
 } from "../common.ts"
 import { Class } from "../element/class.ts"
-import type { DataIndex } from "../storage.ts"
-import { exist } from "../utils.ts"
+import type { DataIndex, DataIndexWithDepth } from "../storage.ts"
+import { asArray, exist } from "../utils.ts"
 
 export function MappedTypeMixin<
-	T extends Constructor<Wrapped<Base<{ [Property.TYPE]?: DataIndex }>>>,
+	T extends Constructor<
+		Wrapped<Base<{ [Property.TYPE]?: DataIndexWithDepth }>>
+	>,
 >(klass: T) {
 	class TypeHolder extends klass {
-		protected _cachedMappedIndex?: DataIndex
+		protected _cachedMappedIndex?: [DataIndex, number]
 		protected _cachedMappedType?: Class<any>
 
 		mappedTypeIndex() {
 			if (this._cachedMappedIndex) return this._cachedMappedIndex
 
-			const type = this.wrapped().data()[Property.TYPE]
+			let [type, arrayDepth] = asArray(
+				this.wrapped().data()[Property.TYPE],
+			) as [DataIndex, number?]
 			const map = this.typeVariableMap()
-			if (!map) return type
+			if (!map) return [type, arrayDepth ?? 0] as const
 
 			const seen = new Set()
-			let remappedType = type
-			while (remappedType != null && !seen.has(remappedType)) {
-				seen.add(remappedType)
-				remappedType = map[remappedType]
+			while (type != null && !seen.has(type)) {
+				seen.add(type)
+				;[type, arrayDepth] = asArray(map[type]) as [DataIndex, number?]
 			}
 
-			this._cachedMappedIndex = remappedType
-			return remappedType
+			this._cachedMappedIndex = [type, arrayDepth ?? 0]
+			return [type, arrayDepth ?? 0] as const
 		}
 
 		mappedType() {
-			const index = exist(this.mappedTypeIndex())
+			const [index] = exist(this.mappedTypeIndex())
 			const type = this.registry.get(Class, this.registry.elementIndexOf(index))
 			this._cachedMappedType = type
 			return type
 		}
 
 		wrappedMappedType() {
-			return this.mappedType().asWrapped(this.typeVariableMap())
+			const [_, arrayDepth] = this.mappedTypeIndex()
+			return this.mappedType().asWrapped(arrayDepth)
 		}
 	}
 

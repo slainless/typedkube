@@ -1,4 +1,4 @@
-import { Base, type Wrapped } from "../common.ts"
+import { Base } from "../common.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, TypeData } from "../storage.ts"
@@ -8,12 +8,10 @@ export class Class<T extends TypeData> extends IndexHolderMixin(
 	Base<TypeData>,
 ) {
 	protected declare _data: T
-	protected _arrayDepth?: number
 
 	constructor(
 		registry: Registry,
 		protected id: ElementIndex,
-		arrayDepth?: number,
 	) {
 		super(registry)
 		const index = this.registry.dataIndexOf(id)
@@ -24,7 +22,6 @@ export class Class<T extends TypeData> extends IndexHolderMixin(
 		// @ts-expect-error ...
 		this.setData(type)
 		this.setIndex(index)
-		this._arrayDepth = arrayDepth
 	}
 
 	validateData(data: TypeData) {
@@ -49,10 +46,6 @@ export class Class<T extends TypeData> extends IndexHolderMixin(
 	override setData(data: T) {
 		this._data = data
 		return this
-	}
-
-	arrayDepth() {
-		return this._arrayDepth
 	}
 
 	packageIndex(): DataIndex | null | undefined {

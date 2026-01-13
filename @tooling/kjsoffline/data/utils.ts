@@ -36,7 +36,7 @@ export function asArray<T>(
 	value: T,
 ): NonNullable<T> extends Array<any> ? NonNullable<T> : Array<NonNullable<T>> {
 	// @ts-expect-error
-	return (Array.isArray(value) ? (value == null ? [] : value) : [value]).filter(
+	return (Array.isArray(value) ? value : value == null ? [] : [value]).filter(
 		(v) => v != null,
 	)
 }
