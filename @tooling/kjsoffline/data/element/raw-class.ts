@@ -5,6 +5,7 @@ import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { RawClassTypeData } from "../storage.ts"
 import { asArray, exist } from "../utils.ts"
+import { ClassTypeVariableMappingMixin } from "../wrapped-mixin/exhaustive-type-variable.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/type-variable.ts"
 import { Class } from "./class.ts"
 import { Constructor } from "./constructor.ts"
@@ -26,10 +27,36 @@ export class RawClass extends AnnotationMixin(
 		) as number[] as ElementIndex[]
 	}
 
+	interfaces() {
+		return this.interfacesIndex().map((index) => {
+			const iface = this.registry.get(Class, index)
+			if (!(iface instanceof RawClass || iface instanceof ParameterizedType))
+				throw new Error("Interface type is not a RawClass or ParameterizedType")
+
+			return iface
+		})
+	}
+
 	superClassIndex() {
 		return this.data()[Property.SUPER_CLASS] as number as
 			| ElementIndex
 			| undefined
+	}
+
+	superClass() {
+		const index = this.superClassIndex()
+		if (index == null) return undefined
+
+		const superClass = this.registry.get(Class, index)
+		if (
+			!(
+				superClass instanceof RawClass ||
+				superClass instanceof ParameterizedType
+			)
+		)
+			throw new Error("Super class type is not a RawClass or ParameterizedType")
+
+		return superClass
 	}
 
 	enclosingClassIndex() {
@@ -198,18 +225,19 @@ export class RawClass extends AnnotationMixin(
 		throw new Error("TODO")
 	}
 
-	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedRawClass(this.registry, this, typeVariableMap)
+	asWrapped() {
+		return this.registry.get(
+			WrappedRawClass,
+			this.id,
+			() => new WrappedRawClass(this.registry, this, {}),
+		)
 	}
 }
 
-export class WrappedRawClass extends MappedTypeVariableMixin(
-	Wrapped<RawClass>,
+export class WrappedRawClass extends ClassTypeVariableMappingMixin(
+	MappedTypeVariableMixin(Wrapped<RawClass>),
 ) {
-	override typeVariableMap(): TypeVariableMap {
-		// TODO: implement computeExhaustiveMapping when accessed without any type variable...
-		throw new Error("TODO")
-	}
+	protected _cachedTypeVariableMap?: TypeVariableMap
 
 	name() {
 		throw new Error("TODO")

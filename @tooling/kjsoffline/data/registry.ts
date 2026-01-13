@@ -1,5 +1,5 @@
 import type { Tagged } from "type-fest"
-import type { Base, Constructor } from "./common.ts"
+import type { Base, Constructor, Wrapped } from "./common.ts"
 import { Class } from "./element/class.ts"
 import { ParameterizedType } from "./element/parameterized-type.ts"
 import { RawClass } from "./element/raw-class.ts"
@@ -11,9 +11,14 @@ import { exist } from "./utils.ts"
 export type ElementIndex = Tagged<number, "element">
 
 export class Registry {
-	private registry: Map<Constructor<Base>, Map<ElementIndex, Base>> = new Map()
+	private registry: Map<Constructor<any>, Map<ElementIndex, any>> = new Map()
 	constructor(readonly storage: DataStorage) {}
 
+	get<T extends Constructor<any>>(
+		klass: T,
+		id: ElementIndex,
+		ctor: () => InstanceType<T>,
+	): InstanceType<T>
 	get(
 		klass: typeof Class,
 		id: ElementIndex,
@@ -24,7 +29,7 @@ export class Registry {
 		id: ElementIndex,
 		...args: any[]
 	): InstanceType<T>
-	get(klass: Constructor<Base>, id: ElementIndex, ...args: any[]) {
+	get(klass: Constructor<any>, id: ElementIndex, ...args: any[]) {
 		let registry = this.registry.get(klass)
 		if (!registry) {
 			registry = new Map()
@@ -45,7 +50,19 @@ export class Registry {
 			else throw new Error(`Invalid data being assigned to ${Class.name}`)
 		}
 
-		const instance = new finalClass(this, id, ...args)
+		let instance: any
+		if (klass === Class) {
+			const arrayDepth = Number.parseInt(args.pop(), 10)
+			instance = new finalClass(
+				this,
+				id,
+				Number.isNaN(arrayDepth) ? undefined : arrayDepth,
+			)
+		} else if (typeof args[0] === "function" && args.length === 1) {
+			instance = args[0]()
+		} else {
+			instance = new finalClass(this, id, ...args)
+		}
 		registry.set(id, instance)
 		return instance
 	}

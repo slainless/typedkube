@@ -1,11 +1,15 @@
-import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
+import { Property, Wrapped } from "../common.ts"
+import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { ParameterizedTypeData } from "../storage.ts"
 import { exist } from "../utils.ts"
+import { ClassTypeVariableMappingMixin } from "../wrapped-mixin/exhaustive-type-variable.ts"
 import { Class } from "./class.ts"
 import { RawClass } from "./raw-class.ts"
 
-export class ParameterizedType extends Class<ParameterizedTypeData> {
+export class ParameterizedType extends TypeVariableMixin(
+	Class<ParameterizedTypeData>,
+) {
 	static override dataDiscriminator(): string {
 		return Property.RAW_PARAMETERIZED_TYPE
 	}
@@ -31,18 +35,27 @@ export class ParameterizedType extends Class<ParameterizedTypeData> {
 	}
 
 	ownerType() {
-		const index = exist(this.ownerTypeIndex())
+		const index = this.ownerTypeIndex()
+		if (index == null) return undefined
+
 		const ownerType = this.registry.get(Class, index)
 		if (
 			!(ownerType instanceof RawClass || ownerType instanceof ParameterizedType)
 		)
 			throw new Error("Owner type is not a RawClass or ParameterizedType")
+
 		return ownerType
 	}
 
-	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedParameterizedType(this.registry, this, typeVariableMap)
+	asWrapped() {
+		return this.registry.get(
+			WrappedParameterizedType,
+			this.id,
+			() => new WrappedParameterizedType(this.registry, this, {}),
+		)
 	}
 }
 
-export class WrappedParameterizedType extends Wrapped<ParameterizedType> {}
+export class WrappedParameterizedType extends ClassTypeVariableMappingMixin(
+	Wrapped<ParameterizedType>,
+) {}

@@ -1,4 +1,4 @@
-import { Base } from "../common.ts"
+import { Base, type Wrapped } from "../common.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, TypeData } from "../storage.ts"

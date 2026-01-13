@@ -1,4 +1,4 @@
-import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
+import { Property, Wrapped } from "../common.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { TypeVariableData } from "../storage.ts"
 import { asArray } from "../utils.ts"
@@ -15,8 +15,12 @@ export class TypeVariable extends Class<TypeVariableData> {
 		) as number[] as ElementIndex[]
 	}
 
-	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedTypeVariable(this.registry, this, typeVariableMap)
+	asWrapped() {
+		return this.registry.get(
+			WrappedTypeVariable,
+			this.id,
+			() => new WrappedTypeVariable(this.registry, this, {}),
+		)
 	}
 }
 

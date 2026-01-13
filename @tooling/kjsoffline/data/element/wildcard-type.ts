@@ -1,4 +1,4 @@
-import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
+import { Property, Wrapped } from "../common.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { WildcardTypeData } from "../storage.ts"
 import { asArray } from "../utils.ts"
@@ -21,8 +21,12 @@ export class WildcardType extends Class<WildcardTypeData> {
 		) as number[] as ElementIndex[]
 	}
 
-	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedWildcardType(this.registry, this, typeVariableMap)
+	asWrapped() {
+		return this.registry.get(
+			WrappedWildcardType,
+			this.id,
+			() => new WrappedWildcardType(this.registry, this, {}),
+		)
 	}
 }
 
