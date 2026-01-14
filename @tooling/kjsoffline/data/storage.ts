@@ -4,7 +4,8 @@ import type { Modifier } from "./element/modifier.ts"
 import { assertExist } from "./utils.ts"
 
 export type DataIndex = Tagged<number, "data">
-export type DataIndexWithDepth = DataIndex | [DataIndex, number]
+export type ArrayDataIndex = [DataIndex, number]
+export type EitherDataIndex = DataIndex | [DataIndex, number]
 
 /**
  * Raw class type data structure.
@@ -18,7 +19,7 @@ export interface RawClassTypeData {
 	/** Modifiers (int) */
 	[Property.MODIFIERS]?: Modifier.Value
 	/** Type variables/parameters (List<TypeVariableID>) */
-	[Property.TYPE_VARIABLES]?: DataIndex[]
+	[Property.TYPE_VARIABLES]?: EitherDataIndex[]
 	/** Package name (PackageID) */
 	[Property.PACKAGE_NAME]?: DataIndex
 	/** Super class (TypeID) */

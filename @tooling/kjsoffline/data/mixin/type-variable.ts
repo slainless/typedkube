@@ -1,9 +1,11 @@
 import { type Base, type Constructor, Property } from "../common.ts"
-import type { DataIndex } from "../storage.ts"
+import type { EitherDataIndex } from "../storage.ts"
 import { asArray } from "../utils.ts"
 
 export function TypeVariableMixin<
-	T extends Constructor<Base<{ [Property.TYPE_VARIABLES]?: DataIndex[] }>>,
+	T extends Constructor<
+		Base<{ [Property.TYPE_VARIABLES]?: EitherDataIndex[] }>
+	>,
 >(klass: T) {
 	class TypeVariableHolder extends klass {
 		typeVariablesIndex() {
@@ -16,6 +18,6 @@ export function TypeVariableMixin<
 
 export namespace TypeVariableMixin {
 	export interface Data {
-		[Property.TYPE_VARIABLES]?: DataIndex[]
+		[Property.TYPE_VARIABLES]?: EitherDataIndex[]
 	}
 }

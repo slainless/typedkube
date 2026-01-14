@@ -1,5 +1,6 @@
 import type { Constructor, Wrapped } from "../common.ts"
 import type { TypeVariableMixin } from "../mixin/type-variable.ts"
+import { dataIndex } from "../utils.ts"
 
 export function MappedTypeVariableMixin<
 	T extends Constructor<
@@ -11,7 +12,7 @@ export function MappedTypeVariableMixin<
 			const typeVariableMap = this.typeVariableMap()
 			return this.wrapped()
 				.typeVariablesIndex()
-				.map((id) => typeVariableMap[id] ?? id)
+				.map((id) => typeVariableMap[dataIndex(id)] ?? id)
 		}
 	}
 

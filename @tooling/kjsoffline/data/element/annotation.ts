@@ -1,7 +1,7 @@
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
-import type { DataIndex, DataIndexWithDepth } from "../storage.ts"
+import type { DataIndex, EitherDataIndex } from "../storage.ts"
 import { exist } from "../utils.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 
@@ -50,7 +50,7 @@ export class WrappedAnnotation extends MappedTypeMixin(Wrapped<Annotation>) {
 
 export namespace Annotation {
 	export interface Data {
-		[Property.ANNOTATION_TYPE]?: DataIndexWithDepth
+		[Property.ANNOTATION_TYPE]?: EitherDataIndex
 		[Property.ANNOTATION_STRING]?: DataIndex
 	}
 }

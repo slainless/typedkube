@@ -5,13 +5,11 @@ import {
 	type Wrapped,
 } from "../common.ts"
 import { Class } from "../element/class.ts"
-import type { DataIndex, DataIndexWithDepth } from "../storage.ts"
+import type { DataIndex, EitherDataIndex } from "../storage.ts"
 import { asArray, exist } from "../utils.ts"
 
 export function MappedTypeMixin<
-	T extends Constructor<
-		Wrapped<Base<{ [Property.TYPE]?: DataIndexWithDepth }>>
-	>,
+	T extends Constructor<Wrapped<Base<{ [Property.TYPE]?: EitherDataIndex }>>>,
 >(klass: T) {
 	class TypeHolder extends klass {
 		protected _cachedMappedIndex?: [DataIndex, number]

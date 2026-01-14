@@ -5,7 +5,7 @@ import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
-import type { DataIndex, DataIndexWithDepth } from "../storage.ts"
+import type { DataIndex, EitherDataIndex } from "../storage.ts"
 import { assertExist } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
@@ -80,6 +80,6 @@ export class WrappedField extends WrappedDeclaringClassMixin(
 export namespace Field {
 	export interface Data extends ModifierMixin.Data, AnnotationMixin.Data {
 		[Property.FIELD_NAME]?: DataIndex
-		[Property.FIELD_TYPE]?: DataIndexWithDepth
+		[Property.FIELD_TYPE]?: EitherDataIndex
 	}
 }

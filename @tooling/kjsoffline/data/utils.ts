@@ -1,3 +1,5 @@
+import type { DataIndex, EitherDataIndex } from "./storage"
+
 type Part = boolean | null | number
 export function decodePart(
 	part: string | undefined,
@@ -39,6 +41,12 @@ export function asArray<T>(
 	return (Array.isArray(value) ? value : value == null ? [] : [value]).filter(
 		(v) => v != null,
 	)
+}
+
+export function dataIndex(index: EitherDataIndex): DataIndex {
+	if (typeof index === "number") return index
+	if (Array.isArray(index)) return index[0]
+	throw new Error(`Expected EitherDataIndex, but received ${index}`)
 }
 
 export function exist<T>(val: T, contextMessage?: string): NonNullable<T> {

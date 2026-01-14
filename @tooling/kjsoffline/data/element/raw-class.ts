@@ -1,4 +1,4 @@
-import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
+import { Property, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { ClassTypeMixin } from "../mixin/class-type.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"

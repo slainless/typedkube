@@ -1,10 +1,11 @@
-import type { Constructor, TypeVariableMap, Wrapped } from "../common"
+import type { Constructor, TypeVariableMap } from "../common"
 import type { Class } from "../element/class"
 import { ParameterizedType } from "../element/parameterized-type"
 import { RawClass } from "../element/raw-class"
 import { TypeVariable } from "../element/type-variable"
 import { WildcardType } from "../element/wildcard-type"
-import type { DataIndex } from "../storage"
+import type { DataIndex, EitherDataIndex } from "../storage"
+import { dataIndex } from "../utils"
 
 export function ClassTypeMixin<T extends Constructor<Class<any>>>(klass: T) {
 	class ClassType extends klass {
@@ -75,7 +76,7 @@ export function ClassTypeMixin<T extends Constructor<Class<any>>>(klass: T) {
 					const fromIndex = rawTypeVariables[index]
 					if (mappedIndex == null || fromIndex == null) continue
 
-					mapping.v[fromIndex] = mappedIndex
+					mapping.v[dataIndex(fromIndex)] = mappedIndex
 				}
 
 				return mapping
@@ -157,6 +158,6 @@ export function ClassTypeMixin<T extends Constructor<Class<any>>>(klass: T) {
 }
 
 export type RecursiveTypeVariableMap = {
-	v: Record<DataIndex, DataIndex>
+	v: Record<DataIndex, EitherDataIndex>
 	n: Map<Class<any>, RecursiveTypeVariableMap>
 }

@@ -7,7 +7,7 @@ import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
-import type { DataIndex, DataIndexWithDepth } from "../storage.ts"
+import type { DataIndex, EitherDataIndex } from "../storage.ts"
 import { assertExist } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
@@ -104,7 +104,7 @@ export namespace Method {
 			FunctionMixin.Data,
 			TypeVariableMixin.Data {
 		[Property.METHOD_NAME]?: DataIndex
-		[Property.METHOD_RETURN_TYPE]?: DataIndexWithDepth
+		[Property.METHOD_RETURN_TYPE]?: EitherDataIndex
 		[Property.EXCEPTIONS]?: DataIndex[]
 	}
 }
