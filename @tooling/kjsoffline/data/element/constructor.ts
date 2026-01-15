@@ -8,10 +8,11 @@ import { ModifierMixin } from "../mixin/modifier.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex } from "../storage.ts"
-import { assertExist } from "../utils.ts"
+import { assertExist, renderClassDebug } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
+import { Modifier } from "./modifier.ts"
 
 export class Constructor extends FunctionMixin(
 	DeclaringClassMixin(
@@ -57,8 +58,16 @@ export class Constructor extends FunctionMixin(
 		return this.registry.storage.getConstructor(id)
 	}
 
+	constructorIndexInClass() {
+		return this._constructorIndexInClass
+	}
+
 	asWrapped(typeVariableMap: TypeVariableMap) {
 		return new WrappedConstructor(this.registry, this, typeVariableMap)
+	}
+
+	asString() {
+		throw new Error("TODO")
 	}
 }
 
@@ -68,19 +77,50 @@ export class WrappedConstructor extends WrappedFunctionMixin(
 	),
 ) {
 	asString() {
-		throw new Error("TODO")
+		const parent = this.wrappedDeclaringClass().asString()
+		const modifier = Modifier.asString(
+			this.wrapped().modifiers() ?? Modifier.PUBLIC.value,
+		).join(" ")
+		const typeVars = this.mappedTypeVariables()
+			.map((type) => type.asString())
+			.join(", ")
+		const parameters = this.wrappedParameters()
+			.map((parameter) => parameter.asString())
+			.join(", ")
+
+		return [
+			modifier,
+			typeVars ? `<${typeVars}>` : "",
+			`${parent}(${parameters})`,
+		]
+			.map((v) => v.trim())
+			.filter(Boolean)
+			.join(" ")
 	}
 
 	asKubeStaticCall() {
-		throw new Error("TODO")
-	}
-
-	id() {
-		throw new Error("TODO")
+		const parent = this.wrappedDeclaringClass()
+		return (
+			`const ${parent.simpleName()} = new ${parent.simpleName().toUpperCase()}(` +
+			this.wrappedParameters()
+				.map((parameter) => parameter.wrapped().name())
+				.join(", ") +
+			")"
+		)
 	}
 
 	wrappedDeclaringConstructor() {
-		throw new Error("TODO")
+		const ctorIndex = this.wrapped().constructorIndexInClass()
+		if (ctorIndex === -1) return null
+
+		const declaringClass = this.wrappedDeclaringClass()
+		const ctor = declaringClass.wrapped().constructors()[ctorIndex]
+		if (ctor == null)
+			throw ReferenceError(
+				`Constructor not found at index ${ctorIndex} in ${renderClassDebug(declaringClass)}`,
+			)
+
+		return ctor.asWrapped(this.typeVariableMap())
 	}
 }
 

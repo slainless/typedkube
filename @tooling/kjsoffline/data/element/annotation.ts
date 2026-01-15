@@ -37,16 +37,12 @@ export class Annotation extends IndexHolderMixin(Base<Annotation.Data>) {
 		return new WrappedAnnotation(this.registry, this, typeVariableMap)
 	}
 
-	override toString() {
-		return `@${this.name()}`
-	}
+	// override toString() {
+	// 	return `@${this.name()}`
+	// }
 }
 
-export class WrappedAnnotation extends MappedTypeMixin(Wrapped<Annotation>) {
-	asString() {
-		throw new Error("TODO")
-	}
-}
+export class WrappedAnnotation extends MappedTypeMixin(Wrapped<Annotation>) {}
 
 export namespace Annotation {
 	export interface Data {

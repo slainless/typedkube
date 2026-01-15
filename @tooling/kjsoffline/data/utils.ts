@@ -1,3 +1,5 @@
+import { Wrapped } from "./common"
+import type { IndexHolderMixin } from "./mixin/index-holder"
 import type { DataIndex, EitherDataIndex } from "./storage"
 
 type Part = boolean | null | number
@@ -66,4 +68,15 @@ export function assertExist<T>(
 
 	// @ts-expect-error
 	return val
+}
+
+export function renderClassDebug(
+	element:
+		| InstanceType<ReturnType<typeof IndexHolderMixin>>
+		| Wrapped<InstanceType<ReturnType<typeof IndexHolderMixin>>>,
+): string {
+	if (element instanceof Wrapped)
+		return `${element.constructor.name} (type: ${element.wrapped().index()})`
+
+	return `${element.constructor.name} (type: ${element.index()})`
 }

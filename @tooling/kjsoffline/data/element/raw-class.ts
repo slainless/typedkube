@@ -76,6 +76,20 @@ export class RawClass extends ClassTypeMixin(
 			| undefined
 	}
 
+	declaringClass() {
+		const index = this.declaringClassIndex()
+		if (index == null) return undefined
+		const declaringClass = this.registry.get(Class, index)
+		if (
+			!(
+				declaringClass instanceof RawClass ||
+				declaringClass instanceof ParameterizedType
+			)
+		)
+			throw new Error("Declaring class is not a RawClass or ParameterizedType")
+		return declaringClass
+	}
+
 	innerClassesIndex() {
 		return asArray(
 			this.data()[Property.INNER_CLASSES],
@@ -177,29 +191,24 @@ export class RawClass extends ClassTypeMixin(
 		}
 	}
 
-	// name() {
-	// 	throw new Error("TODO")
-	// }
-
-	// simpleName() {
-	// 	throw new Error("TODO")
-	// }
-
-	// referenceName() {
-	// 	throw new Error("TODO")
-	// }
-
-	// fullyQualifiedName() {
-	// 	throw new Error("TODO")
-	// }
+	nameIndex() {
+		return this.data()[Property.CLASS_NAME]
+	}
 
 	override packageIndex() {
 		return this.data()[Property.PACKAGE_NAME]
 	}
 
-	packageName() {
-		const packageId = exist(this.packageIndex())
-		return this.registry.storage.getPackageName(packageId)
+	simpleName() {
+		const classNameIndex = exist(this.nameIndex())
+		return exist(this.registry.storage.getName(classNameIndex))
+	}
+
+	packageName(): string {
+		const packageNameIndex = this.packageIndex()
+		if (packageNameIndex == null) return ""
+
+		return this.registry.storage.getPackageName(packageNameIndex)
 	}
 
 	parameterizedArgs() {

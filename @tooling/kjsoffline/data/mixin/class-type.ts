@@ -1,4 +1,4 @@
-import type { Constructor, TypeVariableMap } from "../common"
+import { type Constructor, Property, type TypeVariableMap } from "../common"
 import type { Class } from "../element/class"
 import { ParameterizedType } from "../element/parameterized-type"
 import { RawClass } from "../element/raw-class"
@@ -14,15 +14,6 @@ export function ClassTypeMixin<T extends Constructor<Class<any>>>(klass: T) {
 		// TODO: create lru cache for these...
 		protected _cachedRecursiveTypeVariableMap?: RecursiveTypeVariableMap
 		protected _cachedFlatTypeVariableMap?: TypeVariableMap
-
-		setArrayDepth(depth: number) {
-			this._arrayDepth = depth
-			return this
-		}
-
-		arrayDepth() {
-			return this._arrayDepth
-		}
 
 		typeVariableMap() {
 			if (this._cachedFlatTypeVariableMap != null)
@@ -113,44 +104,6 @@ export function ClassTypeMixin<T extends Constructor<Class<any>>>(klass: T) {
 			}
 
 			return flat
-		}
-
-		name() {
-			if (this instanceof RawClass) {
-			}
-			throw new Error("TODO")
-		}
-
-		simpleName() {
-			throw new Error("TODO")
-		}
-
-		referenceName() {
-			throw new Error("TODO")
-		}
-
-		fullyQualifiedName() {
-			throw new Error("TODO")
-		}
-
-		asKubeLoad_1_18() {
-			throw new Error("TODO")
-		}
-
-		asKubeLoad_1_19() {
-			throw new Error("TODO")
-		}
-
-		asKubeLoad_1_20() {
-			throw new Error("TODO")
-		}
-
-		asKubeLoad() {
-			throw new Error("TODO")
-		}
-
-		asString() {
-			throw new Error("TODO")
 		}
 	}
 

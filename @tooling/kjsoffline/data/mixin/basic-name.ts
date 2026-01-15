@@ -8,7 +8,7 @@ export function BasicNameMixin<
 	class BasicNamed extends klass {
 		name() {
 			const nameIndex = exist(this.data()[Property.NAME])
-			return this.registry.storage.getName(nameIndex)
+			return exist(this.registry.storage.getName(nameIndex))
 		}
 	}
 

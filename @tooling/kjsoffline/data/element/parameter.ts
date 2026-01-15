@@ -11,6 +11,7 @@ import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 import { Constructor } from "./constructor.ts"
 import { Method } from "./method.ts"
+import { Modifier } from "./modifier.ts"
 
 export class Parameter extends DeclaringClassMixin(
 	BasicNameMixin(
@@ -93,11 +94,14 @@ export class WrappedParameter extends WrappedDeclaringClassMixin(
 	MappedTypeMixin(Wrapped<Parameter>),
 ) {
 	asString() {
-		throw new Error("TODO")
-	}
-
-	id() {
-		throw new Error("TODO")
+		const type = this.mappedType().asString()
+		const modifiers = Modifier.asString(
+			this.wrapped().modifiers() ?? Modifier.PUBLIC.value,
+		).join(" ")
+		return [modifiers, type, this.wrapped().name()]
+			.map((v) => v.trim())
+			.filter(Boolean)
+			.join(" ")
 	}
 
 	wrappedDeclaringFunction() {

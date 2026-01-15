@@ -2,13 +2,22 @@ import { Property, Wrapped } from "../common.ts"
 import { ClassTypeMixin } from "../mixin/class-type.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { TypeVariableData } from "../storage.ts"
-import { asArray } from "../utils.ts"
+import { asArray, exist } from "../utils.ts"
 import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
 import { Class } from "./class.ts"
 
 export class TypeVariable extends ClassTypeMixin(Class<TypeVariableData>) {
 	static override dataDiscriminator(): string {
 		return Property.TYPE_VARIABLE_NAME
+	}
+
+	nameIndex() {
+		return this.data()[Property.TYPE_VARIABLE_NAME]
+	}
+
+	simpleName() {
+		const nameIndex = exist(this.nameIndex())
+		return exist(this.registry.storage.getName(nameIndex))
 	}
 
 	typeVariableBoundsIndex() {

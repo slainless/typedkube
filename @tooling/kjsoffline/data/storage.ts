@@ -1,7 +1,7 @@
 import type { Tagged } from "type-fest"
 import { Property } from "./common.ts"
 import type { Modifier } from "./element/modifier.ts"
-import { assertExist } from "./utils.ts"
+import { asArray, assertExist } from "./utils.ts"
 
 export type DataIndex = Tagged<number, "data">
 export type ArrayDataIndex = [DataIndex, number]
@@ -139,12 +139,12 @@ export class DataStorage {
 		return this.packages[id]
 	}
 
-	getPackageName(id: DataIndex | undefined) {
+	getPackageName(id: DataIndex): string {
 		assertExist(id)
-		const data = this.packages[id]
-		if (!data) return
+		const data = asArray(this.packages[id])
+		if (!data) return ""
 		if (data?.length === 1) return data[0]
-		return `${data[1]}.${data[0]}`
+		return `${this.getPackageName(data[1] as DataIndex)}.${data[0]}`
 	}
 
 	getParameter(id: DataIndex) {

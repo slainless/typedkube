@@ -48,6 +48,14 @@ export class ParameterizedType extends ClassTypeMixin(
 		return ownerType
 	}
 
+	packageName(): string {
+		return this.rawType().packageName()
+	}
+
+	simpleName() {
+		return this.rawType().simpleName()
+	}
+
 	asWrapped(arrayDepth = 0) {
 		return new WrappedParameterizedType(this.registry, this, {}).setArrayDepth(
 			arrayDepth,

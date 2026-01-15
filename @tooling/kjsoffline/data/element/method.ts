@@ -13,6 +13,7 @@ import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
+import { Modifier } from "./modifier.ts"
 
 export class Method extends FunctionMixin(
 	DeclaringClassMixin(
@@ -73,19 +74,40 @@ export class WrappedMethod extends WrappedFunctionMixin(
 	),
 ) {
 	asString() {
-		throw new Error("TODO")
+		const returnType = this.mappedType().asString()
+		const modifiers = Modifier.asString(
+			this.wrapped().modifiers() ?? Modifier.PUBLIC.value,
+		).join(" ")
+		const typeVars = this.mappedTypeVariables()
+			.map((type) => type.asString())
+			.join(", ")
+		const parameters = this.wrappedParameters()
+			.map((parameter) => parameter.asString())
+			.join(", ")
+		return [modifiers, returnType, typeVars ? `<${typeVars}>` : "", parameters]
+			.map((v) => v.trim())
+			.filter(Boolean)
+			.join(" ")
 	}
 
 	asKubeStaticCall() {
-		throw new Error("TODO")
-	}
-
-	id() {
-		throw new Error("TODO")
+		const patent = this.wrappedDeclaringClass()
+		return (
+			`${patent.simpleName().toUpperCase()}.${this.wrapped().name()}(` +
+			this.wrappedParameters()
+				.map((p) => p.asString())
+				.join(", ") +
+			")"
+		)
 	}
 
 	equals(other: WrappedMethod) {
 		throw new Error("TODO")
+
+		// if (this.wrapped().name() !== other.wrapped().name()) return false
+		// const thisReturnType = this.mappedType()
+		// const otherReturnType = other.mappedType()
+		// if (thisReturnType.wrapped())
 	}
 
 	moreSpecificThan(other: WrappedMethod) {

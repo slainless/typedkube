@@ -10,6 +10,7 @@ import { assertExist } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
+import { Modifier } from "./modifier.ts"
 
 export class Field extends DeclaringClassMixin(
 	AnnotationMixin(
@@ -48,6 +49,18 @@ export class Field extends DeclaringClassMixin(
 		return this.registry.storage.getField(id)
 	}
 
+	// typeIndex() {
+	// 	return this.data()[Property.FIELD_TYPE]
+	// }
+
+	// type() {
+	// 	const index = exist(this.typeIndex())
+	// 	return this.registry.get(
+	// 		Class,
+	// 		this.registry.elementIndexOf(dataIndex(index)),
+	// 	)
+	// }
+
 	fieldIndexInClass() {
 		return this._fieldIndexInClass
 	}
@@ -65,15 +78,19 @@ export class WrappedField extends WrappedDeclaringClassMixin(
 	WrappedAnnotationMixin(MappedTypeMixin(Wrapped<Field>)),
 ) {
 	asString() {
-		throw new Error("TODO")
+		const returnType = this.mappedType().asString()
+		const modifiers = Modifier.asString(
+			this.wrapped().modifiers() ?? Modifier.PUBLIC.value,
+		).join(" ")
+		return [modifiers, returnType, this.wrapped().name()]
+			.map((v) => v.trim())
+			.filter(Boolean)
+			.join(" ")
 	}
 
 	asKubeStaticReference() {
-		throw new Error("TODO")
-	}
-
-	id() {
-		throw new Error("TODO")
+		const patent = this.wrapped().declaringClass()
+		return `${patent.simpleName().toUpperCase()}.${this.wrapped().name()}`
 	}
 }
 
