@@ -1,11 +1,11 @@
 import type { Tagged } from "type-fest"
-import type { Base, Constructor, Wrapped } from "./common.ts"
+import type { Base, Constructor } from "./common.ts"
 import { Class } from "./element/class.ts"
 import { ParameterizedType } from "./element/parameterized-type.ts"
 import { RawClass } from "./element/raw-class.ts"
 import { TypeVariable } from "./element/type-variable.ts"
 import { WildcardType } from "./element/wildcard-type.ts"
-import type { NameRenderer } from "./name.ts"
+import { NameRenderer } from "./name.ts"
 import type { DataIndex, DataStorage } from "./storage.ts"
 import { exist } from "./utils.ts"
 
@@ -13,10 +13,9 @@ export type ElementIndex = Tagged<number, "element">
 
 export class Registry {
 	private registry: Map<Constructor<any>, Map<ElementIndex, any>> = new Map()
-	constructor(
-		readonly storage: DataStorage,
-		readonly name: NameRenderer,
-	) {}
+	readonly name = new NameRenderer(this)
+
+	constructor(readonly storage: DataStorage) {}
 
 	get<T extends Constructor<any>>(
 		klass: T,
