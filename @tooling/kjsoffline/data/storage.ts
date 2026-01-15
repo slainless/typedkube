@@ -52,7 +52,7 @@ export interface ParameterizedTypeData {
 	/** Owner type (TypeID) */
 	[Property.OWNER_TYPE]?: DataIndex
 	/** Type variables/actual type arguments (List<TypeOrTypeVariableID>) */
-	[Property.TYPE_VARIABLES]: DataIndex[]
+	[Property.TYPE_VARIABLES]: EitherDataIndex[]
 	/** Internal ID assigned during normalization */
 	_id?: DataIndex
 }
@@ -63,9 +63,9 @@ export interface ParameterizedTypeData {
  */
 export interface WildcardTypeData {
 	/** Lower bounds (List<TypeOrTypeVariableID>) */
-	[Property.WILDCARD_LOWER_BOUNDS]?: DataIndex[]
+	[Property.WILDCARD_LOWER_BOUNDS]?: EitherDataIndex[]
 	/** Upper bounds (List<TypeOrTypeVariableID>) */
-	[Property.WILDCARD_UPPER_BOUNDS]?: DataIndex[]
+	[Property.WILDCARD_UPPER_BOUNDS]?: EitherDataIndex[]
 	/** Internal ID assigned during normalization */
 	_id?: DataIndex
 }
@@ -78,7 +78,7 @@ export interface TypeVariableData {
 	/** Type variable name (NameID) */
 	[Property.TYPE_VARIABLE_NAME]: DataIndex
 	/** Type variable bounds (List<TypeOrTypeVariableID>) */
-	[Property.TYPE_VARIABLE_BOUNDS]?: DataIndex[]
+	[Property.TYPE_VARIABLE_BOUNDS]?: EitherDataIndex[]
 	/** Internal ID assigned during normalization */
 	_id?: DataIndex
 }

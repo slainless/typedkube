@@ -13,7 +13,7 @@ export function MappedTypeMixin<
 >(klass: T) {
 	class TypeHolder extends klass {
 		protected _cachedMappedIndex?: [DataIndex, number]
-		protected _cachedMappedType?: Class<any>
+		protected _cachedMappedType?: Wrapped<Class<any>>
 
 		mappedTypeIndex() {
 			if (this._cachedMappedIndex) return this._cachedMappedIndex
@@ -35,15 +35,12 @@ export function MappedTypeMixin<
 		}
 
 		mappedType() {
-			const [index] = exist(this.mappedTypeIndex())
-			const type = this.registry.get(Class, this.registry.elementIndexOf(index))
+			const [index, arrayDepth] = exist(this.mappedTypeIndex())
+			const type = this.registry
+				.get(Class, this.registry.elementIndexOf(index))
+				.asWrapped(arrayDepth)
 			this._cachedMappedType = type
 			return type
-		}
-
-		wrappedMappedType() {
-			const [_, arrayDepth] = this.mappedTypeIndex()
-			return this.mappedType().asWrapped(arrayDepth)
 		}
 	}
 

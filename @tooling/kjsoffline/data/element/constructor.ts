@@ -11,7 +11,7 @@ import type { DataIndex } from "../storage.ts"
 import { assertExist } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
-import { MappedTypeVariableMixin } from "../wrapped-mixin/type-variable.ts"
+import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
 
 export class Constructor extends FunctionMixin(
 	DeclaringClassMixin(

@@ -1,5 +1,5 @@
 import type { Registry } from "./registry.ts"
-import type { DataIndex } from "./storage.ts"
+import type { DataIndex, EitherDataIndex } from "./storage.ts"
 import { decodePart, exist } from "./utils.ts"
 
 export type Constructor<T, Arguments extends unknown[] = any[]> = new (
@@ -94,7 +94,7 @@ export class Wrapped<T extends Base> {
  */
 export type JavaType = string
 
-export type TypeVariableMap = Record<DataIndex, DataIndex>
+export type TypeVariableMap = Record<DataIndex, EitherDataIndex>
 
 export namespace Property {
 	export const TYPE = "t"

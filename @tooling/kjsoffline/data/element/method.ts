@@ -12,7 +12,7 @@ import { assertExist } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
-import { MappedTypeVariableMixin } from "../wrapped-mixin/type-variable.ts"
+import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
 
 export class Method extends FunctionMixin(
 	DeclaringClassMixin(
