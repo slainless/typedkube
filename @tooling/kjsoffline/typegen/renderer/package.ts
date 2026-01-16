@@ -4,13 +4,10 @@ import {
 	renderClassInterface,
 } from "./class-interface"
 
-export function renderPackage(
-	packageName: string,
-	packages: Record<string, RawClass>,
-) {
+export function renderPackage(packageName: string, classes: RawClass[]) {
 	return [
 		`namespace ${packageName} {`,
-		...Object.values(packages).flatMap((klass) => {
+		...classes.flatMap((klass) => {
 			const wrapped = klass.asWrapped(0, {})
 			return [
 				renderClassConstructorInterface(wrapped),
