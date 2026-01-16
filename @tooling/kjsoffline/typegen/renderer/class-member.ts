@@ -36,7 +36,10 @@ export function renderClassMember(klass: Wrapped<Base<any>>) {
 		const mappedType = kls.mappedType()
 		return [
 			modifiers,
-			`${name}: ${mappedType.referenceName(klass.typeVariableMap())}`,
+			`${name}:`,
+			mappedType.referenceName(klass.typeVariableMap(), {
+				typescriptCompatibility: true,
+			}),
 		].join("")
 	}
 

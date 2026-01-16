@@ -129,17 +129,28 @@ export class NameRenderer {
 			.lowerBoundsIndex()
 			.map((bound) => this.registry.get(Class, bound))
 		if (lowerBound.length > 0) {
-			return (
+			const lowerBounds =
 				name +
 				" super " +
 				lowerBound.map((bound) => this.render(bound, config)).join(" & ")
-			)
+
+			// this will lose the contravariance information, but it's better than nothing...
+			if (config.typescriptCompatibility)
+				return (
+					lowerBound.map((bound) => this.render(bound, config)).join(" & ") +
+					`/** @wildcard ${lowerBounds} */`
+				)
+
+			return lowerBounds
 		}
 
 		const upperBound = type
 			.upperBoundsIndex()
 			.map((bound) => this.registry.get(Class, bound))
 		if (upperBound.length > 0) {
+			if (config.typescriptCompatibility)
+				return upperBound.map((bound) => this.render(bound, config)).join(" & ")
+
 			return (
 				name +
 				" extends " +
@@ -147,6 +158,7 @@ export class NameRenderer {
 			)
 		}
 
+		if (config.typescriptCompatibility) return "any"
 		return name
 	}
 
@@ -209,5 +221,6 @@ export namespace NameRenderer {
 		disableEnclosingName?: boolean
 		isDefiningParameterizedType?: boolean
 		nameSuffix?: string
+		typescriptCompatibility?: boolean
 	}
 }

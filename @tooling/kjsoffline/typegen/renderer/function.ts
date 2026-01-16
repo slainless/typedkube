@@ -26,7 +26,9 @@ export function renderFunction(klass: Wrapped<Base<any>>) {
 			klass.wrapped().name(),
 			renderGeneric(klass),
 			`(${renderParameters(klass)}):`,
-			klass.mappedType().referenceName(declaringClass.typeVariableMap()),
+			klass.mappedType().referenceName(declaringClass.typeVariableMap(), {
+				typescriptCompatibility: true,
+			}),
 		].join("")
 	}
 

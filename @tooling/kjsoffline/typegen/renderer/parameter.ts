@@ -8,9 +8,14 @@ export function renderParameters(
 	return klass
 		.wrapped()
 		.parameters()
-		.map(
-			(parameter) =>
-				`${parameter.name()}: ${parameter.asWrapped(typeVariableMap).mappedType().referenceName(typeVariableMap)}`,
+		.map((parameter) =>
+			[
+				`${parameter.name()}:`,
+				parameter
+					.asWrapped(typeVariableMap)
+					.mappedType()
+					.referenceName(typeVariableMap, { typescriptCompatibility: true }),
+			].join(""),
 		)
 		.join(", ")
 }

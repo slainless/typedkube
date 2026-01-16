@@ -10,14 +10,22 @@ export function renderGeneric(
 	if ("typeVariables" in klass) {
 		variables = klass
 			.typeVariables()
-			.map((variable) => variable.asString())
+			.map((variable) =>
+				variable.referenceName(variable.typeVariableMap(), {
+					typescriptCompatibility: true,
+				}),
+			)
 			.join(", ")
 	}
 
 	if ("mappedTypeVariables" in klass) {
 		variables = klass
 			.mappedTypeVariables()
-			.map((variable) => variable.asString())
+			.map((variable) =>
+				variable.referenceName(variable.typeVariableMap(), {
+					typescriptCompatibility: true,
+				}),
+			)
 			.join(", ")
 	}
 	if (variables) return `<${variables}>`
