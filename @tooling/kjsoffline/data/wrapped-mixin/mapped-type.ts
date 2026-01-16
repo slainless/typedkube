@@ -22,7 +22,8 @@ export function MappedTypeMixin<
 				this.wrapped().data()[Property.TYPE],
 			) as [DataIndex, number?]
 			const map = this.typeVariableMap()
-			if (!map) return [type, arrayDepth ?? 0] as const
+			if (!map || Object.keys(map).length === 0)
+				return [type, arrayDepth ?? 0] as const
 
 			const seen = new Set()
 			while (type != null && !seen.has(type)) {
