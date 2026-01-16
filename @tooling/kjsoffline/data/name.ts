@@ -15,12 +15,14 @@ export class NameRenderer {
 		type: Class<any>,
 		typeVariableMap: TypeVariableMap,
 		includeGenerics = true,
+		options?: Partial<NameRenderer.Options>,
 	) {
 		return this.render(type, {
 			typeVariableMap,
 			isDefiningTypeVariable: false,
 			appendPackageName: true,
 			includeGenerics,
+			...options,
 		})
 	}
 
@@ -28,12 +30,14 @@ export class NameRenderer {
 		type: Class<any>,
 		typeVariableMap: TypeVariableMap,
 		includeGenerics = true,
+		options?: Partial<NameRenderer.Options>,
 	) {
 		return this.render(type, {
 			typeVariableMap,
 			isDefiningTypeVariable: false,
 			appendPackageName: false,
 			includeGenerics,
+			...options,
 		})
 	}
 
@@ -41,12 +45,14 @@ export class NameRenderer {
 		type: Class<any>,
 		typeVariableMap: TypeVariableMap,
 		includeGenerics = true,
+		options?: Partial<NameRenderer.Options>,
 	) {
 		return this.render(type, {
 			typeVariableMap,
 			isDefiningTypeVariable: false,
 			appendPackageName: false,
 			includeGenerics,
+			...options,
 		})
 	}
 
@@ -69,8 +75,8 @@ export class NameRenderer {
 	protected rawClassName(type: RawClass, config: NameRenderer.Options) {
 		const name = type.simpleName()
 		if (config.appendPackageName && type.packageIndex() != null)
-			return `${type.packageName()}.${name}`
-		return name
+			return `${type.packageName()}.${name}${config.nameSuffix ?? ""}`
+		return name + (config.nameSuffix ?? "")
 	}
 
 	protected typeVariableName(type: TypeVariable, config: NameRenderer.Options) {
@@ -202,5 +208,6 @@ export namespace NameRenderer {
 		includeGenerics?: boolean
 		disableEnclosingName?: boolean
 		isDefiningParameterizedType?: boolean
+		nameSuffix?: string
 	}
 }
