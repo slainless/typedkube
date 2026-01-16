@@ -5,6 +5,7 @@ import { RawClass } from "../element/raw-class.ts"
 import { TypeVariable } from "../element/type-variable.ts"
 import { WildcardType } from "../element/wildcard-type.ts"
 import type { ClassTypeMixin } from "../mixin/class-type.ts"
+import type { NameRenderer } from "../name.ts"
 
 export function WrappedClassMixin<
 	T extends Constructor<
@@ -29,7 +30,11 @@ export function WrappedClassMixin<
 			return "[]".repeat(this.arrayDepth())
 		}
 
-		name(typeVariableMap: TypeVariableMap = {}, includeGenerics = true) {
+		name(
+			typeVariableMap: TypeVariableMap = {},
+			includeGenerics = true,
+			options?: Partial<NameRenderer.Options>,
+		) {
 			const wrapped = this.wrapped()
 			if (wrapped instanceof RawClass)
 				return (
@@ -37,6 +42,7 @@ export function WrappedClassMixin<
 						wrapped,
 						wrapped.typeVariableMap(),
 						includeGenerics,
+						options,
 					) + this.renderArrayDepth()
 				)
 
@@ -64,18 +70,23 @@ export function WrappedClassMixin<
 		fullyQualifiedName(
 			typeVariableMap: TypeVariableMap = {},
 			includeGenerics = true,
+			options?: Partial<NameRenderer.Options>,
 		) {
 			return (
-				this.registry.name.genericName(
+				this.registry.name.genericDefinition(
 					this.wrapped(),
 					typeVariableMap,
 					includeGenerics,
+					options,
 				) + this.renderArrayDepth()
 			)
 		}
 
-		referenceName(typeVariableMap: TypeVariableMap = {}) {
-			return this.fullyQualifiedName(typeVariableMap, true)
+		referenceName(
+			typeVariableMap: TypeVariableMap = {},
+			options?: Partial<NameRenderer.Options>,
+		) {
+			return this.fullyQualifiedName(typeVariableMap, true, options)
 		}
 
 		asKubeLoad_1_18() {
@@ -90,12 +101,13 @@ export function WrappedClassMixin<
 			return `const $${this.simpleName().toUpperCase()} = Java.loadClass("${this.fullyQualifiedName()}");`
 		}
 
-		asString() {
+		asString(options?: Partial<NameRenderer.Options>) {
 			return (
 				this.registry.name.genericDefinitionWithoutPackage(
 					this.wrapped(),
 					this.typeVariableMap(),
 					true,
+					options,
 				) + this.renderArrayDepth()
 			)
 		}
