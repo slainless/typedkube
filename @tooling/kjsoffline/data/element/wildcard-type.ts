@@ -1,14 +1,19 @@
 import { Property, Wrapped } from "../common.ts"
 import { ClassTypeMixin } from "../mixin/class-type.ts"
 import type { ElementIndex } from "../registry.ts"
-import type { WildcardTypeData } from "../storage.ts"
+import type { TypeData, WildcardTypeData } from "../storage.ts"
 import { asArray } from "../utils.ts"
 import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
 import { Class } from "./class.ts"
 
 export class WildcardType extends ClassTypeMixin(Class<WildcardTypeData>) {
-	static override dataDiscriminator(): string {
-		return Property.WILDCARD_LOWER_BOUNDS
+	static override isValid(data: TypeData) {
+		return (
+			Object.keys(data).length <= 0 ||
+			Object.keys(data).every((key) => key.startsWith("_")) ||
+			Property.WILDCARD_LOWER_BOUNDS in data ||
+			Property.WILDCARD_UPPER_BOUNDS in data
+		)
 	}
 
 	lowerBoundsIndex() {
