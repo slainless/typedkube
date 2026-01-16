@@ -1,4 +1,4 @@
-import { Property, Wrapped } from "../common.ts"
+import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { ClassTypeMixin } from "../mixin/class-type.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex } from "../registry.ts"
@@ -56,10 +56,12 @@ export class ParameterizedType extends ClassTypeMixin(
 		return this.rawType().simpleName()
 	}
 
-	asWrapped(arrayDepth = 0) {
-		return new WrappedParameterizedType(this.registry, this, {}).setArrayDepth(
-			arrayDepth,
-		)
+	asWrapped(arrayDepth = 0, typeVariableMap: TypeVariableMap = {}) {
+		return new WrappedParameterizedType(
+			this.registry,
+			this,
+			typeVariableMap,
+		).setArrayDepth(arrayDepth)
 	}
 }
 

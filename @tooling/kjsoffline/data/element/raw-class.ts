@@ -1,4 +1,4 @@
-import { Property, Wrapped } from "../common.ts"
+import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { ClassTypeMixin } from "../mixin/class-type.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
@@ -249,10 +249,12 @@ export class RawClass extends ClassTypeMixin(
 		throw new Error("TODO")
 	}
 
-	asWrapped(arrayDepth = 0) {
-		return new WrappedRawClass(this.registry, this, {}).setArrayDepth(
-			arrayDepth,
-		)
+	asWrapped(arrayDepth = 0, typeVariableMap: TypeVariableMap = {}) {
+		return new WrappedRawClass(
+			this.registry,
+			this,
+			typeVariableMap,
+		).setArrayDepth(arrayDepth)
 	}
 }
 

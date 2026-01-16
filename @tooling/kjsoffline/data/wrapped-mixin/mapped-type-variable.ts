@@ -24,7 +24,7 @@ export function MappedTypeVariableMixin<
 					Class,
 					this.registry.elementIndexOf(typeIndex),
 				)
-				return type.asWrapped(arrayDepth)
+				return type.asWrapped(arrayDepth, this.typeVariableMap())
 			})
 		}
 	}

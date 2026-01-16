@@ -8,7 +8,9 @@ export function WrappedDeclaringClassMixin<
 >(klass: T) {
 	class HasWrappedDeclaringClass extends klass {
 		wrappedDeclaringClass() {
-			return this.wrapped().declaringClass().asWrapped(this.typeVariableMap())
+			return this.wrapped()
+				.declaringClass()
+				.asWrapped(0, this.typeVariableMap())
 		}
 	}
 
