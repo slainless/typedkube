@@ -96,6 +96,15 @@ export class RawClass extends ClassTypeMixin(
 		) as number[] as ElementIndex[]
 	}
 
+	innerClasses() {
+		return this.innerClassesIndex().map((index) => {
+			const innerClass = this.registry.get(Class, index)
+			if (!(innerClass instanceof RawClass))
+				throw new Error("Inner class is not a RawClass or ParameterizedType")
+			return innerClass
+		})
+	}
+
 	private createAccessor<T>(action: (klass: RawClass) => T[]) {
 		return (shallow = false) => {
 			const elements: T[] = []
