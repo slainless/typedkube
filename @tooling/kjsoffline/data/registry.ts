@@ -49,7 +49,10 @@ export class Registry {
 			else if (ParameterizedType.isValid(data)) finalClass = ParameterizedType
 			else if (WildcardType.isValid(data)) finalClass = WildcardType
 			else if (TypeVariable.isValid(data)) finalClass = TypeVariable
-			else throw new Error(`Invalid data being assigned to ${Class.name}`)
+			else
+				throw new Error(
+					`Invalid data being assigned to ${Class.name}: ${JSON.stringify(data)}`,
+				)
 		}
 
 		let instance: any
@@ -62,11 +65,11 @@ export class Registry {
 		return instance
 	}
 
-	dataIndexOf(elementIndex: ElementIndex): DataIndex {
+	dataIndexOf(elementIndex: ElementIndex | number): DataIndex {
 		return elementIndex as number as DataIndex
 	}
 
-	elementIndexOf(dataIndex: DataIndex): ElementIndex {
+	elementIndexOf(dataIndex: DataIndex | number): ElementIndex {
 		return dataIndex as number as ElementIndex
 	}
 }
