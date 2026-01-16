@@ -9,7 +9,8 @@
     "rules": {
       "suspicious": {
         "noShadowRestrictedNames": "off",
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noMisleadingInstantiator": "off"
       },
       "complexity": {
         "noThisInStatic": "off",
