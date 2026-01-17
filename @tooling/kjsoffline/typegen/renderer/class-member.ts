@@ -38,7 +38,7 @@ export function renderClassMember(klass: Wrapped<Base<any>>) {
 			modifiers,
 			`${name}:`,
 			mappedType.referenceName(klass.typeVariableMap(), {
-				typescriptCompatibility: true,
+				typescriptCompatibility: { plainTypeVariables: true },
 			}),
 		].join("")
 	}

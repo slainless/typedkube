@@ -1,5 +1,6 @@
 import type { Wrapped } from "@tooling/kjsoffline/data/common"
 import type { FunctionMixin } from "@tooling/kjsoffline/data/mixin/function"
+import { mapReservedKeywords } from "../utils"
 
 export function renderParameters(
 	klass: Wrapped<InstanceType<ReturnType<typeof FunctionMixin>>>,
@@ -10,7 +11,7 @@ export function renderParameters(
 		.parameters()
 		.map((parameter) =>
 			[
-				`${parameter.name()}:`,
+				`${mapReservedKeywords(parameter.name())}:`,
 				parameter
 					.asWrapped(typeVariableMap)
 					.mappedType()
