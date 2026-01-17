@@ -96,7 +96,7 @@ export class WrappedMethod extends WrappedFunctionMixin(
 		const name = encloseObjectField(this.wrapped().name())
 		const generics = this.typescriptGenerics()
 		const parameters = this.typescriptParameters()
-		const returnType = this.wrappedDeclaringClass().typescriptReferenceName()
+		const returnType = this.mappedType().typescriptReferenceName()
 		return `${modifiersComment}\n${name}${generics}(${parameters}): ${returnType}`
 	}
 }
