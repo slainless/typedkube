@@ -3,9 +3,9 @@ import { join } from "node:path"
 import { parseArgs } from "node:util"
 import { getLogger } from "@logtape/logtape"
 import { DataStorage, JsonExtractor, Registry } from "@tooling/kjsoffline"
-import { Packager } from "@tooling/kjsoffline/typegen/packager"
-import { DEFAULT_KUBE_OFFLINE_HTML } from "@tooling/libs/default"
-import { configureLogger } from "@tooling/libs/logger"
+import { Packager } from "@tooling/kjsoffline/typegen/packager.ts"
+import { DEFAULT_KUBE_OFFLINE_HTML } from "@tooling/libs/default.ts"
+import { configureLogger } from "@tooling/libs/logger.ts"
 
 const DEFAULT_TYPEGEN_OUTPUT = join(process.cwd(), "typings", "typegen")
 

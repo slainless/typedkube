@@ -4,7 +4,7 @@ import { dirname, join } from "node:path"
 import { createContext, type FormatterContext } from "@dprint/formatter"
 import typescript from "@dprint/typescript"
 import { Class, RawClass, type Registry } from "../data"
-import { renderPackage } from "./renderer/package"
+import { renderPackage } from "./renderer/package.ts"
 export interface Package {
 	[key: string]: RawClass | Package
 	[Package.PackageName]: string

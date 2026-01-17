@@ -1,6 +1,6 @@
 import type { RawClass } from "@tooling/kjsoffline/data"
-import type { Wrapped } from "@tooling/kjsoffline/data/common"
-import { isStatic } from "../utils"
+import type { Wrapped } from "@tooling/kjsoffline/data/common.ts"
+import { isStatic } from "../utils.ts"
 
 export function renderInnerClasses(
 	klass: Wrapped<RawClass>,

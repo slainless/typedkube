@@ -1,7 +1,7 @@
 import type { WrappedRawClass } from "@tooling/kjsoffline/data"
-import { renderFields } from "./field"
-import { renderConstructors, renderMethods } from "./function"
-import { renderInnerClasses } from "./inner-class"
+import { renderFields } from "./field.ts"
+import { renderConstructors, renderMethods } from "./function.ts"
+import { renderInnerClasses } from "./inner-class.ts"
 
 export function renderClassConstructorInterface(klass: WrappedRawClass) {
 	const name = klass.typescriptReferenceName({

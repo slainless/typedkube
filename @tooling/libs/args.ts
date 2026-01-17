@@ -1,5 +1,5 @@
 import { parseArgs } from "node:util"
-import { DEFAULT_DATA_OUTPUT, DEFAULT_KUBE_OFFLINE_HTML } from "./default"
+import { DEFAULT_DATA_OUTPUT, DEFAULT_KUBE_OFFLINE_HTML } from "./default.ts"
 
 export function simpleIOArgs() {
 	return parseArgs({

@@ -1,8 +1,8 @@
-import { getFileSink } from "@logtape/file"
 import { mkdir, truncate } from "node:fs/promises"
+import { dirname } from "node:path"
+import { getFileSink } from "@logtape/file"
 import { type Config, configure, getConsoleSink } from "@logtape/logtape"
 import { getPrettyFormatter } from "@logtape/pretty"
-import { dirname } from 'node:path'
 
 export async function configureLogger(outputPath?: string) {
 	const tapeConfig: Config<any, any> = {
