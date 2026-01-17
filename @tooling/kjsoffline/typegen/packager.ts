@@ -91,12 +91,13 @@ export class Packager {
 		const packageFile = `${dirs.pop()}.d.ts`
 		const packagePath = join(targetDir, ...packageName.split("."), packageFile)
 
-		const code = format
-			? dprint.format(packagePath, renderPackage(packageName, classes))
-			: renderPackage(packageName, classes)
+		let finalCode = renderPackage(packageName, classes)
+		try {
+			if (format) finalCode = dprint.format(packagePath, finalCode)
+		} catch {}
 
 		await mkdir(dirname(packagePath), { recursive: true })
-		await writeFile(packagePath, code)
+		await writeFile(packagePath, finalCode)
 	}
 
 	private collectPackages(packageEntrypoint: Package): Package[] {
