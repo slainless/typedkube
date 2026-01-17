@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises"
 import { join } from "node:path"
+import { getLogger } from "@logtape/logtape"
 import {
 	Annotation,
 	Binding,
@@ -24,6 +25,10 @@ import {
 	renderClassInterface,
 } from "@tooling/kjsoffline/typegen/renderer/class-interface"
 import { simpleIOArgs } from "@tooling/libs/args.ts"
+import { configureLogger } from "@tooling/libs/logger"
+
+await configureLogger()
+const logger = getLogger("global")
 
 const argv = simpleIOArgs()
 const extractor = new JsonExtractor(argv.values.input, argv.values.output)
@@ -38,10 +43,10 @@ const packages = packager.packageMap
 const render = (index: number) => {
 	const klass = registry.get(Class, index as ElementIndex)
 	if (klass instanceof RawClass) {
-		console.log(renderClassConstructorInterface(klass.asWrapped()))
-		console.log(renderClassInterface(klass.asWrapped()))
+		logger.info(renderClassConstructorInterface(klass.asWrapped()))
+		logger.info(renderClassInterface(klass.asWrapped()))
 	} else {
-		console.log(`Not a raw class: ${klass.constructor.name}`)
+		logger.info(`Not a raw class: ${klass.constructor.name}`)
 	}
 }
 const renderPackage = (pkg: Package, format = false) => {
@@ -50,9 +55,6 @@ const renderPackage = (pkg: Package, format = false) => {
 const renderAll = async () => {
 	const results = await packager.generate(join(process.cwd(), "typegen"))
 	for (const [pkg, error] of results) {
-		console.error(
-			`Error generating package ${pkg[Package.PackageName]}:`,
-			error,
-		)
+		logger.error(error, `Error generating package ${pkg[Package.PackageName]}:`)
 	}
 }
