@@ -215,7 +215,7 @@ export class RawClass extends ClassTypeMixin(
 
 	packageName(): string {
 		const packageNameIndex = this.packageIndex()
-		if (packageNameIndex == null) return ""
+		if (packageNameIndex == null) return "$root"
 
 		return this.registry.storage.getPackageName(packageNameIndex)
 	}
