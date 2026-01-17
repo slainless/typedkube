@@ -92,12 +92,17 @@ export class Packager {
 		const packagePath = join(targetDir, ...packageName.split("."), packageFile)
 
 		let finalCode = renderPackage(packageName, classes)
+		let error: any
 		try {
 			if (format) finalCode = dprint.format(packagePath, finalCode)
-		} catch {}
+		} catch (e) {
+			error = e
+		}
 
 		await mkdir(dirname(packagePath), { recursive: true })
 		await writeFile(packagePath, finalCode)
+
+		if (error) throw error
 	}
 
 	private collectPackages(packageEntrypoint: Package): Package[] {
