@@ -34,7 +34,6 @@ export class Packager {
 
 			if (
 				!(klass instanceof RawClass) ||
-				!Number.isNaN(Number.parseInt(klass.simpleName(), 10)) ||
 				klass.simpleName().startsWith("package-info")
 			)
 				continue
