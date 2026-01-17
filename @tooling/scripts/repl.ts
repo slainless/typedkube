@@ -27,6 +27,8 @@ import {
 import { simpleIOArgs } from "@tooling/libs/args.ts"
 import { configureLogger } from "@tooling/libs/logger"
 
+process.env.DEBUG = "true"
+
 await configureLogger()
 const logger = getLogger("global")
 
@@ -39,7 +41,6 @@ const storage = new DataStorage(data)
 const registry = new Registry(storage)
 const packager = new Packager(registry)
 const packages = packager.packageMap
-// process.env.DEBUG = "true"
 const render = (index: number) => {
 	const klass = registry.get(Class, index as ElementIndex)
 	if (klass instanceof RawClass) {
@@ -49,7 +50,7 @@ const render = (index: number) => {
 		logger.info(`Not a raw class: ${klass.constructor.name}`)
 	}
 }
-const renderPackage = (pkg: Package, format = false) => {
+const renderPackage = (pkg: Package, format = true) => {
 	packager.generatePackage(join(process.cwd(), "typegen"), pkg, format)
 }
 const renderAll = async () => {
