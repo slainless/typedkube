@@ -1,5 +1,7 @@
+import { isStatic } from "@tooling/kjsoffline/typegen/utils.ts"
 import type { Constructor, Wrapped } from "../common.ts"
 import { Class } from "../element/class.ts"
+import { type RawClass, WrappedRawClass } from "../element/raw-class.ts"
 import type { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { DataIndex } from "../storage.ts"
 import { asArray, dataIndex } from "../utils.ts"
@@ -36,7 +38,7 @@ export function MappedTypeVariableMixin<
 			})
 		}
 
-		typescriptGenerics(mapGeneric = true) {
+		typescriptGenerics(mapGeneric = true): string {
 			let variables: string
 			if (mapGeneric)
 				variables = this.typeVariables()
@@ -46,6 +48,26 @@ export function MappedTypeVariableMixin<
 				variables = this.mappedTypeVariables()
 					.map((variable) => variable.typescriptReferenceName())
 					.join(",")
+
+			/**
+			 * Inject enclosing class generics if the current class is an inner class and not static.
+			 */
+			if (this instanceof WrappedRawClass) {
+				const rawClass = this.wrapped() as RawClass
+				const useStatic = isStatic(rawClass.modifiersValue())
+				const enclosing = rawClass.enclosingClass() ?? rawClass.declaringClass()
+
+				if (enclosing != null && !useStatic) {
+					const enclosingGenerics = enclosing
+						.typeVariables()
+						.map((variable) => variable.typescriptReferenceName())
+
+					variables = [...enclosingGenerics, variables]
+						.filter(Boolean)
+						.join(",")
+				}
+			}
+
 			return variables ? `<${variables}>` : ""
 		}
 	}
