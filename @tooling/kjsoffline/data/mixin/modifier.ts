@@ -26,9 +26,19 @@ export function ModifierMixin<
 			).join(",")
 
 			return `
-				/**
+				/**${this.debugInfo()}
 				 * @modifiers ${modifiers}
 				 */`
+		}
+
+		private debugInfo() {
+			if (process.env.DEBUG !== "true") return ""
+			return [
+				"",
+				// @ts-expect-error
+				`* @data_index ${this._data._id}`,
+				`* @type ${this.constructor.name}`,
+			].join("\n")
 		}
 	}
 

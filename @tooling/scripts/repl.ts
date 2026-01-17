@@ -34,6 +34,7 @@ const storage = new DataStorage(data)
 const registry = new Registry(storage)
 const packager = new Packager(registry)
 const packages = packager.packageMap
+// process.env.DEBUG = "true"
 const render = (index: number) => {
 	const klass = registry.get(Class, index as ElementIndex)
 	if (klass instanceof RawClass) {
