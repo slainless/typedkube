@@ -37,3 +37,4 @@ bun.lock
 deno.lock
 .vscode
 typings/typegen
+@tooling/logs
