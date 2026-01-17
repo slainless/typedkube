@@ -2,16 +2,13 @@ import type { RawClass } from "@tooling/kjsoffline/data"
 import type { Wrapped } from "@tooling/kjsoffline/data/common"
 import { isStatic } from "../utils"
 
-export function renderInnerClasses(
-	klass: Wrapped<RawClass>,
-	staticOnly = false,
-) {
+export function renderFields(klass: Wrapped<RawClass>, staticOnly = false) {
 	return klass
 		.wrapped()
-		.innerClasses()
+		.fields(true)
 		.filter((v) =>
 			staticOnly ? isStatic(v.modifiersValue()) : !isStatic(v.modifiersValue()),
 		)
-		.map((kls) => kls.asWrapped(0, klass.typeVariableMap()).typescriptField())
+		.map((field) => field.asWrapped(klass.typeVariableMap()).typescriptField())
 		.join("\n")
 }

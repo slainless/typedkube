@@ -1,26 +1,38 @@
 import type { WrappedRawClass } from "@tooling/kjsoffline/data"
-import { renderFields } from "./class-member"
+import { renderFields } from "./field"
 import { renderConstructors, renderMethods } from "./function"
 import { renderInnerClasses } from "./inner-class"
-import { renderExtends } from "./super-class"
 
 export function renderClassConstructorInterface(klass: WrappedRawClass) {
-	return [
-		`interface ${klass.name({}, false, { nameSuffix: "Static" })} ${renderExtends(klass, true)} {`,
-		renderConstructors(klass),
-		renderMethods(klass, true),
-		renderFields(klass, true),
-		renderInnerClasses(klass, true),
-		"}",
-	].join("\n")
+	const name = klass.typescriptReferenceName({
+		mapClassGenerics: false,
+		prependPackageName: false,
+		nameSuffix: "Static",
+	})
+	const inherits = klass.typescriptExtends()
+
+	return `
+		interface ${name} ${inherits ? `extends ${inherits}` : ""} {
+			${renderConstructors(klass)}
+			${renderMethods(klass, true)}
+			${renderFields(klass, true)}
+			${renderInnerClasses(klass, true)}
+		}
+	`
 }
 
 export function renderClassInterface(klass: WrappedRawClass) {
-	return [
-		`interface ${klass.name()} ${renderExtends(klass)} {`,
-		renderMethods(klass, false),
-		renderFields(klass, false),
-		renderInnerClasses(klass, false),
-		"}",
-	].join("\n")
+	const name = klass.typescriptReferenceName({
+		mapClassGenerics: false,
+		prependPackageName: false,
+	})
+	const inherits = klass.typescriptExtends()
+
+	return `
+		interface ${name} ${inherits ? `extends ${inherits}` : ""} {
+			${renderMethods(klass, false)}
+			${renderFields(klass, false)}
+			${renderInnerClasses(klass, false)}
+		}
+	`
 }

@@ -2,15 +2,16 @@ import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { BasicNameMixin } from "../mixin/basic-name.ts"
 import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
-import { FunctionMixin, WrappedFunctionMixin } from "../mixin/function.ts"
+import { FunctionMixin } from "../mixin/function.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, EitherDataIndex } from "../storage.ts"
-import { assertExist } from "../utils.ts"
+import { assertExist, encloseObjectField } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
+import { WrappedFunctionMixin } from "../wrapped-mixin/function.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
 import { Modifier } from "./modifier.ts"
@@ -73,34 +74,6 @@ export class WrappedMethod extends WrappedFunctionMixin(
 		),
 	),
 ) {
-	asString() {
-		const returnType = this.mappedType().asString()
-		const modifiers = Modifier.asString(
-			this.wrapped().modifiers() ?? Modifier.PUBLIC.value,
-		).join(" ")
-		const typeVars = this.mappedTypeVariables()
-			.map((type) => type.asString())
-			.join(", ")
-		const parameters = this.wrappedParameters()
-			.map((parameter) => parameter.asString())
-			.join(", ")
-		return [modifiers, returnType, typeVars ? `<${typeVars}>` : "", parameters]
-			.map((v) => v.trim())
-			.filter(Boolean)
-			.join(" ")
-	}
-
-	asKubeStaticCall() {
-		const patent = this.wrappedDeclaringClass()
-		return (
-			`${patent.simpleName().toUpperCase()}.${this.wrapped().name()}(` +
-			this.wrappedParameters()
-				.map((p) => p.asString())
-				.join(", ") +
-			")"
-		)
-	}
-
 	equals(other: WrappedMethod) {
 		throw new Error("TODO")
 
@@ -116,6 +89,15 @@ export class WrappedMethod extends WrappedFunctionMixin(
 
 	wrappedDeclaringMethod() {
 		throw new Error("TODO")
+	}
+
+	typescriptMethod() {
+		const modifiersComment = this.wrapped().typescriptModifiersComment()
+		const name = encloseObjectField(this.wrapped().name())
+		const generics = this.typescriptGenerics()
+		const parameters = this.typescriptParameters()
+		const returnType = this.wrappedDeclaringClass().typescriptReferenceName()
+		return `${modifiersComment}\n${name}${generics}(${parameters}): ${returnType}`
 	}
 }
 

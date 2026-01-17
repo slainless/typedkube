@@ -10,6 +10,14 @@ export function MappedTypeVariableMixin<
 	>,
 >(klass: T) {
 	class HasMappedTypeVariable extends klass {
+		typeVariablesIndex() {
+			return this.wrapped().typeVariablesIndex()
+		}
+
+		typeVariables() {
+			return this.wrapped().typeVariables()
+		}
+
 		mappedTypeVariablesIndex() {
 			const typeVariableMap = this.typeVariableMap()
 			return this.wrapped()
@@ -26,6 +34,19 @@ export function MappedTypeVariableMixin<
 				)
 				return type.asWrapped(arrayDepth, this.typeVariableMap())
 			})
+		}
+
+		typescriptGenerics(mapGeneric = true) {
+			let variables: string
+			if (mapGeneric)
+				variables = this.typeVariables()
+					.map((variable) => variable.typescriptReferenceName())
+					.join(",")
+			else
+				variables = this.mappedTypeVariables()
+					.map((variable) => variable.typescriptReferenceName())
+					.join(",")
+			return variables ? `<${variables}>` : ""
 		}
 	}
 

@@ -6,12 +6,11 @@ import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, EitherDataIndex } from "../storage.ts"
-import { assertExist } from "../utils.ts"
+import { assertExist, mapReservedKeyword } from "../utils.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 import { Constructor } from "./constructor.ts"
 import { Method } from "./method.ts"
-import { Modifier } from "./modifier.ts"
 
 export class Parameter extends DeclaringClassMixin(
 	BasicNameMixin(
@@ -84,29 +83,20 @@ export class Parameter extends DeclaringClassMixin(
 	asWrapped(typeVariableMap: TypeVariableMap) {
 		return new WrappedParameter(this.registry, this, typeVariableMap)
 	}
-
-	asString() {
-		throw new Error("TODO")
-	}
 }
 
 export class WrappedParameter extends WrappedDeclaringClassMixin(
 	MappedTypeMixin(Wrapped<Parameter>),
 ) {
-	asString() {
-		const type = this.mappedType().asString()
-		const modifiers = Modifier.asString(
-			this.wrapped().modifiers() ?? Modifier.PUBLIC.value,
-		).join(" ")
-		return [modifiers, type, this.wrapped().name()]
-			.map((v) => v.trim())
-			.filter(Boolean)
-			.join(" ")
-	}
-
 	wrappedDeclaringFunction() {
 		throw new Error("TODO")
 		// return this.wrapped().declaringFunction().asWrapped(this.typeVariableMap())
+	}
+
+	typescriptParameter() {
+		const name = mapReservedKeyword(this.wrapped().name())
+		const type = this.mappedType().typescriptReferenceName()
+		return `${name}: ${type}`
 	}
 }
 

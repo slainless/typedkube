@@ -1,13 +1,19 @@
 import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { ClassTypeMixin } from "../mixin/class-type.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
+import type { TypescriptNameOptions } from "../name.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { ParameterizedTypeData } from "../storage.ts"
 import { exist } from "../utils.ts"
 import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
+import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
 import { Class } from "./class.ts"
 import { RawClass } from "./raw-class.ts"
 
+/**
+ * Instantiation of {@link RawClass} with concrete type arguments.
+ * The type arguments are concrete so it should not be affected by any type variable mappings.
+ */
 export class ParameterizedType extends ClassTypeMixin(
 	TypeVariableMixin(Class<ParameterizedTypeData>),
 ) {
@@ -48,14 +54,6 @@ export class ParameterizedType extends ClassTypeMixin(
 		return ownerType
 	}
 
-	packageName(): string {
-		return this.rawType().packageName()
-	}
-
-	simpleName() {
-		return this.rawType().simpleName()
-	}
-
 	asWrapped(arrayDepth = 0, typeVariableMap: TypeVariableMap = {}) {
 		return new WrappedParameterizedType(
 			this.registry,
@@ -66,5 +64,27 @@ export class ParameterizedType extends ClassTypeMixin(
 }
 
 export class WrappedParameterizedType extends WrappedClassMixin(
-	Wrapped<ParameterizedType>,
-) {}
+	MappedTypeVariableMixin(Wrapped<ParameterizedType>),
+) {
+	wrappedRawType() {
+		return this.wrapped().rawType().asWrapped(0, this.typeVariableMap())
+	}
+
+	override typescriptReferenceName(options?: TypescriptNameOptions) {
+		const {
+			prependPackageName = true,
+			appendGenerics = true,
+			nameSuffix = "",
+			renderRootPackageName = false,
+		} = options ?? {}
+
+		const rawType = this.wrappedRawType()
+		const packageName = prependPackageName
+			? rawType.typescriptPackageName(renderRootPackageName)
+			: ""
+		const enclosingClass = rawType.typescriptEnclosingClassName()
+		const name = rawType.typescriptSimpleName()
+		const generics = appendGenerics ? this.typescriptGenerics() : ""
+		return `${packageName ? `${packageName}.` : ""}${enclosingClass}${name}${nameSuffix}${generics}`
+	}
+}

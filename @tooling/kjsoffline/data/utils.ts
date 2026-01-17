@@ -80,3 +80,65 @@ export function renderClassDebug(
 
 	return `${element.constructor.name} (type: ${element.index()})`
 }
+
+const reservedKeywords = new Set([
+	"type",
+	"interface",
+	"function",
+	"class",
+	"enum",
+	"in",
+	"with",
+	"export",
+	"import",
+	"from",
+	"as",
+	"namespace",
+	"module",
+	"private",
+	"protected",
+	"public",
+	"static",
+	"async",
+	"await",
+	"yield",
+	"default",
+	"extends",
+	"implements",
+	"let",
+	"const",
+	"var",
+	"if",
+	"else",
+	"switch",
+	"case",
+	"break",
+	"continue",
+	"return",
+	"throw",
+	"try",
+	"catch",
+	"finally",
+	"while",
+	"do",
+	"for",
+	"instanceof",
+	"typeof",
+	"new",
+	"this",
+	"super",
+	"void",
+	"null",
+	"true",
+	"false",
+])
+
+export function mapReservedKeyword(name: string) {
+	if (reservedKeywords.has(name)) return `$${name}`
+	return name
+}
+
+export function encloseObjectField(name: string) {
+	if (name.includes("-")) return `"${name}"`
+	return name
+}

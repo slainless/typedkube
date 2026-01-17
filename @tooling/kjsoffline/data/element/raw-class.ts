@@ -1,8 +1,10 @@
+import { isStatic } from "@tooling/kjsoffline/typegen/utils.ts"
 import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { ClassTypeMixin } from "../mixin/class-type.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
+import type { TypescriptNameOptions } from "../name.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { RawClassTypeData } from "../storage.ts"
 import { asArray, exist } from "../utils.ts"
@@ -15,6 +17,9 @@ import { Method } from "./method.ts"
 import { ParameterizedType } from "./parameterized-type.ts"
 import type { Relation } from "./relation.ts"
 
+/**
+ * Raw class definition such as `class Foo` or `interface Bar`.
+ */
 export class RawClass extends ClassTypeMixin(
 	AnnotationMixin(ModifierMixin(TypeVariableMixin(Class<RawClassTypeData>))),
 ) {
@@ -222,18 +227,6 @@ export class RawClass extends ClassTypeMixin(
 		return this.data()[Property.PACKAGE_NAME]
 	}
 
-	simpleName() {
-		const classNameIndex = exist(this.nameIndex())
-		return exist(this.registry.storage.getName(classNameIndex))
-	}
-
-	packageName(): string {
-		const packageNameIndex = this.packageIndex()
-		if (packageNameIndex == null) return "$root"
-
-		return this.registry.storage.getPackageName(packageNameIndex)
-	}
-
 	parameterizedArgs() {
 		throw new Error("Not implemented")
 		/**
@@ -283,4 +276,79 @@ export class RawClass extends ClassTypeMixin(
 
 export class WrappedRawClass extends WrappedClassMixin(
 	MappedTypeVariableMixin(Wrapped<RawClass>),
-) {}
+) {
+	typescriptSimpleName() {
+		const classNameIndex = exist(this.wrapped().nameIndex())
+		return exist(this.registry.storage.getName(classNameIndex))
+	}
+
+	typescriptPackageName(renderRootPackageName = false) {
+		const fallback = renderRootPackageName ? "$root" : ""
+		const packageNameIndex = this.wrapped().packageIndex()
+		if (packageNameIndex == null) return fallback
+
+		const packageName = this.registry.storage.getPackageName(packageNameIndex)
+		return packageName || fallback
+	}
+
+	typescriptEnclosingClassName() {
+		let enclosingClassName = ""
+
+		let enclosing =
+			this.wrapped().declaringClass() ?? this.wrapped().enclosingClass()
+		while (enclosing != null) {
+			if (enclosing instanceof ParameterizedType) {
+				const rawType = enclosing.rawType()
+				enclosingClassName = `${rawType.asWrapped().typescriptSimpleName()}$${enclosingClassName}`
+				enclosing = rawType.declaringClass() ?? rawType.enclosingClass()
+			} else {
+				enclosingClassName = `${enclosing.asWrapped().typescriptSimpleName()}$${enclosingClassName}`
+				enclosing = enclosing.declaringClass() ?? enclosing.enclosingClass()
+			}
+		}
+
+		return enclosingClassName
+	}
+
+	typescriptField() {
+		const modifiersComment = this.wrapped().typescriptModifiersComment()
+		const useStatic = isStatic(this.wrapped().modifiersValue())
+		const name = this.typescriptSimpleName()
+		const type = this.typescriptReferenceName({
+			nameSuffix: useStatic ? "Static" : "",
+		})
+		return `${modifiersComment}\n${name}: ${type}`
+	}
+
+	typescriptExtends() {
+		const inherits = [
+			...this.wrapped().interfaces(),
+			this.wrapped().superClass(),
+		]
+			.filter((v) => v != null)
+			.map((v) => v.asWrapped(0, this.typeVariableMap()))
+
+		return inherits.map((v) => v.typescriptReferenceName()).join(", ")
+	}
+
+	override typescriptReferenceName(options?: TypescriptNameOptions) {
+		const {
+			prependPackageName = true,
+			appendGenerics = true,
+			mapClassGenerics = true,
+			nameSuffix = "",
+			renderRootPackageName = false,
+		} = options ?? {}
+		this.wrapped().declaringClass()
+
+		const packageName = prependPackageName
+			? this.typescriptPackageName(renderRootPackageName)
+			: ""
+		const name = this.typescriptSimpleName()
+		const enclosingClass = this.typescriptEnclosingClassName()
+		const generics = appendGenerics
+			? this.typescriptGenerics(mapClassGenerics)
+			: ""
+		return `${packageName ? `${packageName}.` : ""}${enclosingClass}${name}${nameSuffix}${generics}`
+	}
+}

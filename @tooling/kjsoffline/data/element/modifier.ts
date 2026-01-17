@@ -13,6 +13,13 @@ export class Modifier {
 	is(mod: Modifier.Value): boolean {
 		return (this.value & mod) !== 0
 	}
+
+	asString(): string[] {
+		const strings = []
+		for (const modifier of Modifier.STRING_LOOKUP)
+			if (modifier.is(this.value)) strings.push(modifier.name)
+		return strings
+	}
 }
 
 export namespace Modifier {
@@ -46,7 +53,7 @@ export namespace Modifier {
 	export const PARAMETER_MODIFIERS = new Modifier(16, "parameter modifiers")
 	export const ACCESS_MODIFIERS = new Modifier(7, "access modifiers")
 
-	const STRING_LOOKUP = [
+	export const STRING_LOOKUP = [
 		PUBLIC,
 		PROTECTED,
 		PRIVATE,

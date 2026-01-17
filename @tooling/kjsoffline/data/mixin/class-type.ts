@@ -15,7 +15,7 @@ export function ClassTypeMixin<T extends Constructor<Class<any>>>(klass: T) {
 		protected _cachedRecursiveTypeVariableMap?: RecursiveTypeVariableMap
 		protected _cachedFlatTypeVariableMap?: TypeVariableMap
 
-		typeVariableMap() {
+		computeTypeVariableMap() {
 			if (this._cachedFlatTypeVariableMap != null)
 				return this._cachedFlatTypeVariableMap
 

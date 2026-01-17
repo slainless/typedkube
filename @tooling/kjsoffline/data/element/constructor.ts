@@ -2,7 +2,7 @@ import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { BasicNameMixin } from "../mixin/basic-name.ts"
 import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
-import { FunctionMixin, WrappedFunctionMixin } from "../mixin/function.ts"
+import { FunctionMixin } from "../mixin/function.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
@@ -11,8 +11,8 @@ import type { DataIndex } from "../storage.ts"
 import { assertExist, renderClassDebug } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
+import { WrappedFunctionMixin } from "../wrapped-mixin/function.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
-import { Modifier } from "./modifier.ts"
 
 export class Constructor extends FunctionMixin(
 	DeclaringClassMixin(
@@ -76,39 +76,6 @@ export class WrappedConstructor extends WrappedFunctionMixin(
 		WrappedAnnotationMixin(MappedTypeVariableMixin(Wrapped<Constructor>)),
 	),
 ) {
-	asString() {
-		const parent = this.wrappedDeclaringClass().asString()
-		const modifier = Modifier.asString(
-			this.wrapped().modifiers() ?? Modifier.PUBLIC.value,
-		).join(" ")
-		const typeVars = this.mappedTypeVariables()
-			.map((type) => type.asString())
-			.join(", ")
-		const parameters = this.wrappedParameters()
-			.map((parameter) => parameter.asString())
-			.join(", ")
-
-		return [
-			modifier,
-			typeVars ? `<${typeVars}>` : "",
-			`${parent}(${parameters})`,
-		]
-			.map((v) => v.trim())
-			.filter(Boolean)
-			.join(" ")
-	}
-
-	asKubeStaticCall() {
-		const parent = this.wrappedDeclaringClass()
-		return (
-			`const ${parent.simpleName()} = new ${parent.simpleName().toUpperCase()}(` +
-			this.wrappedParameters()
-				.map((parameter) => parameter.wrapped().name())
-				.join(", ") +
-			")"
-		)
-	}
-
 	wrappedDeclaringConstructor() {
 		const ctorIndex = this.wrapped().constructorIndexInClass()
 		if (ctorIndex === -1) return null
@@ -121,6 +88,14 @@ export class WrappedConstructor extends WrappedFunctionMixin(
 			)
 
 		return ctor.asWrapped(this.typeVariableMap())
+	}
+
+	typescriptConstructor() {
+		const modifiersComment = this.wrapped().typescriptModifiersComment()
+		const generics = this.typescriptGenerics()
+		const parameters = this.typescriptParameters()
+		const returnType = this.wrappedDeclaringClass().typescriptReferenceName()
+		return `${modifiersComment}\nnew${generics}(${parameters}): ${returnType}`
 	}
 }
 

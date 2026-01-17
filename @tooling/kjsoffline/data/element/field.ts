@@ -6,11 +6,10 @@ import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, EitherDataIndex } from "../storage.ts"
-import { assertExist } from "../utils.ts"
+import { assertExist, encloseObjectField } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
 import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
-import { Modifier } from "./modifier.ts"
 
 export class Field extends DeclaringClassMixin(
 	AnnotationMixin(
@@ -68,29 +67,16 @@ export class Field extends DeclaringClassMixin(
 	asWrapped(typeVariableMap: TypeVariableMap) {
 		return new WrappedField(this.registry, this, typeVariableMap)
 	}
-
-	asString() {
-		throw new Error("TODO")
-	}
 }
 
 export class WrappedField extends WrappedDeclaringClassMixin(
 	WrappedAnnotationMixin(MappedTypeMixin(Wrapped<Field>)),
 ) {
-	asString() {
-		const returnType = this.mappedType().asString()
-		const modifiers = Modifier.asString(
-			this.wrapped().modifiers() ?? Modifier.PUBLIC.value,
-		).join(" ")
-		return [modifiers, returnType, this.wrapped().name()]
-			.map((v) => v.trim())
-			.filter(Boolean)
-			.join(" ")
-	}
-
-	asKubeStaticReference() {
-		const patent = this.wrapped().declaringClass()
-		return `${patent.simpleName().toUpperCase()}.${this.wrapped().name()}`
+	typescriptField() {
+		const modifiersComment = this.wrapped().typescriptModifiersComment()
+		const name = encloseObjectField(this.wrapped().name())
+		const type = this.mappedType().typescriptReferenceName()
+		return `${modifiersComment}\n${name}: ${type}`
 	}
 }
 

@@ -34,7 +34,7 @@ export class Packager {
 
 			if (
 				!(klass instanceof RawClass) ||
-				klass.simpleName().startsWith("package-info")
+				klass.asWrapped().typescriptSimpleName().startsWith("package-info")
 			)
 				continue
 			this.insertClass(klass)
@@ -42,7 +42,9 @@ export class Packager {
 	}
 
 	private insertClass(klass: RawClass) {
-		const packageName = klass.packageName()
+		const packageName = klass.asWrapped().typescriptPackageName(false)
+		if (!packageName) return
+
 		let packageClasses = this.packages[packageName]
 		if (!packageClasses) {
 			packageClasses = {}
@@ -60,9 +62,9 @@ export class Packager {
 			current = current[part] as Package
 		}
 
-		const wrapped = klass.asWrapped()
-		packageClasses[wrapped.simpleName()] = klass
-		current[wrapped.simpleName()] = klass
+		const name = klass.asWrapped().typescriptSimpleName()
+		packageClasses[name] = klass
+		current[name] = klass
 	}
 
 	async generate(targetDir: string) {
