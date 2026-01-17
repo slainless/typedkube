@@ -18,7 +18,7 @@ import {
 	WildcardType,
 } from "@tooling/kjsoffline"
 import type { ElementIndex } from "@tooling/kjsoffline/data/registry"
-import { type Package, Packager } from "@tooling/kjsoffline/typegen/packager"
+import { Package, Packager } from "@tooling/kjsoffline/typegen/packager"
 import {
 	renderClassConstructorInterface,
 	renderClassInterface,
@@ -45,4 +45,13 @@ const render = (index: number) => {
 }
 const renderPackage = (pkg: Package, format = false) => {
 	packager.generatePackage(join(process.cwd(), "typegen"), pkg, format)
+}
+const renderAll = async () => {
+	const results = await packager.generate(join(process.cwd(), "typegen"))
+	for (const [pkg, error] of results) {
+		console.error(
+			`Error generating package ${pkg[Package.PackageName]}:`,
+			error,
+		)
+	}
 }

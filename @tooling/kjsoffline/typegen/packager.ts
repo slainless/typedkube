@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs"
+import { mkdir, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import dprint from "dprint-node"
 import { Class, RawClass, type Registry } from "../data"
@@ -66,17 +66,27 @@ export class Packager {
 		current[wrapped.simpleName()] = klass
 	}
 
-	generate(targetDir: string) {
-		// TODO: generate for all...
+	async generate(targetDir: string) {
+		const tasks = this.collectPackages(this.packageMap).map((pkg) =>
+			this.generatePackage(targetDir, pkg)
+				.then(() => null)
+				.catch((error) => [pkg, error] as const),
+		)
+		const results = await Promise.all(tasks)
+		return results.filter((result) => result !== null)
 	}
 
-	generatePackage(targetDir: string, packages: Package, format = false) {
-		const classes = Object.values(packages).filter(
+	async generatePackage(
+		targetDir: string,
+		singlePackage: Package,
+		format = true,
+	) {
+		const classes = Object.values(singlePackage).filter(
 			(value) => value instanceof RawClass,
 		)
 		if (Object.keys(classes).length <= 0) return
 
-		const packageName = packages[Package.PackageName]
+		const packageName = singlePackage[Package.PackageName]
 		const dirs = packageName.split(".")
 		const packageFile = `${dirs.pop()}.d.ts`
 		const packagePath = join(targetDir, ...packageName.split("."), packageFile)
@@ -85,7 +95,23 @@ export class Packager {
 			? dprint.format(packagePath, renderPackage(packageName, classes))
 			: renderPackage(packageName, classes)
 
-		mkdirSync(dirname(packagePath), { recursive: true })
-		writeFileSync(packagePath, code)
+		await mkdir(dirname(packagePath), { recursive: true })
+		await writeFile(packagePath, code)
+	}
+
+	private collectPackages(packageEntrypoint: Package): Package[] {
+		const packages: Package[] = []
+		const queue: Package[] = [packageEntrypoint]
+		while (queue.length > 0) {
+			const pkg = queue.shift()
+			if (!pkg) continue
+			packages.push(pkg)
+			queue.push(
+				...(Object.values(pkg).filter(
+					(value) => !(value instanceof RawClass),
+				) as Package[]),
+			)
+		}
+		return packages
 	}
 }
