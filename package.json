@@ -5,7 +5,14 @@
     "@biomejs/biome": "^2.3.11",
     "@rspack/cli": "^1.7.0",
     "@rspack/core": "^1.7.0",
-    "typescript": "^5"
+    "@logtape/file": "^2.0.0",
+    "@logtape/logtape": "^2.0.0",
+    "@logtape/pretty": "^2.0.0",
+    "@types/node": "^25.0.9",
+    "typescript": "^5",
+    "dprint-node": "^1.0.8",
+    "htmlparser2": "^10.0.0",
+    "type-fest": "^5.3.1"
   },
   "scripts": {
     "dev": "rspack build --watch",
@@ -15,12 +22,6 @@
     "debug:repl": "deno repl --inspect -r --allow-all --eval-file @tooling/scripts/repl.ts"
   },
   "dependencies": {
-    "@logtape/file": "^2.0.0",
-    "@logtape/logtape": "^2.0.0",
-    "@logtape/pretty": "^2.0.0",
-    "dprint-node": "^1.0.8",
-    "htmlparser2": "^10.0.0",
-    "type-fest": "^5.3.1"
   },
   "type": "module"
 }
