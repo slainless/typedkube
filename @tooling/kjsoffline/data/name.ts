@@ -3,5 +3,5 @@ export interface TypescriptNameOptions {
 	appendGenerics?: boolean
 	mapClassGenerics?: boolean
 	nameSuffix?: string
-	renderRootPackageName?: boolean
+	rootPackage?: string
 }

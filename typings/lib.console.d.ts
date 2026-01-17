@@ -51,7 +51,7 @@ interface Console {
 	 *
 	 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
 	 */
-	error(...data: any[]): void
+	// error(...data: any[]): void // NOT AVAILABLE
 	/**
 	 * The **`console.group()`** static method creates a new inline group in the Web console log, causing any subsequent console messages to be indented by an additional level, until console/groupEnd_static is called.
 	 *
@@ -75,7 +75,7 @@ interface Console {
 	 *
 	 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/info_static)
 	 */
-	info(...data: any[]): void
+	// info(...data: any[]): void // NOT AVAILABLE
 	/**
 	 * The **`console.log()`** static method outputs a message to the console.
 	 *

@@ -48,7 +48,7 @@ export class Packager {
 
 	private insertClass(klass: RawClass) {
 		const wrapped = klass.asWrapped()
-		const packageName = wrapped.typescriptPackageName(false)
+		const packageName = wrapped.typescriptPackageName()
 		if (!packageName) return
 
 		let packageClasses = this.packages[packageName]

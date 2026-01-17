@@ -282,13 +282,12 @@ export class WrappedRawClass extends WrappedClassMixin(
 		return exist(this.registry.storage.getName(classNameIndex))
 	}
 
-	typescriptPackageName(renderRootPackageName = false) {
-		const fallback = renderRootPackageName ? "$root" : ""
+	typescriptPackageName(rootPackage = "_") {
 		const packageNameIndex = this.wrapped().packageIndex()
-		if (packageNameIndex == null) return fallback
+		if (packageNameIndex == null) return rootPackage
 
 		const packageName = this.registry.storage.getPackageName(packageNameIndex)
-		return packageName || fallback
+		return [rootPackage, packageName].filter(Boolean).join(".")
 	}
 
 	typescriptEnclosingClassName() {
@@ -337,12 +336,12 @@ export class WrappedRawClass extends WrappedClassMixin(
 			appendGenerics = true,
 			mapClassGenerics = true,
 			nameSuffix = "",
-			renderRootPackageName = false,
+			rootPackage,
 		} = options ?? {}
 		this.wrapped().declaringClass()
 
 		const packageName = prependPackageName
-			? this.typescriptPackageName(renderRootPackageName)
+			? this.typescriptPackageName(rootPackage)
 			: ""
 		const name = this.typescriptSimpleName()
 		const enclosingClass = this.typescriptEnclosingClassName()

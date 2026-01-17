@@ -75,12 +75,12 @@ export class WrappedParameterizedType extends WrappedClassMixin(
 			prependPackageName = true,
 			appendGenerics = true,
 			nameSuffix = "",
-			renderRootPackageName = false,
+			rootPackage,
 		} = options ?? {}
 
 		const rawType = this.wrappedRawType()
 		const packageName = prependPackageName
-			? rawType.typescriptPackageName(renderRootPackageName)
+			? rawType.typescriptPackageName(rootPackage)
 			: ""
 		const enclosingClass = rawType.typescriptEnclosingClassName()
 		const name = rawType.typescriptSimpleName()
