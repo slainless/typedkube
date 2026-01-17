@@ -11,7 +11,7 @@
     "dev": "rspack build --watch",
     "build": "rspack build",
     "extract": "deno run @tooling/scripts/extract.ts",
-    "debug:repl": "deno repl --inspect -r --allow-read --allow-write --allow-ffi --eval-file @tooling/scripts/repl.ts"
+    "debug:repl": "deno repl --inspect -r --allow-all --eval-file @tooling/scripts/repl.ts"
   },
   "dependencies": {
     "domhandler": "^5.0.3",
