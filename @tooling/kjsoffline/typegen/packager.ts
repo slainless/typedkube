@@ -54,12 +54,14 @@ export class Packager {
 
 		const parts = packageName.split(".")
 		let current = this.packageMap
+		let partialPackage = ""
 		for (const part of parts) {
-			if (!(part in current)) {
+			partialPackage = partialPackage ? `${partialPackage}.${part}` : part
+			if (!(part in current))
 				current[part] = {
-					[Package.PackageName]: packageName,
+					[Package.PackageName]: partialPackage ?? "",
 				}
-			}
+
 			current = current[part] as Package
 		}
 
