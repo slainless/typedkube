@@ -68,11 +68,23 @@ export class Packager {
 		current[name] = klass
 	}
 
-	async generate(targetDir: string) {
+	async generate(
+		targetDir: string,
+		hooks?: {
+			onSuccess?: (packageName: string) => void
+			onError?: (packageName: string, error: Error) => void
+		},
+	) {
 		const tasks = this.collectPackages(this.packageMap).map((pkg) =>
 			this.generatePackage(targetDir, pkg)
-				.then(() => null)
-				.catch((error) => [pkg, error] as const),
+				.then(() => {
+					hooks?.onSuccess?.(pkg[Package.PackageName])
+					return null
+				})
+				.catch((error) => {
+					hooks?.onError?.(pkg[Package.PackageName], error)
+					return [pkg, error] as const
+				}),
 		)
 		const results = await Promise.all(tasks)
 		return results.filter((result) => result !== null)

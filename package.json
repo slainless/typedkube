@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "rspack build --watch",
     "build": "rspack build",
-    "extract": "deno run @tooling/scripts/extract.ts",
+    "extract": "deno run --allow-all @tooling/scripts/extract.ts",
+    "typegen": "deno run --allow-all @tooling/scripts/typegen.ts",
     "debug:repl": "deno repl --inspect -r --allow-all --eval-file @tooling/scripts/repl.ts"
   },
   "dependencies": {
