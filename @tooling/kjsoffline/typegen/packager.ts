@@ -1,21 +1,26 @@
+import { readFileSync } from "node:fs"
 import { mkdir, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
-import dprint from "dprint-node"
+import { createContext, type FormatterContext } from "@dprint/formatter"
+import typescript from "@dprint/typescript"
 import { Class, RawClass, type Registry } from "../data"
 import { renderPackage } from "./renderer/package"
-
 export interface Package {
 	[key: string]: RawClass | Package
 	[Package.PackageName]: string
 }
 
 export namespace Package {
-	export const PackageName = Symbol("PackageName")
+	export const PackageName = Symbol.for("PackageName")
 }
 
 export class Packager {
+	context: FormatterContext
+
 	constructor(readonly registry: Registry) {
 		this.preload()
+		this.context = createContext()
+		this.context.addPlugin(readFileSync(typescript.getPath()))
 	}
 
 	readonly packages: Record<string, Record<string, RawClass>> = {}
@@ -72,23 +77,25 @@ export class Packager {
 
 	async generate(
 		targetDir: string,
-		hooks?: {
+		options?: {
 			onSuccess?: (packageName: string) => void
 			onError?: (packageName: string, error: Error) => void
 		},
 	) {
-		const tasks = this.collectPackages(this.packageMap).map((pkg) =>
-			this.generatePackage(targetDir, pkg)
-				.then(() => {
-					hooks?.onSuccess?.(pkg[Package.PackageName])
-					return null
-				})
-				.catch((error) => {
-					hooks?.onError?.(pkg[Package.PackageName], error)
-					return [pkg, error] as const
-				}),
+		const tasks = this.collectPackages(this.packageMap)
+		const results = await Promise.all(
+			tasks.map((pkg) =>
+				this.generatePackage(targetDir, pkg)
+					.then(() => {
+						options?.onSuccess?.(pkg[Package.PackageName])
+						return null
+					})
+					.catch((error) => {
+						options?.onError?.(pkg[Package.PackageName], error)
+						return [pkg, error] as const
+					}),
+			),
 		)
-		const results = await Promise.all(tasks)
 		return results.filter((result) => result !== null)
 	}
 
@@ -110,7 +117,11 @@ export class Packager {
 		let finalCode = renderPackage(packageName, classes)
 		let error: any
 		try {
-			if (format) finalCode = dprint.format(packagePath, finalCode)
+			if (format)
+				finalCode = this.context.formatText({
+					filePath: packagePath,
+					fileText: finalCode,
+				})
 		} catch (e) {
 			error = e
 		}
@@ -121,12 +132,13 @@ export class Packager {
 		if (error) throw error
 	}
 
+	// TODO: warn if multiple packages with the same name are found
 	private collectPackages(packageEntrypoint: Package): Package[] {
 		const packages: Package[] = []
 		const queue: Package[] = [packageEntrypoint]
 		while (queue.length > 0) {
 			const pkg = queue.shift()
-			if (!pkg) continue
+			if (!pkg) break
 			packages.push(pkg)
 			queue.push(
 				...(Object.values(pkg).filter(
