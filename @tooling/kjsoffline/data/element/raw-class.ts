@@ -348,6 +348,11 @@ export class WrappedRawClass extends WrappedClassMixin(
 		const generics = appendGenerics
 			? this.typescriptGenerics(mapClassGenerics)
 			: ""
-		return `${packageName ? `${packageName}.` : ""}${enclosingClass}${name}${nameSuffix}${generics}`
+		return `${this.typescriptDebugInfo()}${packageName ? `${packageName}.` : ""}${enclosingClass}${name}${nameSuffix}${generics}`
+	}
+
+	private typescriptDebugInfo() {
+		if (process.env.DEBUG !== "true") return ""
+		return `/** @data_index ${this.wrapped().index()} | @type ${this.constructor.name} */`
 	}
 }
