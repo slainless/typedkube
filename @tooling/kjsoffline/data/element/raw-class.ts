@@ -66,6 +66,20 @@ export class RawClass extends ClassTypeMixin(
 			| undefined
 	}
 
+	enclosingClass() {
+		const index = this.enclosingClassIndex()
+		if (index == null) return undefined
+		const enclosingClass = this.registry.get(Class, index)
+		if (
+			!(
+				enclosingClass instanceof RawClass ||
+				enclosingClass instanceof ParameterizedType
+			)
+		)
+			throw new Error("Enclosing class is not a RawClass or ParameterizedType")
+		return enclosingClass
+	}
+
 	isInnerClass() {
 		return this.enclosingClassIndex() != null
 	}

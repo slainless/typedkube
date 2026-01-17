@@ -57,14 +57,25 @@ export class NameRenderer {
 	}
 
 	protected render(type: Class<any>, config: NameRenderer.Options): string {
-		if (type instanceof RawClass)
-			if (type.declaringClassIndex())
+		if (type instanceof RawClass) {
+			const declaringClass = type.declaringClass()
+			if (declaringClass != null)
 				return (
-					this.render(type.declaringClass()!, config) +
+					this.render(declaringClass, config) +
 					"$" +
 					this.rawClassName(type, { ...config, appendPackageName: false })
 				)
-			else return this.rawClassName(type, config)
+
+			const enclosingClass = type.enclosingClass()
+			if (enclosingClass != null)
+				return (
+					this.render(enclosingClass, config) +
+					"$" +
+					this.rawClassName(type, { ...config, appendPackageName: false })
+				)
+
+			return this.rawClassName(type, config)
+		}
 		if (type instanceof TypeVariable) return this.typeVariableName(type, config)
 		if (type instanceof WildcardType) return this.wildcardName(type, config)
 		if (type instanceof ParameterizedType)
