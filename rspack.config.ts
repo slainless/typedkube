@@ -37,7 +37,7 @@ export default defineConfig({
 		filename: "[name].js",
 		path: path.resolve(process.cwd(), "../kubejs"),
 		clean: {
-			keep: /^(exported|documentation)\/$/,
+			keep: /(exported|documentation)\//,
 		},
 	},
 	plugins: [
