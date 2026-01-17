@@ -100,6 +100,11 @@ export class NameRenderer {
 				})
 		}
 
+		const { enabled, plainTypeVariables } = typescriptOption(
+			config.typescriptCompatibility,
+		)
+		if (enabled && plainTypeVariables) return name
+
 		const bounds = type
 			.typeVariableBoundsIndex()
 			.map((bound) => this.registry.get(Class, bound))
@@ -221,6 +226,21 @@ export namespace NameRenderer {
 		disableEnclosingName?: boolean
 		isDefiningParameterizedType?: boolean
 		nameSuffix?: string
-		typescriptCompatibility?: boolean
+		typescriptCompatibility?: boolean | Omit<TypescriptOptions, "enabled">
+	}
+
+	export interface TypescriptOptions {
+		enabled: boolean
+		plainTypeVariables?: boolean
 	}
 }
+
+const typescriptOption = (
+	options:
+		| boolean
+		| Omit<NameRenderer.TypescriptOptions, "enabled">
+		| undefined,
+): NameRenderer.TypescriptOptions =>
+	typeof options === "boolean" || options == null
+		? { enabled: !!options }
+		: { enabled: true, ...options }

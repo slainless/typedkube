@@ -14,7 +14,9 @@ export function renderParameters(
 				parameter
 					.asWrapped(typeVariableMap)
 					.mappedType()
-					.referenceName(typeVariableMap, { typescriptCompatibility: true }),
+					.referenceName(typeVariableMap, {
+						typescriptCompatibility: { plainTypeVariables: true },
+					}),
 			].join(""),
 		)
 		.join(", ")
