@@ -13,6 +13,17 @@ This setup also enables code sharing, ESM support, modern ECMAScript languange f
 
 ## Get started
 
+### Clone this repository
+
+Clone this repository inside MC's root instance, by default should be cloned as `typedkube`:
+```
+minecraft/
+├─ typedkube/
+├─ kubejs/
+```
+
+Then, install Node dependencies with any package manager.
+
 ### KubeJS Offline
 
 This step is optional, but highly recommended to get the full typescript experience. 
@@ -50,16 +61,7 @@ For Node.js though, the `--experimental-transform-types` flag is probably needed
 > 
 > Users are responsible for backing up their data before running the build.
 
-This workspace should be compatible with any typescript runtime such as Deno, Bun, or Node.js (v22+).
-
-Clone this repository inside MC's root instance, by default should be cloned as `typedkube`:
-```
-minecraft/
-├─ typedkube/
-├─ kubejs/
-```
-
-Install Node dependencies with any package manager, then run the build script with `npm run build` or `npm run dev`.
+Just write any codes in the `scripts/` directory, then run the build script with `npm run build` or `npm run dev`.
 
 ## Directory structure
 
