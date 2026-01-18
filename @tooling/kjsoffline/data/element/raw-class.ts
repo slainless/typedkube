@@ -1,5 +1,6 @@
 import { isStatic } from "@tooling/kjsoffline/typegen/utils.ts"
 import { Property, type TypeVariableMap, Wrapped } from "../common.ts"
+import { DEFAULT_ROOT_PACKAGE } from "../default.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { ClassTypeMixin } from "../mixin/class-type.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
@@ -318,7 +319,7 @@ export class WrappedRawClass extends WrappedClassMixin(
 		return exist(this.registry.storage.getName(classNameIndex))
 	}
 
-	typescriptPackageName(rootPackage = "_") {
+	typescriptPackageName(rootPackage = DEFAULT_ROOT_PACKAGE) {
 		const packageNameIndex = this.wrapped().packageIndex()
 		if (packageNameIndex == null) return ""
 
