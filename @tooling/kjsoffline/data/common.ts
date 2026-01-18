@@ -87,6 +87,18 @@ export class Wrapped<T extends Base> {
 	wrapped(): T {
 		return this.classInstance
 	}
+
+	useBeforeInit<T extends this, K extends keyof T>(
+		this: T,
+		key: K,
+		// @ts-expect-error
+	): NonNullable<T[`_${K}`]> {
+		// @ts-expect-error
+		const value = this[`_${key}`]
+		if (value == null)
+			throw new TypeError(`${String(key)} must be initialized before use!`)
+		return value
+	}
 }
 
 /**

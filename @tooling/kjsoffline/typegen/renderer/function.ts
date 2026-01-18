@@ -3,23 +3,19 @@ import { isStatic } from "../utils.ts"
 
 export function renderConstructors(klass: WrappedRawClass) {
 	return klass
-		.wrapped()
-		.constructors(true)
-		.map((ctor) =>
-			ctor.asWrapped(klass.typeVariableMap()).typescriptConstructor(),
-		)
+		.wrappedConstructors(true)
+		.map((ctor) => ctor.typescriptConstructor())
 		.join("\n")
 }
 
 export function renderMethods(klass: WrappedRawClass, staticOnly = false) {
 	return klass
-		.wrapped()
-		.methods(true)
-		.filter((v) =>
-			staticOnly ? isStatic(v.modifiersValue()) : !isStatic(v.modifiersValue()),
+		.wrappedMethods(true)
+		.filter((method) =>
+			staticOnly
+				? isStatic(method.wrapped().modifiersValue())
+				: !isStatic(method.wrapped().modifiersValue()),
 		)
-		.map((method) =>
-			method.asWrapped(klass.typeVariableMap()).typescriptMethod(),
-		)
+		.map((method) => method.typescriptMethod())
 		.join("\n")
 }

@@ -1,7 +1,5 @@
-import { isStatic } from "@tooling/kjsoffline/typegen/utils.ts"
 import type { Constructor, Wrapped } from "../common.ts"
 import { Class } from "../element/class.ts"
-import { type RawClass, WrappedRawClass } from "../element/raw-class.ts"
 import type { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { DataIndex } from "../storage.ts"
 import { asArray, dataIndex } from "../utils.ts"

@@ -1,46 +1,28 @@
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { BasicNameMixin } from "../mixin/basic-name.ts"
-import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, EitherDataIndex } from "../storage.ts"
 import { assertExist, mapReservedKeyword } from "../utils.ts"
-import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
+import { DeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 import { Constructor } from "./constructor.ts"
 import { Method } from "./method.ts"
 
-export class Parameter extends DeclaringClassMixin(
-	BasicNameMixin(
-		AnnotationMixin(ModifierMixin(IndexHolderMixin(Base<Parameter.Data>))),
-	),
+export class Parameter extends BasicNameMixin(
+	AnnotationMixin(ModifierMixin(IndexHolderMixin(Base<Parameter.Data>))),
 ) {
-	protected _declaringFunctionType: "method" | "constructor"
-	protected _declaringFunctionIndex: ElementIndex
-	protected _parameterIndexInFunction: number
-
 	constructor(
 		registry: Registry,
 		protected id: ElementIndex,
-		declaringClass: ElementIndex,
-		declaringFunction: ElementIndex,
-		declaringFunctionType: Parameter["_declaringFunctionType"],
-		parameterIndexInFunction: number,
 	) {
 		super(registry)
-		assertExist(declaringClass)
-		assertExist(declaringFunction)
-		assertExist(parameterIndexInFunction)
 
 		const index = this.registry.dataIndexOf(id)
 		this.setIndex(index)
 		this.setData(this.decode(index))
-		this.setDeclaringClassIndex(declaringClass)
-		this._declaringFunctionType = declaringFunctionType
-		this._declaringFunctionIndex = declaringFunction
-		this._parameterIndexInFunction = parameterIndexInFunction
 	}
 
 	protected override rawDataParsingKeys() {
@@ -54,6 +36,51 @@ export class Parameter extends DeclaringClassMixin(
 
 	protected override getStorageRawData(id: DataIndex) {
 		return this.registry.storage.getParameter(id)
+	}
+
+	asWrapped(
+		typeVariableMap: TypeVariableMap,
+		declaringClass: ElementIndex,
+		declaringFunction: ElementIndex,
+		declaringFunctionType: "method" | "constructor",
+		parameterIndexInFunction: number,
+	) {
+		return new WrappedParameter(
+			this.registry,
+			this,
+			typeVariableMap,
+			declaringClass,
+			declaringFunction,
+			declaringFunctionType,
+			parameterIndexInFunction,
+		)
+	}
+}
+
+export class WrappedParameter extends DeclaringClassMixin(
+	MappedTypeMixin(Wrapped<Parameter>),
+) {
+	protected _declaringFunctionType: "method" | "constructor"
+	protected _declaringFunctionIndex: ElementIndex
+	protected _parameterIndexInFunction: number
+
+	constructor(
+		registry: Registry,
+		classInstance: Parameter,
+		typeVariableMap: TypeVariableMap,
+		declaringClass: ElementIndex,
+		declaringFunction: ElementIndex,
+		declaringFunctionType: WrappedParameter["_declaringFunctionType"],
+		parameterIndexInFunction: number,
+	) {
+		super(registry, classInstance, typeVariableMap)
+		assertExist(declaringClass)
+		assertExist(declaringFunction)
+		assertExist(parameterIndexInFunction)
+		this.setDeclaringClassIndex(declaringClass)
+		this._declaringFunctionType = declaringFunctionType
+		this._declaringFunctionIndex = declaringFunction
+		this._parameterIndexInFunction = parameterIndexInFunction
 	}
 
 	declaringFunction() {
@@ -78,19 +105,6 @@ export class Parameter extends DeclaringClassMixin(
 
 	parameterIndexInFunction() {
 		return this._parameterIndexInFunction
-	}
-
-	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedParameter(this.registry, this, typeVariableMap)
-	}
-}
-
-export class WrappedParameter extends WrappedDeclaringClassMixin(
-	MappedTypeMixin(Wrapped<Parameter>),
-) {
-	wrappedDeclaringFunction() {
-		throw new Error("TODO")
-		// return this.wrapped().declaringFunction().asWrapped(this.typeVariableMap())
 	}
 
 	typescriptParameter() {

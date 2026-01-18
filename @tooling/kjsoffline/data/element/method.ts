@@ -1,49 +1,35 @@
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { BasicNameMixin } from "../mixin/basic-name.ts"
-import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
-import { FunctionMixin } from "../mixin/function.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
+import { ParameterMixin } from "../mixin/parameter.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, EitherDataIndex } from "../storage.ts"
 import { assertExist, encloseObjectField } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
-import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
-import { WrappedFunctionMixin } from "../wrapped-mixin/function.ts"
+import { DeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
+import { FunctionMixin } from "../wrapped-mixin/function.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
-import { Modifier } from "./modifier.ts"
 
-export class Method extends FunctionMixin(
-	DeclaringClassMixin(
-		AnnotationMixin(
-			ModifierMixin(
-				TypeVariableMixin(BasicNameMixin(IndexHolderMixin(Base<Method.Data>))),
-			),
+export class Method extends ParameterMixin(
+	AnnotationMixin(
+		ModifierMixin(
+			TypeVariableMixin(BasicNameMixin(IndexHolderMixin(Base<Method.Data>))),
 		),
 	),
 ) {
-	protected _methodIndexInClass: number
-
 	constructor(
 		registry: Registry,
 		protected id: ElementIndex,
-		declaringClass: ElementIndex,
-		methodIndexInClass: number,
 	) {
 		super(registry)
-		assertExist(declaringClass)
-		assertExist(methodIndexInClass)
 
 		const index = this.registry.dataIndexOf(id)
 		this.setIndex(index)
 		this.setData(this.decode(index))
-		this.setDeclaringClassIndex(declaringClass)
-		this.setDeclaringFunctionIndex(id)
-		this.setDeclaringFunctionType("method")
-		this._methodIndexInClass = methodIndexInClass
 	}
 
 	protected override rawDataParsingKeys(): readonly string[] {
@@ -62,33 +48,47 @@ export class Method extends FunctionMixin(
 		return this.registry.storage.getMethod(id)
 	}
 
-	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedMethod(this.registry, this, typeVariableMap)
+	asWrapped(
+		typeVariableMap: TypeVariableMap,
+		declaringClass: ElementIndex,
+		methodIndexInClass: number,
+	) {
+		return new WrappedMethod(
+			this.registry,
+			this,
+			typeVariableMap,
+			declaringClass,
+			methodIndexInClass,
+		)
 	}
 }
 
-export class WrappedMethod extends WrappedFunctionMixin(
-	WrappedDeclaringClassMixin(
+export class WrappedMethod extends FunctionMixin(
+	DeclaringClassMixin(
 		WrappedAnnotationMixin(
 			MappedTypeVariableMixin(MappedTypeMixin(Wrapped<Method>)),
 		),
 	),
 ) {
-	equals(other: WrappedMethod) {
-		throw new Error("TODO")
+	protected _methodIndexInClass: number
 
-		// if (this.wrapped().name() !== other.wrapped().name()) return false
-		// const thisReturnType = this.mappedType()
-		// const otherReturnType = other.mappedType()
-		// if (thisReturnType.wrapped())
-	}
+	constructor(
+		registry: Registry,
+		classInstance: Method,
+		typeVariableMap: TypeVariableMap,
+		declaringClass: ElementIndex,
+		methodIndexInClass: number,
+	) {
+		super(registry, classInstance, typeVariableMap)
+		assertExist(declaringClass)
+		assertExist(methodIndexInClass)
 
-	moreSpecificThan(other: WrappedMethod) {
-		throw new Error("TODO")
-	}
-
-	wrappedDeclaringMethod() {
-		throw new Error("TODO")
+		this.setDeclaringClassIndex(declaringClass)
+		this.setDeclaringFunctionIndex(
+			this.registry.elementIndexOf(classInstance.index()),
+		)
+		this.setDeclaringFunctionType("method")
+		this._methodIndexInClass = methodIndexInClass
 	}
 
 	typescriptMethod() {
@@ -105,7 +105,7 @@ export namespace Method {
 	export interface Data
 		extends ModifierMixin.Data,
 			AnnotationMixin.Data,
-			FunctionMixin.Data,
+			ParameterMixin.Data,
 			TypeVariableMixin.Data {
 		[Property.METHOD_NAME]?: DataIndex
 		[Property.METHOD_RETURN_TYPE]?: EitherDataIndex

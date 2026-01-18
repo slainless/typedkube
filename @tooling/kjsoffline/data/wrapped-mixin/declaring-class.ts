@@ -1,18 +1,33 @@
-import type { Constructor, Wrapped } from "../common.ts"
-import type { DeclaringClassMixin } from "../mixin/declaring-class.ts"
+import type { Base, Constructor, Wrapped } from "../common.ts"
+import { Class } from "../element/class.ts"
+import { RawClass } from "../element/raw-class.ts"
+import type { ElementIndex } from "../registry.ts"
 
-export function WrappedDeclaringClassMixin<
-	T extends Constructor<
-		Wrapped<InstanceType<ReturnType<typeof DeclaringClassMixin>>>
-	>,
->(klass: T) {
-	class HasWrappedDeclaringClass extends klass {
+export function DeclaringClassMixin<T extends Constructor<Wrapped<Base>>>(
+	klass: T,
+) {
+	class HasDeclaringClass extends klass {
+		protected _declaringClassIndex?: ElementIndex
+
+		declaringClassIndex() {
+			return this.useBeforeInit("declaringClassIndex")
+		}
+
+		setDeclaringClassIndex(id: ElementIndex) {
+			this._declaringClassIndex = id
+			return this
+		}
+
+		declaringClass() {
+			const klass = this.registry.get(Class, this.declaringClassIndex())
+			if (klass instanceof RawClass) return klass
+			throw new Error("Declaring class must be a RawClass")
+		}
+
 		wrappedDeclaringClass() {
-			return this.wrapped()
-				.declaringClass()
-				.asWrapped(0, this.typeVariableMap())
+			return this.declaringClass().asWrapped(0, this.typeVariableMap())
 		}
 	}
 
-	return HasWrappedDeclaringClass as T & typeof HasWrappedDeclaringClass
+	return HasDeclaringClass as T & typeof HasDeclaringClass
 }

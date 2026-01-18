@@ -3,11 +3,12 @@ import { isStatic } from "../utils.ts"
 
 export function renderFields(klass: WrappedRawClass, staticOnly = false) {
 	return klass
-		.wrapped()
-		.fields(true)
-		.filter((v) =>
-			staticOnly ? isStatic(v.modifiersValue()) : !isStatic(v.modifiersValue()),
+		.wrappedFields(true)
+		.filter((field) =>
+			staticOnly
+				? isStatic(field.wrapped().modifiersValue())
+				: !isStatic(field.wrapped().modifiersValue()),
 		)
-		.map((field) => field.asWrapped(klass.typeVariableMap()).typescriptField())
+		.map((field) => field.typescriptField())
 		.join("\n")
 }

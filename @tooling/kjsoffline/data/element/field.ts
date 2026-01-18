@@ -1,38 +1,27 @@
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { BasicNameMixin } from "../mixin/basic-name.ts"
-import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, EitherDataIndex } from "../storage.ts"
 import { assertExist, encloseObjectField } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
-import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
+import { DeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 
-export class Field extends DeclaringClassMixin(
-	AnnotationMixin(
-		ModifierMixin(BasicNameMixin(IndexHolderMixin(Base<Field.Data>))),
-	),
+export class Field extends AnnotationMixin(
+	ModifierMixin(BasicNameMixin(IndexHolderMixin(Base<Field.Data>))),
 ) {
-	_fieldIndexInClass: number
-
 	constructor(
 		registry: Registry,
 		protected id: ElementIndex,
-		declaringClass: ElementIndex,
-		fieldIndexInClass: number,
 	) {
 		super(registry)
-		assertExist(declaringClass)
-		assertExist(fieldIndexInClass)
 
 		const index = this.registry.dataIndexOf(id)
 		this.setIndex(index)
 		this.setData(this.decode(index))
-		this.setDeclaringClassIndex(declaringClass)
-		this._fieldIndexInClass = fieldIndexInClass
 	}
 
 	protected override rawDataParsingKeys() {
@@ -48,30 +37,45 @@ export class Field extends DeclaringClassMixin(
 		return this.registry.storage.getField(id)
 	}
 
-	// typeIndex() {
-	// 	return this.data()[Property.FIELD_TYPE]
-	// }
+	asWrapped(
+		typeVariableMap: TypeVariableMap,
+		declaringClass: ElementIndex,
+		fieldIndexInClass: number,
+	) {
+		return new WrappedField(
+			this.registry,
+			this,
+			typeVariableMap,
+			declaringClass,
+			fieldIndexInClass,
+		)
+	}
+}
 
-	// type() {
-	// 	const index = exist(this.typeIndex())
-	// 	return this.registry.get(
-	// 		Class,
-	// 		this.registry.elementIndexOf(dataIndex(index)),
-	// 	)
-	// }
+export class WrappedField extends DeclaringClassMixin(
+	WrappedAnnotationMixin(MappedTypeMixin(Wrapped<Field>)),
+) {
+	protected _fieldIndexInClass: number
+
+	constructor(
+		registry: Registry,
+		classInstance: Field,
+		typeVariableMap: TypeVariableMap,
+		declaringClass: ElementIndex,
+		fieldIndexInClass: number,
+	) {
+		super(registry, classInstance, typeVariableMap)
+		assertExist(declaringClass)
+		assertExist(fieldIndexInClass)
+
+		this.setDeclaringClassIndex(declaringClass)
+		this._fieldIndexInClass = fieldIndexInClass
+	}
 
 	fieldIndexInClass() {
 		return this._fieldIndexInClass
 	}
 
-	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedField(this.registry, this, typeVariableMap)
-	}
-}
-
-export class WrappedField extends WrappedDeclaringClassMixin(
-	WrappedAnnotationMixin(MappedTypeMixin(Wrapped<Field>)),
-) {
 	typescriptField() {
 		const modifiersComment = this.wrapped().typescriptModifiersComment()
 		const name = encloseObjectField(this.wrapped().name())

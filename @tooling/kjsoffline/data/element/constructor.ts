@@ -2,47 +2,34 @@ import { isStatic } from "@tooling/kjsoffline/typegen/utils.ts"
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { BasicNameMixin } from "../mixin/basic-name.ts"
-import { DeclaringClassMixin } from "../mixin/declaring-class.ts"
-import { FunctionMixin } from "../mixin/function.ts"
 import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
+import { ParameterMixin } from "../mixin/parameter.ts"
 import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex } from "../storage.ts"
-import { assertExist, renderClassDebug } from "../utils.ts"
+import { assertExist } from "../utils.ts"
 import { WrappedAnnotationMixin } from "../wrapped-mixin/annotation.ts"
-import { WrappedDeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
-import { WrappedFunctionMixin } from "../wrapped-mixin/function.ts"
+import { DeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
+import { FunctionMixin } from "../wrapped-mixin/function.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
 
-export class Constructor extends FunctionMixin(
-	DeclaringClassMixin(
-		AnnotationMixin(
-			ModifierMixin(
-				TypeVariableMixin(BasicNameMixin(IndexHolderMixin(Base<Method.Data>))),
-			),
+export class Constructor extends ParameterMixin(
+	AnnotationMixin(
+		ModifierMixin(
+			TypeVariableMixin(BasicNameMixin(IndexHolderMixin(Base<Method.Data>))),
 		),
 	),
 ) {
-	protected _constructorIndexInClass: number
-
 	constructor(
 		registry: Registry,
 		protected id: ElementIndex,
-		declaringClass: ElementIndex,
-		constructorIndexInClass: number,
 	) {
 		super(registry)
-		assertExist(declaringClass)
-		assertExist(constructorIndexInClass)
 
 		const index = this.registry.dataIndexOf(id)
 		this.setIndex(index)
 		this.setData(this.decode(index))
-		this.setDeclaringClassIndex(declaringClass)
-		this.setDeclaringFunctionIndex(id)
-		this.setDeclaringFunctionType("constructor")
-		this._constructorIndexInClass = constructorIndexInClass
 	}
 
 	protected override rawDataParsingKeys(): readonly string[] {
@@ -59,12 +46,18 @@ export class Constructor extends FunctionMixin(
 		return this.registry.storage.getConstructor(id)
 	}
 
-	constructorIndexInClass() {
-		return this._constructorIndexInClass
-	}
-
-	asWrapped(typeVariableMap: TypeVariableMap) {
-		return new WrappedConstructor(this.registry, this, typeVariableMap)
+	asWrapped(
+		typeVariableMap: TypeVariableMap,
+		declaringClass: ElementIndex,
+		constructorIndexInClass: number,
+	) {
+		return new WrappedConstructor(
+			this.registry,
+			this,
+			typeVariableMap,
+			declaringClass,
+			constructorIndexInClass,
+		)
 	}
 
 	asString() {
@@ -72,23 +65,34 @@ export class Constructor extends FunctionMixin(
 	}
 }
 
-export class WrappedConstructor extends WrappedFunctionMixin(
-	WrappedDeclaringClassMixin(
+export class WrappedConstructor extends FunctionMixin(
+	DeclaringClassMixin(
 		WrappedAnnotationMixin(MappedTypeVariableMixin(Wrapped<Constructor>)),
 	),
 ) {
-	wrappedDeclaringConstructor() {
-		const ctorIndex = this.wrapped().constructorIndexInClass()
-		if (ctorIndex === -1) return null
+	protected _constructorIndexInClass: number
 
-		const declaringClass = this.wrappedDeclaringClass()
-		const ctor = declaringClass.wrapped().constructors()[ctorIndex]
-		if (ctor == null)
-			throw ReferenceError(
-				`Constructor not found at index ${ctorIndex} in ${renderClassDebug(declaringClass)}`,
-			)
+	constructor(
+		registry: Registry,
+		classInstance: Constructor,
+		typeVariableMap: TypeVariableMap,
+		declaringClass: ElementIndex,
+		constructorIndexInClass: number,
+	) {
+		super(registry, classInstance, typeVariableMap)
+		assertExist(declaringClass)
+		assertExist(constructorIndexInClass)
 
-		return ctor.asWrapped(this.typeVariableMap())
+		this.setDeclaringClassIndex(declaringClass)
+		this.setDeclaringFunctionIndex(
+			this.registry.elementIndexOf(classInstance.index()),
+		)
+		this.setDeclaringFunctionType("constructor")
+		this._constructorIndexInClass = constructorIndexInClass
+	}
+
+	constructorIndexInClass() {
+		return this._constructorIndexInClass
 	}
 
 	typescriptConstructor() {
@@ -114,7 +118,7 @@ export namespace Method {
 	export interface Data
 		extends ModifierMixin.Data,
 			AnnotationMixin.Data,
-			FunctionMixin.Data,
+			ParameterMixin.Data,
 			TypeVariableMixin.Data {
 		[Property.EXCEPTIONS]?: DataIndex[]
 	}

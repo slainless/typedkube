@@ -277,6 +277,42 @@ export class RawClass extends ClassTypeMixin(
 export class WrappedRawClass extends WrappedClassMixin(
 	MappedTypeVariableMixin(Wrapped<RawClass>),
 ) {
+	wrappedConstructors(shallow = false) {
+		return this.wrapped()
+			.constructors(shallow)
+			.map((constructor, index) =>
+				constructor.asWrapped(
+					this.typeVariableMap(),
+					this.registry.elementIndexOf(this.wrapped().index()),
+					index,
+				),
+			)
+	}
+
+	wrappedMethods(shallow = false) {
+		return this.wrapped()
+			.methods(shallow)
+			.map((method, index) =>
+				method.asWrapped(
+					this.typeVariableMap(),
+					this.registry.elementIndexOf(this.wrapped().index()),
+					index,
+				),
+			)
+	}
+
+	wrappedFields(shallow = false) {
+		return this.wrapped()
+			.fields(shallow)
+			.map((field, index) =>
+				field.asWrapped(
+					this.typeVariableMap(),
+					this.registry.elementIndexOf(this.wrapped().index()),
+					index,
+				),
+			)
+	}
+
 	typescriptSimpleName() {
 		const classNameIndex = exist(this.wrapped().nameIndex())
 		return exist(this.registry.storage.getName(classNameIndex))
