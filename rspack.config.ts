@@ -2,6 +2,7 @@ import { globSync } from "node:fs"
 import path from "node:path"
 import { defineConfig } from "@rspack/cli"
 import rspack from "@rspack/core"
+import { TYPEDKUBE_OUTPUT_PATH } from "./typedkube.config.ts"
 
 function scriptDirectory(dir: string, targetDirectory: string) {
 	return globSync(path.join(dir, "**/*.[jt]s")).map((file) => {
@@ -35,7 +36,7 @@ export default defineConfig({
 	output: {
 		chunkFormat: "module",
 		filename: "[name].js",
-		path: path.resolve(process.cwd(), "../kubejs"),
+		path: TYPEDKUBE_OUTPUT_PATH,
 		clean: {
 			keep: /(exported|documentation)\//,
 		},

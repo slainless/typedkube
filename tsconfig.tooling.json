@@ -1,6 +1,7 @@
 {
   "include": [
-    "./rspack.config.ts"
+    "./rspack.config.ts",
+    "./typedkube.config.ts"
   ],
   "compilerOptions": {
     "module": "Preserve",

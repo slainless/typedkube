@@ -13,16 +13,11 @@ This setup also enables code sharing, ESM support, modern ECMAScript languange f
 
 ## Get started
 
-### Clone this repository
+### Setup
 
-Clone this repository inside MC's root instance, by default should be cloned as `typedkube`:
-```
-minecraft/
-├─ typedkube/
-├─ kubejs/
-```
-
-Then, install Node dependencies with any package manager.
+1. Clone this repository anywhere
+2. Install Node dependencies with any package manager.
+3. Change output directory (`KUBEJS_PATH`) in `typedkube.config.ts` to actual kubejs directory, be default it points to `../kubejs` relative to this repository.
 
 ### KubeJS Offline
 
@@ -136,6 +131,6 @@ be referenced using fully qualified name.
 ## TODO
 
 - [x] Implements parser and typegen for KubeJS Offlin output
-- [x] Type support for KubeJS-defined callables (BlockEvents.broken, ServerEvents.registry, etc.)
+- [x] Type support for KubeJS builtin wrappers (BlockEvents.broken, ServerEvents.registry, etc.)
 - [x] Type support for Java.loadClass(K): V
 - [ ] Javascript string -> Java String type cast helper

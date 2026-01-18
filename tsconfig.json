@@ -1,5 +1,5 @@
 {
-  "exclude": ["./rspack.config.ts"],
+  "exclude": ["./rspack.config.ts", "./typedkube.config.ts"],
   "compilerOptions": {
     // Environment setup & latest features
     "lib": [],

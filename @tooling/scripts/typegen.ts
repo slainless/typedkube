@@ -4,10 +4,11 @@ import { parseArgs } from "node:util"
 import { getLogger } from "@logtape/logtape"
 import { DataStorage, JsonExtractor, Registry } from "@tooling/kjsoffline"
 import { Packager } from "@tooling/kjsoffline/typegen/packager.ts"
-import { DEFAULT_KUBE_OFFLINE_HTML } from "@tooling/libs/default.ts"
 import { configureLogger } from "@tooling/libs/logger.ts"
-
-const DEFAULT_TYPEGEN_OUTPUT = join(process.cwd(), "typings", "typegen")
+import {
+	KUBEJS_OFFLINE_HTML_DUMP_PATH,
+	TYPEGEN_OUTPUT_PATH,
+} from "../../typedkube.config.ts"
 
 await configureLogger(join(process.cwd(), "@tooling", "logs", "typegen.log"))
 const logger = getLogger("global")
@@ -18,12 +19,12 @@ const argv = parseArgs({
 		input: {
 			type: "string",
 			short: "i",
-			default: DEFAULT_KUBE_OFFLINE_HTML,
+			default: KUBEJS_OFFLINE_HTML_DUMP_PATH,
 		},
 		output: {
 			type: "string",
 			short: "o",
-			default: DEFAULT_TYPEGEN_OUTPUT,
+			default: TYPEGEN_OUTPUT_PATH,
 		},
 	},
 	allowPositionals: false,
