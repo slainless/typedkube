@@ -96,7 +96,8 @@ Refer to [Type generation](#type-generation) for more details.
 3. Modifiers don't maps well to typescript, so every field member will be considered public from the typescript side. Comments are provided though to hint the original modifier.
 4. The mapped inner classes may or may not be symmetrical to the original java classes since this have not been fully tested yet.
 5. The overall generated type definitions are not fully tested yet so expect some generation issues, incorrect typings, etc.
-6. All java package exports must be referenced using fully qualified name in the typescript side.
+6. All java package exports must be referenced using fully qualified name in the typescript side.'
+7. All java package namespaces are prefixed with `_` to prevent namespace collision
 
 ## Node modules support
 
