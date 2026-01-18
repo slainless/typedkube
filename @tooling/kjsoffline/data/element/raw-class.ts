@@ -284,9 +284,11 @@ export class WrappedRawClass extends WrappedClassMixin(
 
 	typescriptPackageName(rootPackage = "_") {
 		const packageNameIndex = this.wrapped().packageIndex()
-		if (packageNameIndex == null) return rootPackage
+		if (packageNameIndex == null) return ""
 
 		const packageName = this.registry.storage.getPackageName(packageNameIndex)
+		if (!packageName) return ""
+
 		return [rootPackage, packageName].filter(Boolean).join(".")
 	}
 
