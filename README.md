@@ -17,7 +17,7 @@ This setup also enables code sharing, ESM support, modern ECMAScript languange f
 
 1. Clone this repository anywhere
 2. Install Node dependencies with any package manager.
-3. Change output directory (`KUBEJS_PATH`) in `typedkube.config.ts` to actual kubejs directory, be default it points to `../kubejs` relative to this repository.
+3. Change output directory (`KUBEJS_PATH`) in `typedkube.config.ts` to actual kubejs directory, by default pointing to `../kubejs` relative to this repository.
 
 ### KubeJS Offline
 
@@ -130,7 +130,7 @@ be referenced using fully qualified name.
 
 ## TODO
 
-- [x] Implements parser and typegen for KubeJS Offlin output
+- [x] Implements parser and typegen for KubeJS Offline output
 - [x] Type support for KubeJS builtin wrappers (BlockEvents.broken, ServerEvents.registry, etc.)
 - [x] Type support for Java.loadClass(K): V
 - [ ] Javascript string -> Java String type cast helper
