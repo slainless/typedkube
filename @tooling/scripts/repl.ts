@@ -18,6 +18,7 @@ import {
 	TypeVariable,
 	WildcardType,
 } from "@tooling/kjsoffline"
+import { Property } from "@tooling/kjsoffline/data/common"
 import type { ElementIndex } from "@tooling/kjsoffline/data/registry"
 import { Package, Packager } from "@tooling/kjsoffline/typegen/packager"
 import {
@@ -27,7 +28,7 @@ import {
 import { simpleIOArgs } from "@tooling/libs/args.ts"
 import { configureLogger } from "@tooling/libs/logger"
 
-process.env.DEBUG = "true"
+// process.env.DEBUG = "true"
 
 await configureLogger()
 const logger = getLogger("global")
@@ -40,7 +41,7 @@ const data = JSON.parse(await readFile(argv.values.output, "utf-8"))
 const storage = new DataStorage(data)
 const registry = new Registry(storage)
 const packager = new Packager(registry)
-const packages = packager.packageMap
+const packages = packager.nestedPackageMap
 const render = (index: number) => {
 	const klass = registry.get(Class, index as ElementIndex)
 	if (klass instanceof RawClass) {
@@ -58,4 +59,7 @@ const renderAll = async () => {
 	for (const [pkg, error] of results) {
 		logger.error(error, `Error generating package ${pkg[Package.PackageName]}:`)
 	}
+}
+const renderLoadClass = async () => {
+	await packager.generateLoadClass(join(process.cwd(), "typegen"))
 }

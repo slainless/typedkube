@@ -4,6 +4,7 @@ import { dirname, join } from "node:path"
 import { createContext, type FormatterContext } from "@dprint/formatter"
 import typescript from "@dprint/typescript"
 import { Class, RawClass, type Registry } from "../data"
+import { renderJavaLoadClass } from "./renderer/load-class.ts"
 import { renderPackage } from "./renderer/package.ts"
 export interface Package {
 	[key: string]: RawClass | Package
@@ -23,8 +24,9 @@ export class Packager {
 		this.context.addPlugin(readFileSync(typescript.getPath()))
 	}
 
-	readonly packages: Record<string, Record<string, RawClass>> = {}
-	readonly packageMap: Package = {
+	readonly packages: RawClass[] = []
+	readonly packageMap: Record<string, Record<string, RawClass>> = {}
+	readonly nestedPackageMap: Package = {
 		[Package.PackageName]: "",
 	}
 
@@ -51,14 +53,16 @@ export class Packager {
 		const packageName = wrapped.typescriptPackageName()
 		if (!packageName) return
 
-		let packageClasses = this.packages[packageName]
+		this.packages.push(klass)
+
+		let packageClasses = this.packageMap[packageName]
 		if (!packageClasses) {
 			packageClasses = {}
-			this.packages[packageName] = packageClasses
+			this.packageMap[packageName] = packageClasses
 		}
 
 		const parts = packageName.split(".")
-		let current = this.packageMap
+		let current = this.nestedPackageMap
 		let partialPackage = ""
 		for (const part of parts) {
 			partialPackage = partialPackage ? `${partialPackage}.${part}` : part
@@ -82,7 +86,7 @@ export class Packager {
 			onError?: (packageName: string, error: Error) => void
 		},
 	) {
-		const tasks = this.collectPackages(this.packageMap)
+		const tasks = this.collectPackages(this.nestedPackageMap)
 		const results = await Promise.all(
 			tasks.map((pkg) =>
 				this.generatePackage(targetDir, pkg)
@@ -128,6 +132,27 @@ export class Packager {
 
 		await mkdir(dirname(packagePath), { recursive: true })
 		await writeFile(packagePath, finalCode)
+
+		if (error) throw error
+	}
+
+	async generateLoadClass(targetPath: string, format = true) {
+		const classes = this.packages
+		let code = renderJavaLoadClass(classes)
+		let error: any
+		if (format) {
+			try {
+				code = this.context.formatText({
+					filePath: targetPath,
+					fileText: code,
+				})
+			} catch (e) {
+				error = e
+			}
+		}
+
+		await mkdir(dirname(targetPath), { recursive: true })
+		await writeFile(targetPath, code)
 
 		if (error) throw error
 	}

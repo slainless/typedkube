@@ -137,6 +137,6 @@ be referenced using fully qualified name.
 
 - [x] Implements parser and typegen for KubeJS Offlin output
 - [ ] Type support for KubeJS-defined callables (BlockEvents.broken, ServerEvents.registry, etc.)
-- [ ] Type support for Java.loadClass(K): V
+- [x] Type support for Java.loadClass(K): V
 - [ ] Type support for miscellanous KubeJS-defined global variables
 - [ ] Javascript string -> Java String type cast helper
