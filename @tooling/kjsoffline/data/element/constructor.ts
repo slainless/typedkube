@@ -101,7 +101,7 @@ export class WrappedConstructor extends FunctionMixin(
 
 		const modifiersComment = this.wrapped().typescriptModifiersComment()
 
-		let generics = this.typescriptGenerics(true, useStatic)
+		let generics = this.typescriptGenerics(true, false)
 		if (!useStatic)
 			generics = [declaringClass.typescriptGenerics(false, false), generics]
 				.filter(Boolean)
