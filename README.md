@@ -131,3 +131,12 @@ Each file is formatted using `dprint` to ensure consistent code style.
 
 Typescript namespaces are used heavily to create consistent java to typescript package mapping. But the tradeoff is, all the exports must
 be referenced using fully qualified name.
+
+
+## TODO
+
+- [x] Implements parser and typegen for KubeJS Offlin output
+- [ ] Type support for KubeJS-defined callables (BlockEvents.broken, ServerEvents.registry, etc.)
+- [ ] Type support for Java.loadClass(K): V
+- [ ] Type support for miscellanous KubeJS-defined global variables
+- [ ] Javascript string -> Java String type cast helper
