@@ -1,4 +1,4 @@
-import { getGlobal, getObjectFields } from "../../libs/global"
+import { getGlobal, getObjectFields } from "../libs/global"
 
 console.log("Hello, World from Server Scripts!")
-console.log("Global members from client:", getObjectFields(getGlobal()))
+console.log("Global members from server:", getObjectFields(getGlobal()))
