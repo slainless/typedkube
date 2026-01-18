@@ -13,7 +13,8 @@
     "@dprint/typescript": "^0.95.13",
     "typescript": "^5",
     "htmlparser2": "^10.0.0",
-    "type-fest": "^5.3.1"
+    "type-fest": "^5.3.1",
+    "remeda": "^2.33.4"
   },
   "scripts": {
     "dev": "rspack build --watch",

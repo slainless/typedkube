@@ -138,6 +138,13 @@ export function mapReservedKeyword(name: string) {
 	return name
 }
 
+export function satinizeName(name: string) {
+	const sanitized = name.replaceAll(/[?!<>[\]]/g, "")
+	if (!sanitized)
+		return `sanitized_${Math.random().toString(36).substring(2, 5)}`
+	return sanitized
+}
+
 export function encloseObjectField(name: string) {
 	if (name.includes("-")) return `"${name}"`
 	return name

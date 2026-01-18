@@ -1,3 +1,4 @@
+import { toCamelCase } from "remeda"
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { BasicNameMixin } from "../mixin/basic-name.ts"
@@ -5,7 +6,7 @@ import { IndexHolderMixin } from "../mixin/index-holder.ts"
 import { ModifierMixin } from "../mixin/modifier.ts"
 import type { ElementIndex, Registry } from "../registry.ts"
 import type { DataIndex, EitherDataIndex } from "../storage.ts"
-import { assertExist, mapReservedKeyword } from "../utils.ts"
+import { assertExist, mapReservedKeyword, satinizeName } from "../utils.ts"
 import { DeclaringClassMixin } from "../wrapped-mixin/declaring-class.ts"
 import { MappedTypeMixin } from "../wrapped-mixin/mapped-type.ts"
 import { Constructor } from "./constructor.ts"
@@ -108,7 +109,9 @@ export class WrappedParameter extends DeclaringClassMixin(
 	}
 
 	typescriptParameter() {
-		const name = mapReservedKeyword(this.wrapped().name())
+		const name = mapReservedKeyword(
+			satinizeName(toCamelCase(this.wrapped().name())),
+		)
 		const type = this.mappedType().typescriptReferenceName()
 		return `${name}: ${type}`
 	}
