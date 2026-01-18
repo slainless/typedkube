@@ -1,3 +1,4 @@
+import { isStatic } from "@tooling/kjsoffline/typegen/utils.ts"
 import { Base, Property, type TypeVariableMap, Wrapped } from "../common.ts"
 import { AnnotationMixin } from "../mixin/annotation.ts"
 import { BasicNameMixin } from "../mixin/basic-name.ts"
@@ -91,8 +92,18 @@ export class WrappedConstructor extends WrappedFunctionMixin(
 	}
 
 	typescriptConstructor() {
+		const declaringClass = this.wrappedDeclaringClass()
+		const useStatic = isStatic(declaringClass.wrapped().modifiersValue())
+
 		const modifiersComment = this.wrapped().typescriptModifiersComment()
-		const generics = this.typescriptGenerics()
+
+		let generics = this.typescriptGenerics(true, useStatic)
+		if (!useStatic)
+			generics = [declaringClass.typescriptGenerics(false, false), generics]
+				.filter(Boolean)
+				.join(",")
+		generics = generics ? `<${generics}>` : ""
+
 		const parameters = this.typescriptParameters()
 		const returnType = this.wrappedDeclaringClass().typescriptReferenceName()
 		return `${modifiersComment}\nnew${generics}(${parameters}): ${returnType}`

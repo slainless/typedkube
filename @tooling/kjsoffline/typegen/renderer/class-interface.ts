@@ -8,8 +8,12 @@ export function renderClassConstructorInterface(klass: WrappedRawClass) {
 		mapClassGenerics: false,
 		prependPackageName: false,
 		nameSuffix: "Static",
+		appendGenerics: false,
 	})
-	const inherits = klass.typescriptExtends()
+	const inherits = klass.typescriptExtends({
+		appendGenerics: false,
+		nameSuffix: "Static",
+	})
 
 	return `
 		interface ${name} ${inherits ? `extends ${inherits}` : ""} {

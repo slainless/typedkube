@@ -38,7 +38,7 @@ export function MappedTypeVariableMixin<
 			})
 		}
 
-		typescriptGenerics(mapGeneric = true): string {
+		typescriptGenerics(mapGeneric = true, enclose = true): string {
 			let variables: string
 			if (mapGeneric)
 				variables = this.typeVariables()
@@ -49,25 +49,7 @@ export function MappedTypeVariableMixin<
 					.map((variable) => variable.typescriptReferenceName())
 					.join(",")
 
-			/**
-			 * Inject enclosing class generics if the current class is an inner class and not static.
-			 */
-			if (this instanceof WrappedRawClass) {
-				const rawClass = this.wrapped() as RawClass
-				const useStatic = isStatic(rawClass.modifiersValue())
-				const enclosing = rawClass.enclosingClass() ?? rawClass.declaringClass()
-
-				if (enclosing != null && !useStatic) {
-					const enclosingGenerics = enclosing
-						.typeVariables()
-						.map((variable) => variable.typescriptReferenceName())
-
-					variables = [...enclosingGenerics, variables]
-						.filter(Boolean)
-						.join(",")
-				}
-			}
-
+			if (!enclose) return variables
 			return variables ? `<${variables}>` : ""
 		}
 	}

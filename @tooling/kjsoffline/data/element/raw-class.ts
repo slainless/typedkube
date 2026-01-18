@@ -321,7 +321,7 @@ export class WrappedRawClass extends WrappedClassMixin(
 		return `${modifiersComment}\n${name}: ${type}`
 	}
 
-	typescriptExtends() {
+	typescriptExtends(options?: TypescriptNameOptions) {
 		const inherits = [
 			...this.wrapped().interfaces(),
 			this.wrapped().superClass(),
@@ -329,7 +329,7 @@ export class WrappedRawClass extends WrappedClassMixin(
 			.filter((v) => v != null)
 			.map((v) => v.asWrapped(0, this.typeVariableMap()))
 
-		return inherits.map((v) => v.typescriptReferenceName()).join(", ")
+		return inherits.map((v) => v.typescriptReferenceName(options)).join(", ")
 	}
 
 	override typescriptReferenceName(options?: TypescriptNameOptions) {
@@ -347,9 +347,26 @@ export class WrappedRawClass extends WrappedClassMixin(
 			: ""
 		const name = this.typescriptSimpleName()
 		const enclosingClass = this.typescriptEnclosingClassName()
-		const generics = appendGenerics
-			? this.typescriptGenerics(mapClassGenerics)
-			: ""
+
+		let generics = ""
+		/**
+		 * Inject enclosing class generics if the current class is an inner class and not static.
+		 */
+		if (appendGenerics) {
+			generics = this.typescriptGenerics(mapClassGenerics, false)
+			const rawClass = this.wrapped()
+			const useStatic = isStatic(rawClass.modifiersValue())
+			const enclosing = rawClass.enclosingClass() ?? rawClass.declaringClass()
+
+			if (enclosing != null && !useStatic) {
+				const enclosingGenerics = enclosing
+					.asWrapped(0, this.typeVariableMap())
+					.typescriptGenerics(false, false)
+
+				generics = [enclosingGenerics, generics].filter(Boolean).join(",")
+			}
+		}
+		generics = generics ? `<${generics}>` : ""
 		return `${this.typescriptDebugInfo()}${packageName ? `${packageName}.` : ""}${enclosingClass}${name}${nameSuffix}${generics}`
 	}
 
