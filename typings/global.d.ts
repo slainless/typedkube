@@ -61,154 +61,431 @@ declare const Call: Function
 declare const StringUtils: _.dev.latvian.mods.kubejs.plugin.builtin.wrapper.StringUtilsWrapperStatic
 
 // Manual injections from Rhino, probably...
+// Events mapped from kubejs/src/main/java/dev/latvian/mods/kubejs/plugin/builtin/event/
 
 interface StartupEvents {
-	init: _.dev.latvian.mods.kubejs.plugin.builtin.event.StartupEventsStatic["INIT"]
-	registry: _.dev.latvian.mods.kubejs.plugin.builtin.event.StartupEventsStatic["REGISTRY"]
-	modifyCreativeTab: _.dev.latvian.mods.kubejs.plugin.builtin.event.StartupEventsStatic["MODIFY_CREATIVE_TAB"]
-	postInit: _.dev.latvian.mods.kubejs.plugin.builtin.event.StartupEventsStatic["POST_INIT"]
+	init: EventHandler<_.dev.latvian.mods.kubejs.event.KubeStartupEvent>
+	postInit: EventHandler<_.dev.latvian.mods.kubejs.event.KubeStartupEvent>
+	registry: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<?>>
+		string,
+		_.dev.latvian.mods.kubejs.registry.RegistryKubeEvent
+	>
+	modifyCreativeTab: TargetedEventHandler<
+		// net.minecraft.resources.ResourceLocation
+		string,
+		_.dev.latvian.mods.kubejs.item.creativetab.CreativeTabKubeEvent
+	>
 }
 declare const StartupEvents: StartupEvents
 
 interface ServerEvents {
-	registry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["REGISTRY"]
-	recipeMappingRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["RECIPE_MAPPING_REGISTRY"]
-	recipes: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["RECIPES"]
-	specialRecipeSerializers: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["SPECIAL_RECIPE_SERIALIZERS"]
-	compostableRecipes: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["COMPOSTABLE_RECIPES"]
-	recipeSchemaRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["RECIPE_SCHEMA_REGISTRY"]
-	modifyRecipeResult: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["MODIFY_RECIPE_RESULT"]
-	tick: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["TICK"]
-	command: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["COMMAND"]
-	tags: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["TAGS"]
-	loaded: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["LOADED"]
-	commandRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["COMMAND_REGISTRY"]
-	afterRecipes: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["AFTER_RECIPES"]
-	unloaded: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["UNLOADED"]
-	modifyRecipeIngredient: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["MODIFY_RECIPE_INGREDIENT"]
-	basicCommand: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["BASIC_COMMAND"]
-	generateData: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["GENERATE_DATA"]
-	basicPublicCommand: _.dev.latvian.mods.kubejs.plugin.builtin.event.ServerEventsStatic["BASIC_PUBLIC_COMMAND"]
+	registry: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<?>>
+		string,
+		_.dev.latvian.mods.kubejs.registry.ServerRegistryKubeEvent
+	>
+	generateData: TargetedEventHandler<
+		// dev.latvian.mods.kubejs.script.data.GeneratedDataStage
+		string,
+		_.dev.latvian.mods.kubejs.generator.KubeDataGenerator
+	>
+	loaded: EventHandler<_.dev.latvian.mods.kubejs.server.ServerKubeEvent>
+	unloaded: EventHandler<_.dev.latvian.mods.kubejs.server.ServerKubeEvent>
+	tick: EventHandler<_.dev.latvian.mods.kubejs.server.ServerKubeEvent>
+	tags: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.core.Registry<?>>
+		string,
+		_.dev.latvian.mods.kubejs.server.tag.TagKubeEvent
+	>
+	commandRegistry: EventHandler<_.dev.latvian.mods.kubejs.command.CommandRegistryKubeEvent>
+	command: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.server.CommandKubeEvent
+	>
+	basicCommand: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.server.BasicCommandKubeEvent
+	>
+	basicPublicCommand: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.server.BasicCommandKubeEvent
+	>
+	recipeMappingRegistry: EventHandler<_.dev.latvian.mods.kubejs.recipe.schema.RecipeMappingRegistry>
+	recipeSchemaRegistry: EventHandler<_.dev.latvian.mods.kubejs.recipe.schema.RecipeSchemaRegistry>
+	recipes: EventHandler<_.dev.latvian.mods.kubejs.recipe.RecipesKubeEvent>
+	afterRecipes: EventHandler<_.dev.latvian.mods.kubejs.recipe.AfterRecipesLoadedKubeEvent>
+	specialRecipeSerializers: EventHandler<_.dev.latvian.mods.kubejs.recipe.special.SpecialRecipeSerializerManager>
+	compostableRecipes: EventHandler<_.dev.latvian.mods.kubejs.recipe.CompostableRecipesKubeEvent>
+	modifyRecipeResult: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.recipe.ModifyCraftingItemKubeEvent
+	>
+	modifyRecipeIngredient: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.recipe.ModifyCraftingItemKubeEvent
+	>
 }
 declare const ServerEvents: ServerEvents
 
 interface LevelEvents {
-	loaded: _.dev.latvian.mods.kubejs.plugin.builtin.event.LevelEventsStatic["LOADED"]
-	unloaded: _.dev.latvian.mods.kubejs.plugin.builtin.event.LevelEventsStatic["UNLOADED"]
-	beforeExplosion: _.dev.latvian.mods.kubejs.plugin.builtin.event.LevelEventsStatic["BEFORE_EXPLOSION"]
-	saved: _.dev.latvian.mods.kubejs.plugin.builtin.event.LevelEventsStatic["SAVED"]
-	tick: _.dev.latvian.mods.kubejs.plugin.builtin.event.LevelEventsStatic["TICK"]
-	afterExplosion: _.dev.latvian.mods.kubejs.plugin.builtin.event.LevelEventsStatic["AFTER_EXPLOSION"]
+	loaded: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>
+		string,
+		_.dev.latvian.mods.kubejs.level.SimpleLevelKubeEvent
+	>
+	unloaded: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>
+		string,
+		_.dev.latvian.mods.kubejs.level.SimpleLevelKubeEvent
+	>
+	beforeExplosion: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>
+		string,
+		_.dev.latvian.mods.kubejs.level.ExplosionKubeEvent$Before
+	>
+	saved: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>
+		string,
+		_.dev.latvian.mods.kubejs.level.SimpleLevelKubeEvent
+	>
+	tick: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>
+		string,
+		_.dev.latvian.mods.kubejs.level.SimpleLevelKubeEvent
+	>
+	afterExplosion: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>
+		string,
+		_.dev.latvian.mods.kubejs.level.ExplosionKubeEvent$After
+	>
 }
 declare const LevelEvents: LevelEvents
 
 interface NetworkEvents {
-	dataReceived: _.dev.latvian.mods.kubejs.plugin.builtin.event.NetworkEventsStatic["DATA_RECEIVED"]
+	dataReceived: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.net.NetworkKubeEvent
+	>
 }
 declare const NetworkEvents: NetworkEvents
 
 interface ItemEvents {
-	rightClicked: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["RIGHT_CLICKED"]
-	crafted: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["CRAFTED"]
-	dropped: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["DROPPED"]
-	dynamicTooltips: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["DYNAMIC_TOOLTIPS"]
-	modelProperties: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["MODEL_PROPERTIES"]
-	firstRightClicked: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["FIRST_RIGHT_CLICKED"]
-	modification: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["MODIFICATION"]
-	pickedUp: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["PICKED_UP"]
-	destroyed: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["DESTROYED"]
-	entityInteracted: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["ENTITY_INTERACTED"]
-	toolTierRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["TOOL_TIER_REGISTRY"]
-	foodEaten: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["FOOD_EATEN"]
-	firstLeftClicked: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["FIRST_LEFT_CLICKED"]
-	canPickUp: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["CAN_PICK_UP"]
-	smelted: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["SMELTED"]
-	modifyTooltips: _.dev.latvian.mods.kubejs.plugin.builtin.event.ItemEventsStatic["MODIFY_TOOLTIPS"]
+	rightClicked: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemClickedKubeEvent
+	>
+	crafted: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemCraftedKubeEvent
+	>
+	dropped: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemDroppedKubeEvent
+	>
+	dynamicTooltips: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.item.DynamicItemTooltipsKubeEvent
+	>
+	modelProperties: EventHandler<_.dev.latvian.mods.kubejs.item.ItemModelPropertiesKubeEvent>
+	firstRightClicked: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemClickedKubeEvent
+	>
+	modification: EventHandler<_.dev.latvian.mods.kubejs.item.ItemModificationKubeEvent>
+	pickedUp: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemPickedUpKubeEvent
+	>
+	destroyed: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemDestroyedKubeEvent
+	>
+	entityInteracted: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemEntityInteractedKubeEvent
+	>
+	toolTierRegistry: EventHandler<_.dev.latvian.mods.kubejs.item.custom.ItemToolTierRegistryKubeEvent>
+	foodEaten: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.FoodEatenKubeEvent
+	>
+	firstLeftClicked: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemClickedKubeEvent
+	>
+	canPickUp: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemPickedUpKubeEvent
+	>
+	smelted: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.item.ItemSmeltedKubeEvent
+	>
+	modifyTooltips: EventHandler<_.dev.latvian.mods.kubejs.item.ModifyItemTooltipsKubeEvent>
 }
 declare const ItemEvents: ItemEvents
 
 interface BlockEvents {
-	broken: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["BROKEN"]
-	placed: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["PLACED"]
-	leftClicked: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["LEFT_CLICKED"]
-	randomTick: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["RANDOM_TICK"]
-	rightClicked: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["RIGHT_CLICKED"]
-	startedFalling: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["STARTED_FALLING"]
-	modification: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["MODIFICATION"]
-	detectorPowered: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["DETECTOR_POWERED"]
-	farmlandTrampled: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["FARMLAND_TRAMPLING"]
-	stoppedFalling: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["STOPPED_FALLING"]
-	drops: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["DROPS"]
-	detectorUnpowered: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["DETECTOR_UNPOWERED"]
-	picked: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["PICKED"]
-	detectorChanged: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["DETECTOR_CHANGED"]
-	blockEntityTick: _.dev.latvian.mods.kubejs.plugin.builtin.event.BlockEventsStatic["BLOCK_ENTITY_TICK"]
+	broken: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.BlockBrokenKubeEvent
+	>
+	placed: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.BlockPlacedKubeEvent
+	>
+	leftClicked: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.BlockLeftClickedKubeEvent
+	>
+	randomTick: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.RandomTickKubeEvent
+	>
+	rightClicked: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.BlockRightClickedKubeEvent
+	>
+	startedFalling: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.BlockStartedFallingKubeEvent
+	>
+	modification: EventHandler<_.dev.latvian.mods.kubejs.block.BlockModificationKubeEvent>
+	detectorPowered: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.block.DetectorBlockKubeEvent
+	>
+	farmlandTrampled: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.FarmlandTrampledKubeEvent
+	>
+	stoppedFalling: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.BlockStoppedFallingKubeEvent
+	>
+	drops: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.BlockDropsKubeEvent
+	>
+	detectorUnpowered: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.block.DetectorBlockKubeEvent
+	>
+	picked: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.BlockPickedKubeEvent
+	>
+	detectorChanged: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.block.DetectorBlockKubeEvent
+	>
+	blockEntityTick: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>
+		string,
+		_.dev.latvian.mods.kubejs.block.entity.BlockEntityTickKubeEvent
+	>
 }
 declare const BlockEvents: BlockEvents
 
 interface EntityEvents {
-	afterHurt: _.dev.latvian.mods.kubejs.plugin.builtin.event.EntityEventsStatic["AFTER_HURT"]
-	spawned: _.dev.latvian.mods.kubejs.plugin.builtin.event.EntityEventsStatic["SPAWNED"]
-	drops: _.dev.latvian.mods.kubejs.plugin.builtin.event.EntityEventsStatic["DROPS"]
-	checkSpawn: _.dev.latvian.mods.kubejs.plugin.builtin.event.EntityEventsStatic["CHECK_SPAWN"]
-	death: _.dev.latvian.mods.kubejs.plugin.builtin.event.EntityEventsStatic["DEATH"]
-	beforeHurt: _.dev.latvian.mods.kubejs.plugin.builtin.event.EntityEventsStatic["BEFORE_HURT"]
+	afterHurt: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.entity.AfterLivingEntityHurtKubeEvent
+	>
+	spawned: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.entity.EntitySpawnedKubeEvent
+	>
+	drops: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.entity.LivingEntityDropsKubeEvent
+	>
+	checkSpawn: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.entity.CheckLivingEntitySpawnKubeEvent
+	>
+	death: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.entity.LivingEntityDeathKubeEvent
+	>
+	beforeHurt: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.entity.BeforeLivingEntityHurtKubeEvent
+	>
 }
 declare const EntityEvents: EntityEvents
 
 interface PlayerEvents {
-	chestOpened: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["CHEST_OPENED"]
-	loggedOut: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["LOGGED_OUT"]
-	tick: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["TICK"]
-	stageRemoved: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["STAGE_REMOVED"]
-	respawned: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["RESPAWNED"]
-	decorateChat: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["DECORATE_CHAT"]
-	cloned: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["CLONED"]
-	stageAdded: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["STAGE_ADDED"]
-	advancement: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["ADVANCEMENT"]
-	chat: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["CHAT"]
-	chestClosed: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["CHEST_CLOSED"]
-	loggedIn: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["LOGGED_IN"]
-	inventoryClosed: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["INVENTORY_CLOSED"]
-	inventoryChanged: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["INVENTORY_CHANGED"]
-	inventoryOpened: _.dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEventsStatic["INVENTORY_OPENED"]
+	chestOpened: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.inventory.MenuType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.player.ChestKubeEvent
+	>
+	loggedOut: EventHandler<_.dev.latvian.mods.kubejs.player.SimplePlayerKubeEvent>
+	tick: EventHandler<_.dev.latvian.mods.kubejs.player.SimplePlayerKubeEvent>
+	stageRemoved: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.player.StageChangedEvent
+	>
+	respawned: EventHandler<_.dev.latvian.mods.kubejs.player.PlayerRespawnedKubeEvent>
+	decorateChat: EventHandler<_.dev.latvian.mods.kubejs.player.PlayerChatReceivedKubeEvent>
+	cloned: EventHandler<_.dev.latvian.mods.kubejs.player.PlayerClonedKubeEvent>
+	stageAdded: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.player.StageChangedEvent
+	>
+	advancement: TargetedEventHandler<
+		// net.minecraft.resources.ResourceLocation
+		string,
+		_.dev.latvian.mods.kubejs.player.PlayerAdvancementKubeEvent
+	>
+	chat: EventHandler<_.dev.latvian.mods.kubejs.player.PlayerChatReceivedKubeEvent>
+	chestClosed: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.inventory.MenuType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.player.ChestKubeEvent
+	>
+	loggedIn: EventHandler<_.dev.latvian.mods.kubejs.player.SimplePlayerKubeEvent>
+	inventoryClosed: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.inventory.MenuType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.player.InventoryKubeEvent
+	>
+	inventoryChanged: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.item.Item>
+		string,
+		_.dev.latvian.mods.kubejs.player.InventoryChangedKubeEvent
+	>
+	inventoryOpened: TargetedEventHandler<
+		// net.minecraft.resources.ResourceKey<net.minecraft.world.inventory.MenuType<?>>
+		string,
+		_.dev.latvian.mods.kubejs.player.InventoryKubeEvent
+	>
 }
 declare const PlayerEvents: PlayerEvents
 
 interface RecipeViewerEvents {
-	addEntries: _.dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEventsStatic["ADD_ENTRIES"]
-	removeEntriesCompletely: _.dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEventsStatic["REMOVE_ENTRIES_COMPLETELY"]
-	addInformation: _.dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEventsStatic["ADD_INFORMATION"]
-	removeRecipes: _.dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEventsStatic["REMOVE_RECIPES"]
-	removeEntries: _.dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEventsStatic["REMOVE_ENTRIES"]
-	removeCategories: _.dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEventsStatic["REMOVE_CATEGORIES"]
-	registerSubtypes: _.dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEventsStatic["REGISTER_SUBTYPES"]
-	groupEntries: _.dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEventsStatic["GROUP_ENTRIES"]
+	addEntries: TargetedEventHandler<
+		// dev.latvian.mods.kubejs.recipe.viewer.RecipeViewerEntryType
+		string,
+		_.dev.latvian.mods.kubejs.recipe.viewer.AddEntriesKubeEvent
+	>
+	removeEntriesCompletely: TargetedEventHandler<
+		// dev.latvian.mods.kubejs.recipe.viewer.RecipeViewerEntryType
+		string,
+		_.dev.latvian.mods.kubejs.recipe.viewer.RemoveEntriesKubeEvent
+	>
+	addInformation: TargetedEventHandler<
+		// dev.latvian.mods.kubejs.recipe.viewer.RecipeViewerEntryType
+		string,
+		_.dev.latvian.mods.kubejs.recipe.viewer.AddInformationKubeEvent
+	>
+	removeRecipes: EventHandler<_.dev.latvian.mods.kubejs.recipe.viewer.RemoveRecipesKubeEvent>
+	removeEntries: TargetedEventHandler<
+		// dev.latvian.mods.kubejs.recipe.viewer.RecipeViewerEntryType
+		string,
+		_.dev.latvian.mods.kubejs.recipe.viewer.RemoveEntriesKubeEvent
+	>
+	removeCategories: EventHandler<_.dev.latvian.mods.kubejs.recipe.viewer.RemoveCategoriesKubeEvent>
+	registerSubtypes: TargetedEventHandler<
+		// dev.latvian.mods.kubejs.recipe.viewer.RecipeViewerEntryType
+		string,
+		_.dev.latvian.mods.kubejs.recipe.viewer.RegisterSubtypesKubeEvent
+	>
+	groupEntries: TargetedEventHandler<
+		// dev.latvian.mods.kubejs.recipe.viewer.RecipeViewerEntryType
+		string,
+		_.dev.latvian.mods.kubejs.recipe.viewer.GroupEntriesKubeEvent
+	>
 }
 declare const RecipeViewerEvents: RecipeViewerEvents
 
 interface ClientEvents {
-	rightDebugInfo: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["RIGHT_DEBUG_INFO"]
-	leftDebugInfo: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["LEFT_DEBUG_INFO"]
-	atlasSpriteRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["ATLAS_SPRITE_REGISTRY"]
-	loggedOut: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["LOGGED_OUT"]
-	generateAssets: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["GENERATE_ASSETS"]
-	blockEntityRendererRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["BLOCK_ENTITY_RENDERER_REGISTRY"]
-	tick: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["TICK"]
-	menuScreenRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["MENU_SCREEN_REGISTRY"]
-	highlight: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["HIGHLIGHT"]
-	particleProviderRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["PARTICLE_PROVIDER_REGISTRY"]
-	entityRendererRegistry: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["ENTITY_RENDERER_REGISTRY"]
-	loggedIn: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["LOGGED_IN"]
-	lang: _.dev.latvian.mods.kubejs.plugin.builtin.event.ClientEventsStatic["LANG"]
+	rightDebugInfo: EventHandler<_.dev.latvian.mods.kubejs.client.DebugInfoKubeEvent>
+	leftDebugInfo: EventHandler<_.dev.latvian.mods.kubejs.client.DebugInfoKubeEvent>
+	atlasSpriteRegistry: TargetedEventHandler<
+		// net.minecraft.resources.ResourceLocation
+		string,
+		_.dev.latvian.mods.kubejs.client.AtlasSpriteRegistryKubeEvent
+	>
+	loggedOut: EventHandler<_.dev.latvian.mods.kubejs.client.ClientPlayerKubeEvent>
+	generateAssets: TargetedEventHandler<
+		// dev.latvian.mods.kubejs.script.data.GeneratedDataStage
+		string,
+		_.dev.latvian.mods.kubejs.generator.KubeAssetGenerator
+	>
+	blockEntityRendererRegistry: EventHandler<_.dev.latvian.mods.kubejs.client.BlockEntityRendererRegistryKubeEvent>
+	tick: EventHandler<_.dev.latvian.mods.kubejs.client.ClientPlayerKubeEvent>
+	menuScreenRegistry: EventHandler<_.dev.latvian.mods.kubejs.client.MenuScreenRegistryKubeEvent>
+	highlight: EventHandler<_.dev.latvian.mods.kubejs.client.highlight.HighlightKubeEvent>
+	particleProviderRegistry: EventHandler<_.dev.latvian.mods.kubejs.client.ParticleProviderRegistryKubeEvent>
+	entityRendererRegistry: EventHandler<_.dev.latvian.mods.kubejs.client.EntityRendererRegistryKubeEvent>
+	loggedIn: EventHandler<_.dev.latvian.mods.kubejs.client.ClientPlayerKubeEvent>
+	lang: TargetedEventHandler<
+		// java.lang.String
+		string,
+		_.dev.latvian.mods.kubejs.client.LangKubeEvent
+	>
 }
 declare const ClientEvents: ClientEvents
 
 interface KeyBindEvents {
-	registry: _.dev.latvian.mods.kubejs.plugin.builtin.event.KeyBindEventsStatic["REGISTRY"]
-	pressed: _.dev.latvian.mods.kubejs.plugin.builtin.event.KeyBindEventsStatic["PRESSED"]
-	tick: _.dev.latvian.mods.kubejs.plugin.builtin.event.KeyBindEventsStatic["TICK"]
-	released: _.dev.latvian.mods.kubejs.plugin.builtin.event.KeyBindEventsStatic["RELEASED"]
+	registry: EventHandler<_.dev.latvian.mods.kubejs.client.KeybindRegistryKubeEvent>
+	pressed: TargetedEventHandler<
+		// _.dev.latvian.mods.kubejs.client.KubeJSKeybinds$KubeKey
+		string,
+		_.dev.latvian.mods.kubejs.client.KubeJSKeybinds$KeyEvent
+	>
+	tick: TargetedEventHandler<
+		// _.dev.latvian.mods.kubejs.client.KubeJSKeybinds$KubeKey
+		string,
+		_.dev.latvian.mods.kubejs.client.KubeJSKeybinds$TickingKeyEvent
+	>
+	released: TargetedEventHandler<
+		// _.dev.latvian.mods.kubejs.client.KubeJSKeybinds$KubeKey
+		string,
+		_.dev.latvian.mods.kubejs.client.KubeJSKeybinds$TickingKeyEvent
+	>
 }
 declare const KeyBindEvents: KeyBindEvents
 
