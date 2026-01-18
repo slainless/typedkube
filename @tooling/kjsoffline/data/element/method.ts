@@ -92,10 +92,29 @@ export class WrappedMethod extends FunctionMixin(
 	}
 
 	typescriptMethod() {
+		const method = this.renderMethod()
+		const parameters = this.wrappedParameters()
+		if (
+			parameters.length > 0 &&
+			parameters[0]
+				?.mappedType()
+				.typescriptReferenceName()
+				.endsWith("dev.latvian.mods.rhino.Context")
+		)
+			return `${method}\n${this.renderMethod(
+				parameters
+					.slice(1)
+					.map((parameter) => parameter.typescriptParameter())
+					.join(","),
+			)}`
+
+		return method
+	}
+
+	protected renderMethod(parameters = this.typescriptParameters()) {
 		const modifiersComment = this.wrapped().typescriptModifiersComment()
 		const name = encloseObjectField(this.wrapped().name())
 		const generics = this.typescriptGenerics()
-		const parameters = this.typescriptParameters()
 		const returnType = this.mappedType().typescriptReferenceName()
 		return `${modifiersComment}\n${name}${generics}(${parameters}): ${returnType}`
 	}
