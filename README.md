@@ -4,7 +4,7 @@ Augment [KubeJS](https://kubejs.com/) workspace with:
   - Opinionated, ready to use typescript setup
   - Fast bundler
   - Correct type definitions setup
-  - Fully typed KubeJS APIs, directly sourced from runtime Java reflection dumps (Thanks to [KubeJS Offline](https://github.com/Hunter19823/kubejsoffline-core))
+  - Fully typed Java-side APIs, directly sourced from runtime Java reflection dumps (Thanks to [KubeJS Offline](https://github.com/Hunter19823/kubejsoffline-core))
 
 This setup also enables code sharing, ESM support, modern ECMAScript languange features[^1], and limited Node modules support[^2].
 
