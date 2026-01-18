@@ -1,8 +1,7 @@
-import type { RawClass } from "@tooling/kjsoffline/data"
-import type { Wrapped } from "@tooling/kjsoffline/data/common.ts"
+import type { WrappedRawClass } from "@tooling/kjsoffline/data"
 import { isStatic } from "../utils.ts"
 
-export function renderFields(klass: Wrapped<RawClass>, staticOnly = false) {
+export function renderFields(klass: WrappedRawClass, staticOnly = false) {
 	return klass
 		.wrapped()
 		.fields(true)

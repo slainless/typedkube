@@ -1,8 +1,7 @@
-import type { RawClass } from "@tooling/kjsoffline/data"
-import type { Wrapped } from "@tooling/kjsoffline/data/common.ts"
+import type { WrappedRawClass } from "@tooling/kjsoffline/data"
 import { isStatic } from "../utils.ts"
 
-export function renderConstructors(klass: Wrapped<RawClass>) {
+export function renderConstructors(klass: WrappedRawClass) {
 	return klass
 		.wrapped()
 		.constructors(true)
@@ -12,7 +11,7 @@ export function renderConstructors(klass: Wrapped<RawClass>) {
 		.join("\n")
 }
 
-export function renderMethods(klass: Wrapped<RawClass>, staticOnly = false) {
+export function renderMethods(klass: WrappedRawClass, staticOnly = false) {
 	return klass
 		.wrapped()
 		.methods(true)
