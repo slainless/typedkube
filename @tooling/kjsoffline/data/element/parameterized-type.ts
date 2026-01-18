@@ -4,7 +4,7 @@ import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { TypescriptNameOptions } from "../name.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { ParameterizedTypeData } from "../storage.ts"
-import { exist } from "../utils.ts"
+import { exist, isDebug } from "../utils.ts"
 import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
 import { Class } from "./class.ts"
@@ -85,6 +85,11 @@ export class WrappedParameterizedType extends WrappedClassMixin(
 		const enclosingClass = rawType.typescriptEnclosingClassName()
 		const name = rawType.typescriptSimpleName()
 		const generics = appendGenerics ? this.typescriptGenerics() : ""
-		return `${packageName ? `${packageName}.` : ""}${enclosingClass}${name}${nameSuffix}${generics}`
+		return `${this.typescriptDebugInfo()}${packageName ? `${packageName}.` : ""}${enclosingClass}${name}${nameSuffix}${generics}`
+	}
+
+	private typescriptDebugInfo() {
+		if (!isDebug()) return ""
+		return `/** @data_index ${this.wrapped().index()} | @type ${this.constructor.name} */`
 	}
 }

@@ -7,7 +7,7 @@ import { TypeVariableMixin } from "../mixin/type-variable.ts"
 import type { TypescriptNameOptions } from "../name.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { RawClassTypeData } from "../storage.ts"
-import { asArray, exist } from "../utils.ts"
+import { asArray, exist, isDebug } from "../utils.ts"
 import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
 import { MappedTypeVariableMixin } from "../wrapped-mixin/mapped-type-variable.ts"
 import { Class } from "./class.ts"
@@ -371,7 +371,7 @@ export class WrappedRawClass extends WrappedClassMixin(
 	}
 
 	private typescriptDebugInfo() {
-		if (process.env.DEBUG !== "true") return ""
+		if (!isDebug()) return ""
 		return `/** @data_index ${this.wrapped().index()} | @type ${this.constructor.name} */`
 	}
 }

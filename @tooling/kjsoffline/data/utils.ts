@@ -142,3 +142,7 @@ export function encloseObjectField(name: string) {
 	if (name.includes("-")) return `"${name}"`
 	return name
 }
+
+export function isDebug() {
+	return process.env.DEBUG === "true"
+}

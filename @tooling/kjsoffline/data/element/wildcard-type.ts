@@ -3,7 +3,7 @@ import { ClassTypeMixin } from "../mixin/class-type.ts"
 import type { TypescriptNameOptions } from "../name.ts"
 import type { ElementIndex } from "../registry.ts"
 import type { TypeData, WildcardTypeData } from "../storage.ts"
-import { asArray } from "../utils.ts"
+import { asArray, isDebug } from "../utils.ts"
 import { WrappedClassMixin } from "../wrapped-mixin/class-type.ts"
 import { Class } from "./class.ts"
 
@@ -74,7 +74,8 @@ export class WrappedWildcardType extends WrappedClassMixin(
 			typescriptReference = lowerBounds
 				.map((type) => type.typescriptReferenceName())
 				.join(" & ")
-			wildcardComment = `/** @type {? super ${typescriptReference}} */`
+			if (!isDebug())
+				wildcardComment = `/** @type {? super ${typescriptReference}} */`
 		}
 
 		const upperBounds = this.wrappedUpperBounds()
