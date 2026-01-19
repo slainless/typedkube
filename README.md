@@ -134,4 +134,8 @@ be referenced using fully qualified name.
 - [x] Implements parser and typegen for KubeJS Offline output
 - [x] Type support for KubeJS builtin wrappers (BlockEvents.broken, ServerEvents.registry, etc.)
 - [x] Type support for Java.loadClass(K): V
-- [ ] Javascript string -> Java String type cast helper
+- [ ] Parameters and return types mapping in the type generation
+- [ ] Callable typings for dev.latvian.mods.rhino.BaseFunction and its subclasses
+- [ ] Type generation for KubeJS recipe JSON schemas
+- [ ] Substitute generic with any in certain cases (e.g. declaring class has no generic while field returns ParameterizedType)
+- [ ] Inheritance check and compatiblity type generation for NativeJavaList and NativeJavaMap
