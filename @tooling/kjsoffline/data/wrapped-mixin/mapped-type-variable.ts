@@ -10,23 +10,23 @@ export function MappedTypeVariableMixin<
 	>,
 >(klass: T) {
 	class HasMappedTypeVariable extends klass {
-		typeVariablesIndex() {
-			return this.wrapped().typeVariablesIndex()
+		typeVariablesIndices() {
+			return this.wrapped().typeVariablesIndices()
 		}
 
 		typeVariables() {
 			return this.wrapped().typeVariables()
 		}
 
-		mappedTypeVariablesIndex() {
+		mappedTypeVariablesIndices() {
 			const typeVariableMap = this.typeVariableMap()
 			return this.wrapped()
-				.typeVariablesIndex()
+				.typeVariablesIndices()
 				.map((id) => typeVariableMap[dataIndex(id)] ?? id)
 		}
 
 		mappedTypeVariables() {
-			return this.mappedTypeVariablesIndex().map((index) => {
+			return this.mappedTypeVariablesIndices().map((index) => {
 				const [typeIndex, arrayDepth] = asArray(index) as [DataIndex, number]
 				const type = this.registry.get(
 					Class,

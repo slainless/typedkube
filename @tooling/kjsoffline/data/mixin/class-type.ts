@@ -45,8 +45,8 @@ export function ClassTypeMixin<T extends Constructor<Class<any>>>(klass: T) {
 
 			if (this instanceof ParameterizedType) {
 				const rawType = this.rawType()
-				const rawTypeVariables = rawType.typeVariablesIndex()
-				const actualTypeVariables = this.typeVariablesIndex()
+				const rawTypeVariables = rawType.typeVariablesIndices()
+				const actualTypeVariables = this.typeVariablesIndices()
 				if (rawTypeVariables.length !== actualTypeVariables.length) {
 					throw new Error(
 						"Raw type variables and actual type variables must have the same length",

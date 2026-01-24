@@ -20,26 +20,26 @@ export class WildcardType extends ClassTypeMixin(Class<WildcardTypeData>) {
 		)
 	}
 
-	lowerBoundsIndex() {
+	lowerBoundsIndices() {
 		return asArray(
 			this.data()[Property.WILDCARD_LOWER_BOUNDS],
 		) as number[] as ElementIndex[]
 	}
 
 	lowerBounds() {
-		return this.lowerBoundsIndex().map((index) =>
+		return this.lowerBoundsIndices().map((index) =>
 			this.registry.get(Class, index),
 		)
 	}
 
-	upperBoundsIndex() {
+	upperBoundsIndices() {
 		return asArray(
 			this.data()[Property.WILDCARD_UPPER_BOUNDS],
 		) as number[] as ElementIndex[]
 	}
 
 	upperBounds() {
-		return this.upperBoundsIndex().map((index) =>
+		return this.upperBoundsIndices().map((index) =>
 			this.registry.get(Class, index),
 		)
 	}

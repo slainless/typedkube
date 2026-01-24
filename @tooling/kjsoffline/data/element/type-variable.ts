@@ -24,7 +24,7 @@ export class TypeVariable extends ClassTypeMixin(Class<TypeVariableData>) {
 		return exist(this.registry.storage.getName(nameIndex))
 	}
 
-	typeVariableBoundsIndex() {
+	typeVariableBoundsIndices() {
 		return asArray(
 			this.data()[Property.TYPE_VARIABLE_BOUNDS],
 		) as number[] as ElementIndex[]

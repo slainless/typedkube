@@ -10,12 +10,12 @@ export function TypeVariableMixin<
 	>,
 >(klass: T) {
 	class TypeVariableHolder extends klass {
-		typeVariablesIndex() {
+		typeVariablesIndices() {
 			return asArray(this.data()[Property.TYPE_VARIABLES])
 		}
 
 		typeVariables(): InstanceType<ReturnType<typeof WrappedClassMixin>>[] {
-			return this.typeVariablesIndex().map((index) => {
+			return this.typeVariablesIndices().map((index) => {
 				const [typeIndex, arrayDepth] = asArray(index) as [DataIndex, number]
 				const type = this.registry.get(
 					Class,

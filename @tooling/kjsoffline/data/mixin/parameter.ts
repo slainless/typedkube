@@ -7,12 +7,14 @@ export function ParameterMixin<
 	T extends Constructor<Base<{ [Property.PARAMETERS]?: ElementIndex[] }>>,
 >(klass: T) {
 	class IsFunction extends klass {
-		parameterIndex() {
+		parameterIndices() {
 			return asArray(this.data()[Property.PARAMETERS])
 		}
 
 		parameters() {
-			return this.parameterIndex().map((id) => this.registry.get(Parameter, id))
+			return this.parameterIndices().map((id) =>
+				this.registry.get(Parameter, id),
+			)
 		}
 	}
 
