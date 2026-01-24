@@ -21,7 +21,8 @@
     "build": "rspack build",
     "extract": "deno run --allow-all @tooling/scripts/extract.ts",
     "typegen": "deno run --allow-all @tooling/scripts/typegen.ts",
-    "debug:repl": "deno repl --inspect -r --allow-all --eval-file @tooling/scripts/repl.ts"
+    "debug:repl": "deno repl --inspect -r --allow-all --eval-file @tooling/scripts/repl.ts",
+    "debug:generate": "deno run --allow-all --watch @tooling/scripts/generate.ts"
   },
   "dependencies": {},
   "type": "module"

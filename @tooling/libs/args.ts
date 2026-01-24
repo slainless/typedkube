@@ -5,6 +5,7 @@ import {
 	TYPEGEN_OUTPUT_PATH,
 } from "../../typedkube.config.ts"
 
+export const debugOutputPath = join(process.cwd(), "@debug_typegen")
 export function simpleIOArgs() {
 	return parseArgs({
 		args: process.argv.slice(2),

@@ -25,24 +25,15 @@ import {
 	renderClassConstructorInterface,
 	renderClassInterface,
 } from "@tooling/kjsoffline/typegen/renderer/class-interface"
-import { simpleIOArgs } from "@tooling/libs/args.ts"
-import { configureLogger } from "@tooling/libs/logger"
+import { debugOutputPath } from "@tooling/libs/args"
+import { bootstrapTypegen } from "@tooling/libs/bootstrap"
 
 // process.env.DEBUG = "true"
 
-await configureLogger()
-const logger = getLogger("global")
+const { packager, logger, registry } = await bootstrapTypegen()
 
-const argv = simpleIOArgs()
-const extractor = new JsonExtractor(argv.values.input, argv.values.output)
-await extractor.extract()
-
-const data = JSON.parse(await readFile(argv.values.output, "utf-8"))
-const storage = new DataStorage(data)
-const registry = new Registry(storage)
-const packager = new Packager(registry)
-const packages = packager.nestedPackageMap
-const render = (index: number) => {
+export const packages = packager.nestedPackageMap
+export const render = (index: number) => {
 	const klass = registry.get(Class, index as ElementIndex)
 	if (klass instanceof RawClass) {
 		logger.info(renderClassConstructorInterface(klass.asWrapped()))
@@ -51,15 +42,15 @@ const render = (index: number) => {
 		logger.info(`Not a raw class: ${klass.constructor.name}`)
 	}
 }
-const renderPackage = (pkg: Package, format = true) => {
-	packager.generatePackage(join(process.cwd(), "typegen"), pkg, format)
+export const renderPackage = (pkg: Package, format = true) => {
+	packager.generatePackage(debugOutputPath, pkg, format)
 }
-const renderAll = async () => {
-	const results = await packager.generate(join(process.cwd(), "typegen"))
+export const renderAll = async () => {
+	const results = await packager.generate(debugOutputPath)
 	for (const [pkg, error] of results) {
 		logger.error(error, `Error generating package ${pkg[Package.PackageName]}:`)
 	}
 }
-const renderLoadClass = async () => {
-	await packager.generateLoadClass(join(process.cwd(), "typegen"))
+export const renderLoadClass = async () => {
+	await packager.generateLoadClass(debugOutputPath)
 }
