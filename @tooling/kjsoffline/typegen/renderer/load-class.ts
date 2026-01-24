@@ -1,6 +1,6 @@
-import type { RawClass } from "@tooling/kjsoffline/data"
+import type { WrappedRawClass } from "@tooling/kjsoffline/data"
 
-export function renderJavaLoadClass(klass: RawClass[]) {
+export function renderJavaLoadClass(klass: WrappedRawClass[]) {
 	return `
 		interface LoadClassMap {
 			${klass.map(renderJavaLoadClassEntry).join("\n")}
@@ -8,8 +8,8 @@ export function renderJavaLoadClass(klass: RawClass[]) {
 	`
 }
 
-function renderJavaLoadClassEntry(klass: RawClass) {
-	const wrapped = klass.asWrapped()
+function renderJavaLoadClassEntry(klass: WrappedRawClass) {
+	const wrapped = klass
 	const keyName = wrapped.typescriptReferenceName({
 		appendGenerics: false,
 		rootPackage: "",

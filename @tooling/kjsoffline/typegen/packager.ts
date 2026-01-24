@@ -3,11 +3,11 @@ import { mkdir, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { createContext, type FormatterContext } from "@dprint/formatter"
 import typescript from "@dprint/typescript"
-import { Class, RawClass, type Registry } from "../data"
+import { Class, RawClass, type Registry, WrappedRawClass } from "../data"
 import { renderJavaLoadClass } from "./renderer/load-class.ts"
 import { renderPackage } from "./renderer/package.ts"
 export interface Package {
-	[key: string]: RawClass | Package
+	[key: string]: WrappedRawClass | Package
 	[Package.PackageName]: string
 }
 
@@ -24,8 +24,8 @@ export class Packager {
 		this.context.addPlugin(readFileSync(typescript.getPath()))
 	}
 
-	readonly packages: RawClass[] = []
-	readonly packageMap: Record<string, Record<string, RawClass>> = {}
+	readonly packages: WrappedRawClass[] = []
+	readonly packageMap: Record<string, Record<string, WrappedRawClass>> = {}
 	readonly nestedPackageMap: Package = {
 		[Package.PackageName]: "",
 	}
@@ -44,13 +44,13 @@ export class Packager {
 				klass.asWrapped().typescriptSimpleName().startsWith("package-info")
 			)
 				continue
-			this.insertClass(klass)
+
+			this.insertClass(klass.asWrapped(0, klass.computeTypeVariableMap()))
 		}
 	}
 
-	private insertClass(klass: RawClass) {
-		const wrapped = klass.asWrapped()
-		const packageName = wrapped.typescriptPackageName()
+	private insertClass(klass: WrappedRawClass) {
+		const packageName = klass.typescriptPackageName()
 		if (!packageName) return
 
 		this.packages.push(klass)
@@ -74,7 +74,7 @@ export class Packager {
 			current = current[part] as Package
 		}
 
-		const name = wrapped.typescriptReferenceName()
+		const name = klass.typescriptReferenceName()
 		packageClasses[name] = klass
 		current[name] = klass
 	}
@@ -109,7 +109,7 @@ export class Packager {
 		format = true,
 	) {
 		const classes = Object.values(singlePackage).filter(
-			(value) => value instanceof RawClass,
+			(value) => value instanceof WrappedRawClass,
 		)
 		if (Object.keys(classes).length <= 0) return
 
@@ -167,7 +167,7 @@ export class Packager {
 			packages.push(pkg)
 			queue.push(
 				...(Object.values(pkg).filter(
-					(value) => !(value instanceof RawClass),
+					(value) => !(value instanceof WrappedRawClass),
 				) as Package[]),
 			)
 		}
